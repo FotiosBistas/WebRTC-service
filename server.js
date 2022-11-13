@@ -1,10 +1,3 @@
-/* import adapter from "webrtc-adapter";
- */
+ //TODO listen to requests 
 
-const mhandler = require('./src/front-end/media-handler'); 
-
-
-mhandler.getMedia({
-    video: true, 
-    audio: true, 
-}) 
+ 
