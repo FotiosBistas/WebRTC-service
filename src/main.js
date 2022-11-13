@@ -1,8 +1,8 @@
 
 import { media_functions } from "./front-end/media-handler.js";
-import {initiateConnection} from "./back-end/initiate-connection.js"; 
+import {initiateConnection} from "./client-back-end/initiate-connection.js"; 
  
-let set_local_stream = async() => {
+let startTheConnection = async() => {
     let localStream = await media_functions.getMedia({
         video: true, 
         audio: true,
@@ -11,7 +11,7 @@ let set_local_stream = async() => {
     await initiateConnection(stream);
 };  
 
-set_local_stream().catch((err) => {
+startTheConnection().catch((err) => {
     alert(err); 
 }); 
 
