@@ -1,9 +1,12 @@
 
 import { media_functions } from "./media-handler.js";
 
-alert(media_functions)
+let set_local_stream = async() => {
+    let localStream = await media_functions.getMedia({
+        video: true, 
+        audio: true,
+    });
+    document.getElementById('local-video').srcObject = localStream; 
+};  
 
-media_functions.getMedia({
-    video: true, 
-    audio: true, 
-}); 
+set_local_stream(); 
