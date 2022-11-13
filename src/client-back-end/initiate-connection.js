@@ -13,10 +13,11 @@ const default_configuration = {
     ]
 };
 
+let connection = new RTCPeerConnection(default_configuration); 
+
 
 export async function initiateConnection(...streams){
     console.log("Streams received as parameters: ", streams);
-    let connection = new RTCPeerConnection(default_configuration); 
 
     for(const stream of streams) {
         console.log("Adding stream: ",stream, " to connection"); 
@@ -32,6 +33,8 @@ export async function initiateConnection(...streams){
     }catch(error){
         console.log("error in iniatiate connection", error);
     }
+    //temporary thing used for testing.
+    return connection; 
 }
 
 
