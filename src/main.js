@@ -1,9 +1,9 @@
 
 import { media_functions } from "./front-end/media-handler.js";
 import {initiateConnection} from "./client-back-end/initiate-connection.js"; 
-import {receiveInitialConnection} from "./client-back-end/receive-connection.js"
+import {handleOffer} from "./client-back-end/receive-connection.js"
 
-let connection = null; 
+let offer = null; 
 
 let startTheConnection = async() => {
     let localStream = await media_functions.getMedia({
@@ -11,13 +11,20 @@ let startTheConnection = async() => {
         audio: true,
     });
     let stream = document.getElementById('local-video').srcObject = localStream; 
-    connection = await initiateConnection(stream);
+    offer = await initiateConnection(stream);
+    return offer; 
 };  
 
-startTheConnection().catch((err) => {
+startTheConnection()
+.then((offer) => {
+    //TODO obviously it should not be here and it should be called once the
+    //server sends the offer 
+    console.log("Description of the offer: ",offer);
+    handleOffer(offer); 
+})
+.catch((err) => {
     alert(err); 
 }); 
 
 
-
-await receiveInitialConnection(connection); 
+console.log("Handling offer")

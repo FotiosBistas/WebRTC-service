@@ -29,12 +29,11 @@ export async function initiateConnection(...streams){
 
     try{
         let offer = await connection.createOffer(); 
-        let description = await connection.setLocalDescription(offer);
+        await connection.setLocalDescription(offer);
+        return offer; 
     }catch(error){
         console.log("error in iniatiate connection", error);
     }
-    //temporary thing used for testing.
-    return connection; 
 }
 
 
