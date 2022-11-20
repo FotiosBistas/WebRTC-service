@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "webrtc-adapter": "^8.2.0"
+    "webrtc-adapter": "^8.2.0",
+    "ws": "^8.11.0"
   }
 }
