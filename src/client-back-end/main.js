@@ -1,7 +1,7 @@
 
-import { media_functions } from "./front-end/media-handler.js";
-import {initiateConnection} from "./client-back-end/initiate-connection.js"; 
-import {handleOffer} from "./client-back-end/receive-connection.js"
+import { media_functions } from "./media-handler.js";
+import {initiateConnection} from "./initiate-connection.js"; 
+import {handleOffer} from "./receive-connection.js"
 
 let offer = null; 
 
@@ -25,6 +25,5 @@ startTheConnection()
 .catch((err) => {
     alert(err); 
 }); 
-
 
 console.log("Handling offer")
