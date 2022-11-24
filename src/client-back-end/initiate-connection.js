@@ -1,37 +1,31 @@
 
-
-const default_configuration = {
-    iceServers: [
-        {
-            urls:[
-                'stun:stun1.l.google.com:19302',
-                'stun:stun2.l.google.com:19302',
-                'stun:stun3.l.google.com:19302',
-                'stun:stun4.l.google.com:19302'
-            ]
-        }
-    ]
-};
-
-let connection = new RTCPeerConnection(default_configuration); 
+import { media_functions } from "./media-handler.js";
 
 
-export async function initiateConnection(...streams){
-    console.log("Streams received as parameters: ", streams);
+function log(text){
+    var time = new Date();
+    console.log("[" + time.toLocaleTimeString() + "] " + text);
+}
 
-    for(const stream of streams) {
-        console.log("Adding stream: ",stream, " to connection"); 
-        stream.getTracks().forEach(track => {
-            console.log("Adding track: ",track, " to connection"); 
-            connection.addTrack(track,stream); 
-        });
-    }
 
+
+export async function initiateConnection(connection){
     try{
+        let localStream = await media_functions.getMedia({
+            video: true, 
+            audio: true,
+        });
+        document.getElementById('local-video').srcObject = localStream; 
+
+        //add tracks into stream 
+        localStream.getTracks().forEach((track => {
+            connection.addTrack(track, localStream); 
+        }));
+
         let offer = await connection.createOffer(); 
         await connection.setLocalDescription(offer);
         //TODO send the offer to the signalling server 
-        return offer; 
+        return Promise.resolve(offer); 
     }catch(error){
         console.log("error in iniatiate connection", error);
     }
