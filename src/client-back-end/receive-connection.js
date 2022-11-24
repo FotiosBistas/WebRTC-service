@@ -1,10 +1,19 @@
 
-import {media_functions} from ""
+function log(text){
+    var time = new Date();
+    console.log("[" + time.toLocaleTimeString() + "] " + text);
+}
 
-let remoteStream = new MediaStream(); 
-let connection = new RTCPeerConnection(); 
+/**
+ * Function is called as a callback from the ontrack event listener.  
+ * @param  {...any} tracks the track that should be added to the connection
+ */
+export async function handleTrack(track){
+    log("adding track to connection"); 
+    
+}
 
-export async function handleOffer(offer){
+export async function handleOffer(connection, offer){
     connection.setRemoteDescription(offer)
 
     //capturing local media should not be done in this way 
