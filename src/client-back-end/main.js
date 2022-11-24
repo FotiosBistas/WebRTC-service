@@ -1,7 +1,5 @@
 
 import {initiateConnection} from "./initiate-connection.js"; 
-import {handleOffer, handleTrack} from "./receive-connection.js"
-
 
 function log(text){
     var time = new Date();
