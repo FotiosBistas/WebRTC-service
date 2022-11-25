@@ -1,4 +1,8 @@
-import {createPeerConnection} from "./connection-handler"; 
+import {createPeerConnection} from "./peer-connection-handler.js"; 
+
+
+let web_socket_connection = null; 
+
 
 function log(text){
     var time = new Date();
@@ -14,6 +18,9 @@ let clientID = 0;
 let myUsername = null; 
 
 
+let connection = await createPeerConnection(); 
+
+
 function createIdentifier(){
     //TODO create a unique identifier so we can handle connections in the server 
 
@@ -23,6 +30,7 @@ function createIdentifier(){
 function connect(){
     let serverURL; 
 
+    connection = new WebSocket(); 
 
 }
 

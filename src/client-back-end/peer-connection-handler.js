@@ -7,7 +7,7 @@ function log(text){
     console.log("[" + time.toLocaleTimeString() + "] " + text);
 }
 
-media_config = {
+let media_config = {
     video: true, 
     audio: true, 
 }
@@ -33,7 +33,7 @@ let peer_connection = null;
  * Creates a RTCPeerConnection 
  * @returns the peer connection created with the appropriate handlers 
  */
-export function createPeerConnection(){
+export async function createPeerConnection(){
     log("Creating new peer connection"); 
     peer_connection = new RTCPeerConnection(default_configuration); 
     peer_connection.onconnectionstatechange = handleConnectionStateChangeEvent;
@@ -72,6 +72,7 @@ async function handleNegotiationNeededEvent(){
         log("Setting local description with offer: " + offer); 
         await connection.setLocalDescription(offer);
 
+        log("Sending the offer to the remote peer")
         //TODO send the offer to the signalling server 
 
         // ----- TASK  ------- 
@@ -89,7 +90,10 @@ async function handleNegotiationNeededEvent(){
 function handleConnectionStateChangeEvent(event){
     //new,connecting,connected,disconnected 
     switch(peer_connection.connectionState){
-       case "closed":
+        case "connected":
+            log("Peers successfully connected");
+            break; 
+        case "closed":
             closeConnection(); 
             break;  
     } 
