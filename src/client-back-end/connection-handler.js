@@ -29,14 +29,20 @@ const default_configuration = {
 let peer_connection = null; 
 
 
-async function createPeerConnection(){
+/**
+ * Creates a RTCPeerConnection 
+ * @returns the peer connection created with the appropriate handlers 
+ */
+export function createPeerConnection(){
     log("Creating new peer connection"); 
     peer_connection = new RTCPeerConnection(default_configuration); 
     peer_connection.onconnectionstatechange = handleConnectionStateChangeEvent;
     peer_connection.onicecandidate = handleICECandidateEvent;
     peer_connection.ontrack = handleTrackEvent;
     peer_connection.onnegotiationneeded = handleNegotiationNeededEvent; 
-    peer_connection.oniceconnectionstatechange = ;
+    peer_connection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
+
+    return peer_connection; 
 }
 
 
@@ -129,15 +135,30 @@ function handleTrackEvent(event){
     });
 }
 
-
+/**
+ * Gets called using on ice candidate event. 
+ * 
+ * @param {*} event 
+ */
 function handleICECandidateEvent(event){
     if(event.candidate){
         log("Handling ICE candidate event"); 
         //send ice candidate to server 
+        //this also includes the candidates which string is " "
+        //this means that the ICE negotiation has finished. s
 
         // ----- TASK  -------
     }
 }
 
+function handleICEConnectionStateChangeEvent(event) {
+    log("Handling ice connection state change");
 
-
+    switch(peer_connection.iceConnectionState){
+        case "closed":
+        case "failed":
+        case "disconnected":
+            closeConnection();
+            break;
+    }
+}
