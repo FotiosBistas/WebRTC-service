@@ -152,7 +152,10 @@ function handleICECandidateEvent(event){
         //this also includes the candidates which string is " "
         //this means that the ICE negotiation has finished. s
 
-        // ----- TASK  -------
+        sendToServer({
+            type: "new-ice-candidate",
+            candidate: "event.candidate"
+        });
     }
 }
 
