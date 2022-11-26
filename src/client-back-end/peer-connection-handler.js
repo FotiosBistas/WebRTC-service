@@ -1,6 +1,6 @@
 
 import { media_functions } from "./media-handler.js";
-
+import {sendToServer} from "./websocket-connection-handler.js"
 
 function log(text){
     var time = new Date();
@@ -72,8 +72,11 @@ async function handleNegotiationNeededEvent(){
         await connection.setLocalDescription(offer);
 
         log("Sending the offer to the remote peer")
-        return Promise.resolve(offer); 
-
+        
+        sendToServer({
+            type: "video-offer"
+        });
+        
     }catch(error){
         log("error while handling negotiation needed", error);
     }
@@ -133,6 +136,7 @@ function handleTrackEvent(event){
         //TODO add tracks to the remote stream(s) and handle the html/css 
 
         // ----- TASK  -------
+        peer_connection.addTrack(track,); 
     });
 }
 
