@@ -28,7 +28,6 @@ const default_configuration = {
 
 let peer_connection = null; 
 
-
 /**
  * Creates a RTCPeerConnection 
  * @returns the peer connection created with the appropriate handlers 
@@ -73,9 +72,7 @@ async function handleNegotiationNeededEvent(){
         await connection.setLocalDescription(offer);
 
         log("Sending the offer to the remote peer")
-        //TODO send the offer to the signalling server 
-
-        // ----- TASK  ------- 
+        return Promise.resolve(offer); 
 
     }catch(error){
         log("error while handling negotiation needed", error);
