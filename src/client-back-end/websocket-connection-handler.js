@@ -1,3 +1,4 @@
+import {peer_connection} from "./peer-connection-handler.js"
 
 let hostname = "localhost"; 
 let server_port = 6578; 
@@ -10,17 +11,22 @@ function log(text){
 }
 
 /**
- * 
+ * Turns the message into JSON and sends it over the server. 
  * @param {*} message 
  */
  function sendToServer(message){
-    if (!("type" in message)) {
+    if (!("type" in message) || !message.type) {
         log("Error: message doesn't have type property")
         return 
     }
-    let json_message = JSON.stringify(message); 
-    log("Sending message: " + json_message + "to server"); 
-    web_socket_connection.send(json_message); 
+    try{
+        let json_message = JSON.stringify(message); 
+        log("Sending message: " + json_message + "to server"); 
+        web_socket_connection.send(json_message); 
+    }catch(err){
+        log("Error occured while sending data to server: ", err);
+    }
+
 }
 
 function createIdentifier(){
@@ -29,7 +35,7 @@ function createIdentifier(){
     // ----- TASK  ------- 
 }
 
-export function connect(){
+export function webSocketConnect(){
     let serverURL; 
 
     serverURL = "ws://" + hostname + ":" + server_port; 
@@ -40,8 +46,6 @@ export function connect(){
     web_socket_connection.onerror = onErrorEventHandler; 
     web_socket_connection.onmessage = onMessageEventHandler; 
     web_socket_connection.onopen = onOpenEventHandler; 
-
-    return web_socket_connection; 
 }
 
 function onCloseEventHandler(event) {
@@ -50,12 +54,27 @@ function onCloseEventHandler(event) {
 }
 
 function onErrorEventHandler(error) {
-    log("An error occured: " + JSON.stringify(error)); 
+    log("A web socket error occured: " + JSON.stringify(error)); 
 }
 
 function onMessageEventHandler(message) {
     log("New message received from connection"); 
-    
+    let msg = JSON.parse(message.data);
+    switch(msg.type){
+        //TODO handle all the messages types  
+
+        // ----- TASK  ------- 
+        case "new-ice-candindate": 
+            handleNewICECandidate(msg); 
+            break; 
+        case "offer-answer":
+            handleOfferAnswer
+            break; 
+
+        case "offer":
+            handleNewOffer(msg); 
+            break; 
+    }
 }
 
 function onOpenEventHandler(event) {
@@ -63,4 +82,28 @@ function onOpenEventHandler(event) {
     //TODO handle the corresponding html and css 
 
     // ----- TASK  ------- 
+}
+
+
+async function handleNewICECandidate(message){
+    
+    if (!("candidate" in message) || !message.candidate){
+        log("Received new ice candidate event without candidate value")
+        return 
+    }
+
+    let new_candidate = new RTCIceCandidate(message.candidate);
+    try{
+        await peer_connection.addIceCandidate(new_candidate);
+    }catch(err){
+        log("Error while adding new ICE candidate: " + err); 
+    }
+}
+
+async function handleNewOffer(msg){
+    
+}
+
+async function handleOfferAnswer(msg){
+
 }
