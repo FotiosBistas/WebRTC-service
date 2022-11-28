@@ -1,0 +1,13 @@
+.chatandcall{
+    display: grid; 
+    grid-template-columns: 1fr 1fr;
+}
+
+.video-call{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px,1fr));
+}
+
+.chat{
+    background-color: aliceblue;
+}

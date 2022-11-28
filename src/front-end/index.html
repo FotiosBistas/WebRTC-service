@@ -6,16 +6,27 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./css/main.css">
+        <link rel="stylesheet" href="./css/index.css">
         <script src="../client-back-end/main.js" type="module" defer></script>
     </head>
     <body>
         <main>
             <!-- TODO: find the method that adds video when event happens -->
-            <div class="gallery">
-                <video autoplay playsinline id="local-video"></video>
-                <video autoplay playsinline id="remote-video"></video>
+            <div class="room">
+                <form action="/send_data" method="POST" id = "techsupportform"></form>
+                <fieldset>
+                    <legend> Create new Room </legend>
+                    <label for="roomcode">Room Code</label>
+                    <input type="number" id="roomcode" name="room_code" pattern="{0-9}{4}" min="0">
+                </fieldset>
+                <button type = "CreateRoom" form="joinroomform" value = "Submit"> Submit </button>
+                <fieldset>
+                    <legend>Join Room</legend>
+                    <label for="roomcode"> Room code</label>
+                    <input type="number" id="roomcode" name="room_code" pattern="{0-9}{4}" min="0">
+                </fieldset>
+                <button type = "CreateRoom" form="joinroomform" value = "Submit"> Submit </button>
             </div>
         </main>
     </body>
-</html>>
+</html>
