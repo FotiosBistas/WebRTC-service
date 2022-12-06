@@ -13,19 +13,19 @@
         <main>
             <!-- TODO: find the method that adds video when event happens -->
             <div class="room">
-                <form action="/send_data" method="POST" id = "techsupportform"></form>
+                <form action="/send_data" method="POST" id = "join-room-form"></form>
                 <fieldset>
                     <legend> Create new Room </legend>
                     <label for="roomcode">Room Code</label>
                     <input type="number" id="roomcode" name="room_code" pattern="{0-9}{4}" min="0">
                 </fieldset>
-                <button type = "CreateRoom" form="joinroomform" value = "Submit"> Submit </button>
+                <button type="CreateRoom" id="create-room-button" form="join-room-form" value="Create Room"> Create Room </button>
                 <fieldset>
                     <legend>Join Room</legend>
                     <label for="roomcode"> Room code</label>
                     <input type="number" id="roomcode" name="room_code" pattern="{0-9}{4}" min="0">
                 </fieldset>
-                <button type = "CreateRoom" form="joinroomform" value = "Submit"> Submit </button>
+                <button type="button" id="join-room-button" form="join-room-form" value = "Join Room"> Join Room </button>
             </div>
         </main>
     </body>

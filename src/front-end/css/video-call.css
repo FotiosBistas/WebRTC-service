@@ -8,6 +8,24 @@
     grid-template-columns: repeat(auto-fit, minmax(500px,1fr));
 }
 
+.stream-controls {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    background-color: grey;
+}
+
+.stream-controls li:hover{
+    background-color: aliceblue;
+}
+
 .chat{
     background-color: aliceblue;
+}
+
+
+.stream-controls img{
+    max-width: 50%;
+    width: 50%; 
+    height: 50%; 
 }

@@ -1,16 +1,21 @@
-import {createPeerConnection} from "./peer-connection-handler.js"; 
-import {connect} from "./websocket-connection-handler.js"
+import {media_functions} from "./media-handler.js"
 
 
+/* let join_room_button = document.getElementById("join-room-button");
+
+join_room_button.onclick = function() {
+    window.location.href = "video-call.html"
+} */
+
+/* let create_room_button = document.getElementById("create-room-button");
+
+create_room_button.onclick = function() {
+
+} */
 
 
+let camera_button = document.getElementById("camera-button");
 
-let remoteStream = new MediaStream(); 
-
-let clientID = 0; 
-let myUsername = null; 
-
-
-let offer = await createPeerConnection(); 
-
-web_socket_connection = connect(); 
+camera_button.onclick = function(event) {
+    let local_stream = media_functions.getMedia({video:true}); 
+}
