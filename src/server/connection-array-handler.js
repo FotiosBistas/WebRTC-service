@@ -2,16 +2,18 @@
 
 let connection_array = []; 
 
-let connection_wrapper = {
-    id: 0, 
-    username, 
-    connection, 
-}
 
-function addConnection(){
+let connection_array_functions = {
+
+    addConnection: function (){
+    
+    },
+
+    removeConnection: function(){
+
+    }
     
 }
 
-function removeConnection(){
 
-}
+

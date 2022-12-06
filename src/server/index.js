@@ -4,11 +4,12 @@
 
 //web socket secured 
 
-var ws = require('wss');
+var WebSocketServer = require('websocket').server;
 //https for initial request and the upgrading in into websockets 
 const https = require('https'); 
 const http = require('http'); 
 const fs = require('fs'); 
+const connection_array_functions = require('./connection-array-handler.js'); 
 
 const private_key = './privateKey.key'
 const certificate = './certificate.crt' 
@@ -18,7 +19,6 @@ const https_options = {
     cert: fs.readFileSync(certificate)
 }
 
-const connection_array = require('connection-array-handler'); 
 
 let https_server = null; 
 let web_socket_server = null;
@@ -29,9 +29,21 @@ function log(text){
     console.log("[" + time.toLocaleTimeString() + "] " + text);
 }
 
+
+
 try{
     if(https_options.key && https_options.cert){
-        https_server = https.createServer(https_options,handleHttpsRequest); 
+        /**
+         * Upgrade https connection onto web sockets: 
+         * GET /chat
+         * Host: javascript.info
+         * Upgrade: websocket
+         * Connection: Upgrade
+         */
+        https_server = https.createServer(
+            https_options,
+            handleHttpsRequest,
+            ); 
     }
 }catch(err){
     log(err + "while starting https server"); 
@@ -65,19 +77,14 @@ function allowOrigin(origin){
     return true; 
 }
 
-/**
- * Upgrade https connection onto web sockets: 
- * GET /chat
- * Host: javascript.info
- * Upgrade: websocket
- * Connection: Upgrade
- */
-web_socket_server = new ws.Server({
-    httpServer: https_server, 
-});
+
+web_socket_server = new WebSocketServer({
+    httpServer: https_server,
+    autoAcceptConnections: false 
+}); 
 
 web_socket_server.onconnection = onConnectionHandler; 
-
+ 
 /**
  * Gets called whenever a new connection occurs in the server.
  * @param {*} ws is the underlying socket for the server connection 
