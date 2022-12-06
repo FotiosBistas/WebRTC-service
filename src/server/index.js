@@ -2,8 +2,25 @@
 
 // this will run on node js 
 
-var ws = require('ws');
+//web socket secured 
 
+var ws = require('wss');
+//https for initial request and the upgrading in into websockets 
+const https = require('https'); 
+const http = require('http'); 
+const fs = require('fs'); 
+
+const private_key = './privateKey.key'
+const certificate = './certificate.crt' 
+
+const https_options = {
+    key: fs.readFileSync(private_key), 
+    cert: fs.readFileSync(certificate)
+}
+
+const connection_array = require('connection-array-handler'); 
+
+let https_server = null; 
 let web_socket_server = null;
 
 
@@ -12,37 +29,54 @@ function log(text){
     console.log("[" + time.toLocaleTimeString() + "] " + text);
 }
 
-/* let httpserver = null; 
-
 try{
-
+    if(https_options.key && https_options.cert){
+        https_server = https.createServer(https_options,handleHttpsRequest); 
+    }
 }catch(err){
-    log(err); 
+    log(err + "while starting https server"); 
 }
 
-function handleHTTPRequest(request, response){
-    log("Received requests for: " + request.url); 
-    //TODO handle http requests 
-    response.writeHead(); 
-    response.end(); 
+// Try to create https server without the options, meaning an http server
+if(https_server === null){
+    try{
+        https_server = http.createServer({}, handleHttpsRequest);
+    }catch(err){
+        log("Error while trying to create http server: " + err); 
+    }
 }
 
-httpserver.listen(6503, function(){
+https_server.listen(6503, function(){
     log("Server is listening on port 6503"); 
-});  */
+}); 
 
+/**
+ * We don't want to send any http data to the users. All is handled locally. 
+ * @param {*} request 
+ * @param {*} response 
+ */
+function handleHttpsRequest(request, response){
+    log("Received request for the web server" + request.url); 
+    response.writeHead(404); 
+    response.end;
+}
 
 function allowOrigin(origin){
-
+    return true; 
 }
 
-function createNewWebSocketServer(){
-    web_socket_server = new ws.Server({
-        port: 6578,
-    });
-    
-    web_socket_server.onconnection = onConnectionHandler; 
-}
+/**
+ * Upgrade https connection onto web sockets: 
+ * GET /chat
+ * Host: javascript.info
+ * Upgrade: websocket
+ * Connection: Upgrade
+ */
+web_socket_server = new ws.Server({
+    httpServer: https_server, 
+});
+
+web_socket_server.onconnection = onConnectionHandler; 
 
 /**
  * Gets called whenever a new connection occurs in the server.

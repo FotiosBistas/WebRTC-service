@@ -1,6 +1,9 @@
 {
   "dependencies": {
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
     "webrtc-adapter": "^8.2.0",
-    "ws": "^8.11.0"
+    "ws": "^8.11.0",
+    "wss": "^3.3.4"
   }
 }
