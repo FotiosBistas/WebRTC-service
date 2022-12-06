@@ -1,7 +1,7 @@
 import {peer_connection} from "./peer-connection-handler.js"
 
-let hostname = "localhost"; 
-let server_port = 6578; 
+let hostname = "127.0.0.1"; 
+let server_port = 60503; 
 let web_socket_connection = null; 
 
 
@@ -14,7 +14,7 @@ function log(text){
  * Turns the message into JSON and sends it over the server. 
  * @param {*} message 
  */
- function sendToServer(message){
+export function sendToServer(message){
     if (!("type" in message) || !message.type) {
         log("Error: message doesn't have type property")
         return 
@@ -37,8 +37,11 @@ function createIdentifier(){
 
 export function webSocketConnect(){
     let serverURL; 
+    let scheme = "ws"; 
 
-    serverURL = "ws://" + hostname + ":" + server_port; 
+    //--------TASK------- 
+    //add extra s on the scheme in order to do a web sockets secured 
+    serverURL = scheme + "://" + hostname + ":" + server_port; 
 
     web_socket_connection = new WebSocket(serverURL); 
 
@@ -54,7 +57,7 @@ function onCloseEventHandler(event) {
 }
 
 function onErrorEventHandler(error) {
-    log("A web socket error occured: " + JSON.stringify(error)); 
+    log("A web socket error occured: " + JSON.stringify(error, ["message", "arguments", "type", "name"])); 
 }
 
 function onMessageEventHandler(message) {

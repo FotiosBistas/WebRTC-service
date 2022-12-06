@@ -22,24 +22,18 @@ const https_options = {
 
 let https_server = null; 
 let web_socket_server = null;
-
+const port = 60503; 
 
 function log(text){
     var time = new Date();
-    console.log("[" + time.toLocaleTimeString() + "] " + text);
+    console.log("[" + time.toLocaleTimeString() + "] " + " " + text);
 }
 
 
 
-try{
+/* try{
     if(https_options.key && https_options.cert){
-        /**
-         * Upgrade https connection onto web sockets: 
-         * GET /chat
-         * Host: javascript.info
-         * Upgrade: websocket
-         * Connection: Upgrade
-         */
+        
         https_server = https.createServer(
             https_options,
             handleHttpsRequest,
@@ -47,7 +41,7 @@ try{
     }
 }catch(err){
     log(err + "while starting https server"); 
-}
+} */
 
 // Try to create https server without the options, meaning an http server
 if(https_server === null){
@@ -58,8 +52,8 @@ if(https_server === null){
     }
 }
 
-https_server.listen(6503, function(){
-    log("Server is listening on port 6503"); 
+https_server.listen(port, function(){
+    log("Server is listening on port: " + port); 
 }); 
 
 /**
@@ -77,10 +71,15 @@ function allowOrigin(origin){
     return true; 
 }
 
-
+/**
+ * Upgrade https connection onto web sockets: 
+ * GET /chat
+ * Host: javascript.info
+ * Upgrade: websocket
+ * Connection: Upgrade
+ */
 web_socket_server = new WebSocketServer({
     httpServer: https_server,
-    autoAcceptConnections: false 
 }); 
 
 web_socket_server.onconnection = onConnectionHandler; 
@@ -91,6 +90,7 @@ web_socket_server.onconnection = onConnectionHandler;
  */
 function onConnectionHandler(ws) {
 
+    
     ws.onclose = onCloseEventHandler; 
     ws.onerror = onErrorEventHandler; 
     ws.onmessage = onMessageEventHandler; 

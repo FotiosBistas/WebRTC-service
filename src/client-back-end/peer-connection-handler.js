@@ -26,7 +26,7 @@ const default_configuration = {
 };
 
 
-let peer_connection = null; 
+export let peer_connection = null; 
 
 /**
  * Creates a RTCPeerConnection 
