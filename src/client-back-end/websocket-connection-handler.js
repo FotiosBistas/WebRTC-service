@@ -1,7 +1,14 @@
+"use strict"
+
 import {peer_connection} from "./peer-connection-handler.js"
 
-let hostname = "127.0.0.1"; 
-let server_port = 60503; 
+let hostname = window.location.hostname;
+if (!hostname) {
+  hostname = "localhost";
+}
+
+log("Hostname: " + hostname); 
+let server_port = 62000; 
 let web_socket_connection = null; 
 
 
@@ -39,11 +46,17 @@ export function webSocketConnect(){
     let serverURL; 
     let scheme = "ws"; 
 
+    
+    if(document.location.protocol === "https:"){
+        scheme += "s";
+    }
+
     //--------TASK------- 
     //add extra s on the scheme in order to do a web sockets secured 
     serverURL = scheme + "://" + hostname + ":" + server_port; 
-
-    web_socket_connection = new WebSocket(serverURL); 
+    log("Server URL is: " + serverURL);
+    // accepts all unauthorized https sources. 
+    web_socket_connection = new WebSocket(serverURL, "json"); 
 
     web_socket_connection.onclose = onCloseEventHandler; 
     web_socket_connection.onerror = onErrorEventHandler; 

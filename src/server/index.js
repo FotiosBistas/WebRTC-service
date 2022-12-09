@@ -2,14 +2,16 @@
 
 // this will run on node js 
 
-//web socket secured 
+"use strict"
 
+//web socket secured 
 var WebSocketServer = require('websocket').server;
 //https for initial request and the upgrading in into websockets 
 const https = require('https'); 
 const http = require('http'); 
 const fs = require('fs'); 
 const connection_array_functions = require('./connection-array-handler.js'); 
+const { join } = require('path');
 
 const private_key = './privateKey.key'
 const certificate = './certificate.crt' 
@@ -22,7 +24,7 @@ const https_options = {
 
 let https_server = null; 
 let web_socket_server = null;
-const port = 60503; 
+const port = 62000; 
 
 function log(text){
     var time = new Date();
@@ -30,23 +32,26 @@ function log(text){
 }
 
 
-
+/* 
+Best idea would be to create an https server but it doesn't work for some reason 
+*/
 /* try{
     if(https_options.key && https_options.cert){
-        
         https_server = https.createServer(
             https_options,
             handleHttpsRequest,
             ); 
+        log("Created a https server");
     }
 }catch(err){
     log(err + "while starting https server"); 
-} */
+}  */
 
 // Try to create https server without the options, meaning an http server
 if(https_server === null){
     try{
         https_server = http.createServer({}, handleHttpsRequest);
+        log("Created a http server");
     }catch(err){
         log("Error while trying to create http server: " + err); 
     }
@@ -80,21 +85,34 @@ function allowOrigin(origin){
  */
 web_socket_server = new WebSocketServer({
     httpServer: https_server,
+    autoAcceptConnections: false, 
 }); 
 
-web_socket_server.onconnection = onConnectionHandler; 
- 
+if(web_socket_server){
+    log("Created a websocket server"); 
+}
+else{
+    log("ERROR while trying to create websocket server")
+}
+
+web_socket_server.on('request', function(request) {
+    log("request received");
+    let connection = request.accept("json", request.origin); 
+});
+
+/* web_socket_server.on('connection', onConnectionHandler); 
+ */
 /**
  * Gets called whenever a new connection occurs in the server.
  * @param {*} ws is the underlying socket for the server connection 
  */
 function onConnectionHandler(ws) {
 
-    
-    ws.onclose = onCloseEventHandler; 
-    ws.onerror = onErrorEventHandler; 
-    ws.onmessage = onMessageEventHandler; 
-    ws.onopen = onOpenEventHandler;  
+    log("Received new connection request")
+    ws.addEventListener('close',onCloseEventHandler); 
+    ws.addEventListener('error',onErrorEventHandler); 
+    ws.addEventListener('message',onMessageEventHandler); 
+    ws.addEventListener('open',onOpenEventHandler); 
 }
 
 function onCloseEventHandler(event) {
@@ -108,7 +126,7 @@ function onErrorEventHandler(error) {
 }
 
 function onMessageEventHandler(message) {
-    log("New message received from connection"); 
+    log("New message received from connection" + message); 
     
 }
 

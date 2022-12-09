@@ -4,6 +4,7 @@
     "http": "^0.0.1-security",
     "https": "^1.0.0",
     "index.js": "^0.0.3",
+    "socket.io": "^4.5.4",
     "websocket": "^1.0.34",
     "ws": "^8.11.0"
   }
