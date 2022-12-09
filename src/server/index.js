@@ -33,6 +33,7 @@ function log(text){
 
 
 /* 
+
 Best idea would be to create an https server but it doesn't work for some reason 
 */
 /* try{
@@ -98,21 +99,21 @@ else{
 web_socket_server.on('request', function(request) {
     log("request received");
     let connection = request.accept("json", request.origin); 
+    assignConnectionHandlers(connection); 
 });
 
-/* web_socket_server.on('connection', onConnectionHandler); 
- */
+
 /**
- * Gets called whenever a new connection occurs in the server.
+ * Gets called whenever a new connection occurs in the http(s) server and is accepted.
  * @param {*} ws is the underlying socket for the server connection 
  */
-function onConnectionHandler(ws) {
+function assignConnectionHandlers(ws) {
 
-    log("Received new connection request")
-    ws.addEventListener('close',onCloseEventHandler); 
-    ws.addEventListener('error',onErrorEventHandler); 
-    ws.addEventListener('message',onMessageEventHandler); 
-    ws.addEventListener('open',onOpenEventHandler); 
+    log("Assigning handlers to the connection");
+    ws.onclose = onCloseEventHandler; 
+    ws.onerror = onErrorEventHandler; 
+    ws.onmessage = onMessageEventHandler; 
+    ws.onopen = onOpenEventHandler; 
 }
 
 function onCloseEventHandler(event) {
