@@ -90,6 +90,9 @@ web_socket_server = new WebSocketServer({
     autoAcceptConnections: false, 
 }); 
 
+log(!null)
+
+
 if(web_socket_server){
     log("Created a websocket server"); 
 }
@@ -103,9 +106,11 @@ web_socket_server.on('request',async function(request) {
     assignConnectionHandlers(connection); 
     /* unique identifer for user */
     connection.user_id = await connection_array_functions.createIdentifierForUser(++nextID); 
-    
+    connection.user_id = connection.user_id;  
+
     connection_array_functions.addConnection(connection); 
-    
+
+    //TODO temporary way to send data 
     connection.send(JSON.stringify({
         type: "id",
         identifier: connection.user_id 
@@ -137,7 +142,15 @@ function onErrorEventHandler(error) {
 
 function onMessageEventHandler(message) {
     log("New message received from connection"); 
-    
+    let json_msg = JSON.parse(message.data);
+    switch (json_msg.type){
+        case "room_code":
+            log("New room code message received. Creating new room"); 
+            break; 
+        default: 
+            log("Unhandled message type: " + json_msg.type);
+    }
+
 }
 
 function onOpenEventHandler(event) {
