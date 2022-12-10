@@ -90,8 +90,6 @@ web_socket_server = new WebSocketServer({
     autoAcceptConnections: false, 
 }); 
 
-log(!null)
-
 
 if(web_socket_server){
     log("Created a websocket server"); 
@@ -125,10 +123,10 @@ web_socket_server.on('request',async function(request) {
 function assignConnectionHandlers(ws) {
 
     log("Assigning handlers to the connection");
-    ws.onclose = onCloseEventHandler; 
-    ws.onerror = onErrorEventHandler; 
-    ws.onmessage = onMessageEventHandler; 
-    ws.onopen = onOpenEventHandler; 
+    ws.on('close', onCloseEventHandler); 
+    ws.on('error', onErrorEventHandler); 
+    ws.on('message', onMessageEventHandler); 
+    ws.on('open', onOpenEventHandler); 
 }
 
 function onCloseEventHandler(event) {
@@ -140,12 +138,16 @@ function onErrorEventHandler(error) {
     log("An error occured: " + error); 
 }
 
+/**
+ * Gets called whenever there's a new message on the connection. 
+ * @param {*} message a utf8 type message received from the connection 
+ */
 function onMessageEventHandler(message) {
     log("New message received from connection"); 
-    let json_msg = JSON.parse(message.data);
-    switch (json_msg.type){
+    let data = JSON.parse(message.utf8Data); 
+    switch (data.type){
         case "room_code":
-            log("New room code message received. Creating new room"); 
+           
             break; 
         default: 
             log("Unhandled message type: " + json_msg.type);
