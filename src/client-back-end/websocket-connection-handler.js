@@ -10,6 +10,7 @@ if (!hostname) {
 log("Hostname: " + hostname); 
 let server_port = 62000; 
 let web_socket_connection = null; 
+let current_room_code = null; 
 export let clientID = null; 
 
 function log(text){
@@ -29,8 +30,9 @@ export function sendToServer(message){
     }
     
     /* all messages sent to the server must have an id property (id of the client) */
-    if(!("id" in message) || !message.type){
+    if(!("id" in message) || !message.id){
         log("Error: message doesn't have ID property");
+        return
     }
 
     try{
@@ -49,22 +51,28 @@ function createIdentifier(){
     // ----- TASK  ------- 
 }
 
-export function webSocketConnect(){
+/**
+ * Connects the user to the room that was specified. This is done by creating a web 
+ * socket. Also assigns the appropriate handlers 
+ * @param {*} room_code the room code that was specified 
+ */
+export async function webSocketConnect(room_code){
     let serverURL; 
     let scheme = "ws"; 
-
+    current_room_code = room_code; 
     /* If the protocol is https you must use web socket secured */
+    //--------TASK------- 
+    //add extras on the scheme in order to do a web sockets secured 
     if(document.location.protocol === "https:"){
         scheme += "s";
     }
 
-    //--------TASK------- 
-    //add extra s on the scheme in order to do a web sockets secured 
     serverURL = scheme + "://" + hostname + ":" + server_port; 
     log("Server URL is: " + serverURL);
-    // accepts all unauthorized https sources. 
-    web_socket_connection = new WebSocket(serverURL, "json"); 
 
+    web_socket_connection = new WebSocket(serverURL, "json"); 
+    
+    //assing event handlers 
     web_socket_connection.onclose = onCloseEventHandler; 
     web_socket_connection.onerror = onErrorEventHandler; 
     web_socket_connection.onmessage = onMessageEventHandler; 
@@ -92,6 +100,14 @@ function onMessageEventHandler(message) {
         case "id": 
             log("Received new ID message from connection"); 
             clientID = msg.identifier; 
+
+            // sending the desired room code 
+            sendToServer({
+                id: clientID, 
+                type:"room_code", 
+                code: current_room_code
+            }); 
+
             break; 
         case "new-ice-candindate": 
             handleNewICECandidate(msg); 
@@ -103,11 +119,15 @@ function onMessageEventHandler(message) {
         case "offer":
             handleNewOffer(msg); 
             break; 
+        default: 
+            log("Unhandled message type: " + msg.type);
     }
 }
 
 function onOpenEventHandler(event) {
     log("New connection has been opened"); 
+
+    
     //TODO handle the corresponding html and css 
 
     // ----- TASK  ------- 
