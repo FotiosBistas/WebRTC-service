@@ -66,11 +66,11 @@ async function handleNegotiationNeededEvent(){
 
         log("Sending the offer to the remote peer")
         
-        sendToServer(JSON.stringify({
+        sendToServer({
             identifier: clientID, 
             type: "video-offer", 
             sdp: peer_connection.localDescription, 
-        }));
+        });
         
     }catch(error){
         log("error while handling negotiation needed", error);
@@ -136,7 +136,7 @@ function handleTrackEvent(event){
 }
 
 /**
- * Gets called using on ice candidate event. 
+ * Gets called when there's a new ice candidate. 
  * 
  * @param {*} event 
  */
@@ -147,11 +147,11 @@ function handleICECandidateEvent(event){
         //this also includes the candidates which string is " "
         //this means that the ICE negotiation has finished. s
 
-        sendToServer(JSON.stringify({
+        sendToServer({
             identifier: clientID, 
             type: "new-ice-candidate",
             candidate: event.candidate
-        }));
+        });
     }
 }
 
