@@ -10,7 +10,7 @@ if (!hostname) {
 log("Hostname: " + hostname); 
 let server_port = 62000; 
 let web_socket_connection = null; 
-
+export let clientID = null; 
 
 function log(text){
     var time = new Date();
@@ -22,10 +22,17 @@ function log(text){
  * @param {*} message 
  */
 export function sendToServer(message){
+    /* all messages sent to the server must have a type property */
     if (!("type" in message) || !message.type) {
         log("Error: message doesn't have type property")
         return 
     }
+    
+    /* all messages sent to the server must have an id property (id of the client) */
+    if(!("id" in message) || !message.type){
+        log("Error: message doesn't have ID property");
+    }
+
     try{
         let json_message = JSON.stringify(message); 
         log("Sending message: " + json_message + "to server"); 
@@ -46,7 +53,7 @@ export function webSocketConnect(){
     let serverURL; 
     let scheme = "ws"; 
 
-    
+    /* If the protocol is https you must use web socket secured */
     if(document.location.protocol === "https:"){
         scheme += "s";
     }
@@ -75,16 +82,22 @@ function onErrorEventHandler(error) {
 
 function onMessageEventHandler(message) {
     log("New message received from connection"); 
+
     let msg = JSON.parse(message.data);
+
     switch(msg.type){
         //TODO handle all the messages types  
 
         // ----- TASK  ------- 
+        case "id": 
+            log("Received new ID message from connection"); 
+            clientID = msg.identifier; 
+            break; 
         case "new-ice-candindate": 
             handleNewICECandidate(msg); 
             break; 
         case "offer-answer":
-            handleOfferAnswer
+            handleOfferAnswer(msg); 
             break; 
 
         case "offer":

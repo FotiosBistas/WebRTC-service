@@ -1,6 +1,6 @@
 
 import { media_functions } from "./media-handler.js";
-import {sendToServer} from "./websocket-connection-handler.js"
+import {sendToServer,clientID} from "./websocket-connection-handler.js"
 
 function log(text){
     var time = new Date();
@@ -52,13 +52,6 @@ export async function createPeerConnection(){
 async function handleNegotiationNeededEvent(){
     log("Handling negotiation");
     try{
-        
-
-
-        /* //add tracks into stream 
-        localStream.getTracks().forEach((track => {
-            connection.addTrack(track, localStream); 
-        })); */
 
         const offer = await connection.createOffer(); 
 
@@ -73,9 +66,11 @@ async function handleNegotiationNeededEvent(){
 
         log("Sending the offer to the remote peer")
         
-        sendToServer({
-            type: "video-offer"
-        });
+        sendToServer(JSON.stringify({
+            identifier: clientID, 
+            type: "video-offer", 
+            sdp: peer_connection.localDescription, 
+        }));
         
     }catch(error){
         log("error while handling negotiation needed", error);
@@ -152,10 +147,11 @@ function handleICECandidateEvent(event){
         //this also includes the candidates which string is " "
         //this means that the ICE negotiation has finished. s
 
-        sendToServer({
+        sendToServer(JSON.stringify({
+            identifier: clientID, 
             type: "new-ice-candidate",
-            candidate: "event.candidate"
-        });
+            candidate: event.candidate
+        }));
     }
 }
 

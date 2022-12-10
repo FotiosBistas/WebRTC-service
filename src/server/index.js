@@ -24,6 +24,7 @@ const https_options = {
 
 let https_server = null; 
 let web_socket_server = null;
+let nextID = 0;
 const port = 62000; 
 
 function log(text){
@@ -96,10 +97,19 @@ else{
     log("ERROR while trying to create websocket server")
 }
 
-web_socket_server.on('request', function(request) {
+web_socket_server.on('request',async function(request) {
     log("request received");
     let connection = request.accept("json", request.origin); 
     assignConnectionHandlers(connection); 
+    /* unique identifer for user */
+    connection.user_id = await connection_array_functions.createIdentifierForUser(++nextID); 
+    
+    connection_array_functions.addConnection(connection); 
+    
+    connection.send(JSON.stringify({
+        type: "id",
+        identifier: connection.user_id 
+    }))
 });
 
 
@@ -119,7 +129,6 @@ function assignConnectionHandlers(ws) {
 function onCloseEventHandler(event) {
     log("Connection has been closed with code: " 
     + event.code + " reason: " + event.reason + " was clean: " + event.wasClean); 
-
 }
 
 function onErrorEventHandler(error) {
@@ -127,7 +136,7 @@ function onErrorEventHandler(error) {
 }
 
 function onMessageEventHandler(message) {
-    log("New message received from connection" + message); 
+    log("New message received from connection"); 
     
 }
 
@@ -135,3 +144,5 @@ function onOpenEventHandler(event) {
     log("New connection has been opened"); 
 
 }
+
+
