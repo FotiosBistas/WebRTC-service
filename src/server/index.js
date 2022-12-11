@@ -156,6 +156,7 @@ function onMessageEventHandler(message) {
             //create room and add room code to connection 
             try{
                 room_handlers.createRoom(data.room_code);
+                room_handlers.addUserToRoom(data.room_code, this);
                 //IMPORTANT IOUOUOUOUOU add room code to connection 
                 this.room_code = data.room_code;  
             }catch(err){
@@ -165,7 +166,7 @@ function onMessageEventHandler(message) {
             break; 
         case "join_room_code":
             try{
-                room_handlers.addUserToRoom(data.room_code, data.id); 
+                room_handlers.addUserToRoom(data.room_code, this); 
             }catch(err){
                 log("Error(" + err + ")while trying to add user to room"); 
             }

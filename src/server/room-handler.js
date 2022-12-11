@@ -35,10 +35,10 @@ module.exports = {
     /**
      * Adds user to the specific room if it exists. 
      * @param {*} room_code the room code that the user is going to be added to 
-     * @param {*} clientID the user that is going to be added to the room 
+     * @param {*} connection the user connection that is going to be added to the room 
      * @throws {*} room doesn't exist error if room doesn't exist.  
     */
-    addUserToRoom: function(room_code, clientID){
+    addUserToRoom: function(room_code, connection){
         let room = this.doesRoomExists(room_code);
         if(!room){
             throw new Error("Room doesn't exist");   
