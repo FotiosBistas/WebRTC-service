@@ -103,6 +103,13 @@ function onMessageEventHandler(message) {
         case "id": 
             log("Received new ID message from connection"); 
             clientID = msg.identifier; 
+
+            sendToServer({
+                type: current_action + "_room_code", 
+                id: clientID, 
+                room_code: current_room_code 
+            });
+             
             break; 
         case "new-ice-candindate": 
             handleNewICECandidate(msg); 
@@ -133,11 +140,7 @@ function onOpenEventHandler(event) {
     */
     
     
-    sendToServer({
-        type: current_action + "_room_code", 
-        id: clientID, 
-        room_code: current_room_code 
-    }); 
+   
     
 
     //TODO handle the corresponding html and css 
