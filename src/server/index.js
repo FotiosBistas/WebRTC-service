@@ -103,15 +103,17 @@ web_socket_server.on('request',async function(request) {
     let connection = request.accept("json", request.origin); 
     assignConnectionHandlers(connection); 
     /* unique identifer for user */
-    connection.user_id = await connection_array_functions.createIdentifierForUser(++nextID); 
+    let user_id = await connection_array_functions.createIdentifierForUser(++nextID); 
 
     connection_array_functions.addConnection(connection); 
 
     //TODO temporary way to send data 
     connection.send(JSON.stringify({
         type: "id",
-        identifier: connection.user_id 
+        identifier: user_id 
     }))
+
+
 });
 
 
@@ -147,10 +149,21 @@ function onMessageEventHandler(message) {
     let data = JSON.parse(message.utf8Data); 
     switch (data.type){
         case "create_room_code": 
-            connection_array_functions.createRoom(data.room_code); 
+            //create room and add room code to connection 
+            try{
+                connection_array_functions.createRoom(data.room_code);
+                this.room_code = data.room_code;  
+            }catch(err){
+                log("Error(" + err + ")while trying to create new room"); 
+            }
+            
             break; 
         case "join_room_code":
-            connection_array_functions.addUserToRoom(data.room_code); 
+            try{
+                connection_array_functions.addUserToRoom(data.room_code); 
+            }catch(err){
+                log("Error(" + err + ")while trying to add user to room"); 
+            }
             break; 
         default: 
             log("Unhandled message type: " + json_msg.type);
