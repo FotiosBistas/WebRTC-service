@@ -43,7 +43,7 @@ module.exports = {
         if(!room){
             throw new Error("Room doesn't exist");   
         }
-        room.users.push(clientID);
+        room.users.push(connection);
         log("Added new user:" + clientID + " to room:" + JSON.stringify(room));
     },
 
