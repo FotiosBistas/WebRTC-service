@@ -152,6 +152,7 @@ function onMessageEventHandler(message) {
             //create room and add room code to connection 
             try{
                 connection_array_functions.createRoom(data.room_code);
+                //add room code to connection 
                 this.room_code = data.room_code;  
             }catch(err){
                 log("Error(" + err + ")while trying to create new room"); 
