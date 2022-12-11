@@ -1,4 +1,4 @@
-
+const send_data_handlers = require("./send-data.js");
 
 let active_connections = []; 
 
@@ -22,11 +22,29 @@ module.exports =  {
     },
 
     /**
-     * filter all non dead connections using connection.connected 
+     * filter all non dead connections using connection.connected. 
+     * Inform the other users using the room that a specific user's connection was terminated. 
      */
     removeConnection: function(){
         log("Removing connection from array");
-        active_connections = active_connections.filter((connection) => connection.connected);
+        let connection_room_code = null; 
+        let clientID = null; 
+        active_connections = active_connections.filter((connection) => {
+            if(!connection.connected){
+                connection_room_code = connection.room_code; 
+                clientID = connection.user_id; 
+            }else{
+                return connection.connected; 
+            }
+        });
+
+        let message = {
+            type: "user-left",
+            identifier: clientID, 
+            room_code: connection_room_code, 
+        }
+
+        send_data_handlers.sendToRoomParticipants(connection_room_code, message); 
     },  
     
     /**

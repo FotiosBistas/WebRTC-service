@@ -101,15 +101,22 @@ function onMessageEventHandler(message) {
 
         // ----- TASK  ------- 
         case "id": 
+            //user is initialized in the server 
             log("Received new ID message from connection"); 
             clientID = msg.identifier; 
-
+            //after that send immediately which room you want to join/create 
             sendToServer({
                 type: current_action + "_room_code", 
                 id: clientID, 
                 room_code: current_room_code 
             });
              
+            break; 
+        case "user-left": 
+            //some other user left the call 
+            log("Received user left message"); 
+            let left_user = msg.identifier; 
+            handleUserLeaving(left_user); 
             break; 
         case "new-ice-candindate": 
             handleNewICECandidate(msg); 
@@ -138,10 +145,6 @@ function onOpenEventHandler(event) {
         case "join_room_code":
             break; 
     */
-    
-    
-   
-    
 
     //TODO handle the corresponding html and css 
 
@@ -169,5 +172,9 @@ async function handleNewOffer(msg){
 }
 
 async function handleOfferAnswer(msg){
+
+}
+
+function handleUserLeaving(clientID){
 
 }
