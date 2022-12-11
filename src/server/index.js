@@ -10,7 +10,8 @@ var WebSocketServer = require('websocket').server;
 const https = require('https'); 
 const http = require('http'); 
 const fs = require('fs'); 
-const connection_array_functions = require('./connection-array-handler.js'); 
+const active_connection_handlers = require('./connection-array-handler.js'); 
+const room_handlers = require('./room-handler.js'); 
 const { join } = require('path');
 
 const private_key = './privateKey.key'
@@ -103,9 +104,12 @@ web_socket_server.on('request',async function(request) {
     let connection = request.accept("json", request.origin); 
     assignConnectionHandlers(connection); 
     /* unique identifer for user */
-    let user_id = await connection_array_functions.createIdentifierForUser(++nextID); 
+    let user_id = await active_connection_handlers.createIdentifierForUser(++nextID); 
 
-    connection_array_functions.addConnection(connection); 
+    //IMPORTANT IOUOUOUOUOU add user id to connection 
+    connection.user_id = user_id; 
+
+    active_connection_handlers.addConnection(connection); 
 
     //TODO temporary way to send data 
     connection.send(JSON.stringify({
@@ -133,7 +137,7 @@ function assignConnectionHandlers(ws) {
 function onCloseEventHandler(event) {
     log("Connection has been closed with code: " 
     + event.code + " reason: " + event.reason + " was clean: " + event.wasClean); 
-    connection_array_functions.removeConnection(); 
+    active_connection_handlers.removeConnection(); 
 }
 
 function onErrorEventHandler(error) {
@@ -151,7 +155,7 @@ function onMessageEventHandler(message) {
         case "create_room_code": 
             //create room and add room code to connection 
             try{
-                connection_array_functions.createRoom(data.room_code);
+                room_handlers.createRoom(data.room_code);
                 //IMPORTANT IOUOUOUOUOU add room code to connection 
                 this.room_code = data.room_code;  
             }catch(err){
@@ -161,7 +165,7 @@ function onMessageEventHandler(message) {
             break; 
         case "join_room_code":
             try{
-                connection_array_functions.addUserToRoom(data.room_code, data.id); 
+                room_handlers.addUserToRoom(data.room_code, data.id); 
             }catch(err){
                 log("Error(" + err + ")while trying to add user to room"); 
             }
