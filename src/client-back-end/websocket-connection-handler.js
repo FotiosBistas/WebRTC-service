@@ -12,6 +12,7 @@ let server_port = 62000;
 let web_socket_connection = null; 
 let current_room_code = null; 
 export let clientID = null; 
+let current_action = null; 
 
 function log(text){
     var time = new Date();
@@ -20,7 +21,7 @@ function log(text){
 
 /**
  * Turns the message into JSON and sends it over the server. 
- * @param {*} message 
+ * @param {*} message message that must follow certain types that are enforced by this function
  */
 export function sendToServer(message){
     /* all messages sent to the server must have a type property */
@@ -35,6 +36,12 @@ export function sendToServer(message){
         return
     }
 
+    /* all messages sent to the server must have a room code property */
+    if((!("room_code") in message) || !message.room_code){
+        log("Error: message doesn't have room code property");
+        return 
+    }
+
     try{
         let json_message = JSON.stringify(message); 
         log("Sending message: " + json_message + "to server"); 
@@ -45,21 +52,17 @@ export function sendToServer(message){
 
 }
 
-function createIdentifier(){
-    //TODO create a unique identifier so we can handle connections in the server 
-
-    // ----- TASK  ------- 
-}
-
 /**
  * Connects the user to the room that was specified. This is done by creating a web 
  * socket. Also assigns the appropriate handlers 
  * @param {*} room_code the room code that was specified 
+ * @param {*} action create or join a room 
  */
-export async function webSocketConnect(room_code){
+export async function webSocketConnect(room_code, action){
     let serverURL; 
     let scheme = "ws"; 
     current_room_code = room_code; 
+    current_action = action; 
     /* If the protocol is https you must use web socket secured */
     //--------TASK------- 
     //add extras on the scheme in order to do a web sockets secured 
@@ -100,14 +103,6 @@ function onMessageEventHandler(message) {
         case "id": 
             log("Received new ID message from connection"); 
             clientID = msg.identifier; 
-
-            // sending the desired room code 
-            sendToServer({
-                id: clientID, 
-                type:"room_code", 
-                code: current_room_code
-            }); 
-
             break; 
         case "new-ice-candindate": 
             handleNewICECandidate(msg); 
@@ -127,7 +122,24 @@ function onMessageEventHandler(message) {
 function onOpenEventHandler(event) {
     log("New connection has been opened"); 
 
+    //send room code to server 
+    //client id is not yet defined 
+    //REMINDER: this is checked by the server: 
+    /* 
+        case "create_room_code": 
+            break; 
+        case "join_room_code":
+            break; 
+    */
     
+    
+    sendToServer({
+        type: current_action + "_room_code", 
+        id: clientID, 
+        room_code: current_room_code 
+    }); 
+    
+
     //TODO handle the corresponding html and css 
 
     // ----- TASK  ------- 
