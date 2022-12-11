@@ -23,10 +23,13 @@ module.exports = {
             throw new Error("Room already exists"); 
         }
         //users are added on the connection based on the room code 
-        rooms.push({
+        let new_room = {
             code: room_code,
             users: [], 
-        }); 
+        }
+        rooms.push(new_room); 
+
+        log("Created new room: " + JSON.stringify(new_room));
     },
 
     /**
@@ -41,6 +44,7 @@ module.exports = {
             throw new Error("Room doesn't exist");   
         }
         room.users.push(clientID);
+        log("Added new user:" + clientID + " to room:" + JSON.stringify(room));
     },
 
     /**
