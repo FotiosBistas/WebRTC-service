@@ -104,7 +104,6 @@ web_socket_server.on('request',async function(request) {
     assignConnectionHandlers(connection); 
     /* unique identifer for user */
     connection.user_id = await connection_array_functions.createIdentifierForUser(++nextID); 
-    connection.user_id = connection.user_id;  
 
     connection_array_functions.addConnection(connection); 
 
@@ -132,6 +131,7 @@ function assignConnectionHandlers(ws) {
 function onCloseEventHandler(event) {
     log("Connection has been closed with code: " 
     + event.code + " reason: " + event.reason + " was clean: " + event.wasClean); 
+    connection_array_functions.removeConnection(); 
 }
 
 function onErrorEventHandler(error) {
@@ -146,8 +146,11 @@ function onMessageEventHandler(message) {
     log("New message received from connection"); 
     let data = JSON.parse(message.utf8Data); 
     switch (data.type){
-        case "room_code":
-           
+        case "create_room_code": 
+            connection_array_functions.createRoom(data.room_code); 
+            break; 
+        case "join_room_code":
+            connection_array_functions.addUserToRoom(data.room_code); 
             break; 
         default: 
             log("Unhandled message type: " + json_msg.type);
