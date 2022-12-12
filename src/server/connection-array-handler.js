@@ -1,4 +1,5 @@
 const send_data_handlers = require("./send-data.js");
+const room_handlers = require("./room-handler.js");
 
 let active_connections = []; 
 
@@ -29,6 +30,8 @@ module.exports =  {
         log("Removing connection from array");
         let connection_room_code = null; 
         let clientID = null; 
+
+        //remove the connection with 
         active_connections = active_connections.filter((connection) => {
             if(!connection.connected){
                 connection_room_code = connection.room_code; 
@@ -37,6 +40,8 @@ module.exports =  {
                 return connection.connected; 
             }
         });
+
+        room_handlers.removeConnectionFromRoom(connection_room_code, clientID); 
 
         let message = {
             type: "user-left",
@@ -64,21 +69,6 @@ module.exports =  {
         return connection; 
     },
 
-    /**
-     * Finds all connections with the specified room code. 
-     * @param {*} room_code the room code that we want to receive the connections for
-     * @returns the connections (or connection) with the specified room code
-     * @throws {*} connection with the specified room code does not exist error
-     */
-    getRoomCodeConnections: function(room_code){
-        let connections = active_connections.filter((connection) => connection.room_code == room_code);
-
-        if(!connections){
-            throw new Error("connection with the specified room code does not exist");
-        }
-
-        return connections;  
-    },
     
     /**
      * Creates a unique identifier for the user based on the sha-256 algorithm. 
