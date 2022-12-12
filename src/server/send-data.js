@@ -39,6 +39,10 @@ module.exports = {
             throw err; 
         }
 
+        if(!(current_room_connections.length)){
+            throw new Error("no connection to send the data to"); 
+        }
+
         current_room_connections.forEach((connection) => {
             connection.send(JSON.stringify(message));
         });

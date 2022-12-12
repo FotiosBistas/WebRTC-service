@@ -41,15 +41,23 @@ module.exports =  {
             }
         });
 
-        room_handlers.removeConnectionFromRoom(connection_room_code, clientID); 
+        try{
+            room_handlers.removeConnectionFromRoom(connection_room_code, clientID); 
+        }catch(err){
+            throw err; 
+        }
 
         let message = {
             type: "user-left",
-            identifier: clientID, 
+            identifier: clientID,
             room_code: connection_room_code, 
         }
 
-        send_data_handlers.sendToRoomParticipants(connection_room_code, message); 
+        try{
+            send_data_handlers.sendToRoomParticipants(connection_room_code, message); 
+        }catch(err){
+            throw err; 
+        }
     },  
     
     /**

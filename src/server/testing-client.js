@@ -100,6 +100,10 @@ function onMessageEventHandler(message){
             });
              
             break; 
+        case "user-left": 
+            log("Received user left message"); 
+            break; 
+
         default: 
             log("Unhanlded message type"); 
     }

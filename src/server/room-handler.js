@@ -74,15 +74,19 @@ module.exports = {
         let current_room = null ,current_room_connections = null; 
         try{
             ({current_room,current_room_connections} = this.getConnectionsFromRoom(room_code));
-        }
-        catch(err){
+        }catch(err){
             throw err; 
         }
+        
         current_room_connections = current_room_connections.filter((connection) => {
             return clientID !== connection.user_id; 
         }); 
 
         current_room.users = current_room_connections; 
+        //if length is equal to zero means no more users are using the room 
+        if(!(current_room.users.length)){
+            this.removeRoom(room_code); 
+        }
     },
 
     /**
@@ -90,7 +94,7 @@ module.exports = {
      * @param {*} room_code 
      */
     removeRoom: function(room_code){
-        rooms = rooms.filter((room) => room_code !== room.room_code); 
+        rooms = rooms.filter((room) => room_code !== room.code); 
     },
 
     /**

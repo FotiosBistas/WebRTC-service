@@ -137,7 +137,11 @@ function assignConnectionHandlers(ws) {
 function onCloseEventHandler(event) {
     log("Connection has been closed with code: " 
     + event.code + " reason: " + event.reason + " was clean: " + event.wasClean); 
-    active_connection_handlers.removeConnection(); 
+    try{
+        active_connection_handlers.removeConnection(); 
+    }catch(err){
+        log("Error:(" + err + ") while trying to remove connection");
+    }
 }
 
 function onErrorEventHandler(error) {
