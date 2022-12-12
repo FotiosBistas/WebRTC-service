@@ -155,10 +155,7 @@ function onMessageEventHandler(message) {
         case "create_room_code": 
             //create room and add room code to connection 
             try{
-                room_handlers.createRoom(data.room_code);
-                room_handlers.addUserToRoom(data.room_code, this);
-                //IMPORTANT IOUOUOUOUOU add room code to connection 
-                this.room_code = data.room_code;  
+                room_handlers.createRoom(data.room_code, this);
             }catch(err){
                 log("Error(" + err + ")while trying to create new room"); 
             }
