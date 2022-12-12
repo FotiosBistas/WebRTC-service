@@ -10,7 +10,7 @@ if (!hostname) {
 log("Hostname: " + hostname); 
 let server_port = 62000; 
 let web_socket_connection = null; 
-let current_room_code = null; 
+export let current_room_code = null; 
 export let clientID = null; 
 let current_action = null; 
 
@@ -21,6 +21,14 @@ function log(text){
 
 /**
  * Turns the message into JSON and sends it over the server. 
+ * The format of the message should be: 
+ * 
+ * {
+ *  type: given_type, 
+ *  id: clientID, 
+ *  room_code: current_room_code, 
+ *  ...
+ * }
  * @param {*} message message that must follow certain types that are enforced by this function
  */
 export function sendToServer(message){

@@ -12,7 +12,8 @@ const http = require('http');
 const fs = require('fs'); 
 const active_connection_handlers = require('./connection-array-handler.js'); 
 const room_handlers = require('./room-handler.js'); 
-const { join } = require('path');
+const send_data = require('./send-data.js'); 
+
 
 const private_key = './privateKey.key'
 const certificate = './certificate.crt' 
@@ -172,6 +173,12 @@ function onMessageEventHandler(message) {
                 log("Error(" + err + ")while trying to add user to room"); 
             }
             break; 
+        case "offer": 
+            try{
+                send_data.sendToRoomParticipants(data.room_code, data);
+            }catch(err){
+                log("Error(" + err + ")while trying to send offer to room participants");
+            }
         default: 
             log("Unhandled message type: " + json_msg.type);
     }

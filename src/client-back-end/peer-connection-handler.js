@@ -1,6 +1,6 @@
 
 import { media_functions } from "./media-handler.js";
-import {sendToServer,clientID} from "./websocket-connection-handler.js"
+import {sendToServer,clientID, current_room_code} from "./websocket-connection-handler.js"
 
 function log(text){
     var time = new Date();
@@ -11,6 +11,8 @@ let media_config = {
     video: true, 
     audio: true, 
 }
+
+let remote_streams = []; 
 
 const default_configuration = {
     iceServers: [
@@ -53,13 +55,13 @@ async function handleNegotiationNeededEvent(){
     log("Handling negotiation");
     try{
 
-        const offer = await connection.createOffer(); 
-
         //Verify there is no ongoing exchange of offer and answer underway.
         if (peer_connection.signalingState != "stable") {
             log("There is an ongoing exchange of offer and answer"); 
             return; 
         }
+
+        const offer = await connection.createOffer(); 
 
         log("Setting local description with offer: " + offer); 
         await connection.setLocalDescription(offer);
@@ -67,8 +69,9 @@ async function handleNegotiationNeededEvent(){
         log("Sending the offer to the remote peer")
         
         sendToServer({
-            identifier: clientID, 
-            type: "video-offer", 
+            id: clientID, 
+            type: "offer", 
+            room_code: current_room_code, 
             sdp: peer_connection.localDescription, 
         });
         
@@ -127,7 +130,7 @@ function closeConnection(){
  */
 function handleTrackEvent(event){
     log("Handling track event");
-    event.stream[0].getTrack().forEach((track) =>{
+    event.streams[0].getTrack().forEach((track) =>{
         //TODO add tracks to the remote stream(s) and handle the html/css 
 
         // ----- TASK  -------
@@ -148,7 +151,8 @@ function handleICECandidateEvent(event){
         //this means that the ICE negotiation has finished. s
 
         sendToServer({
-            identifier: clientID, 
+            id: clientID, 
+            room_code: current_room_code, 
             type: "new-ice-candidate",
             candidate: event.candidate
         });

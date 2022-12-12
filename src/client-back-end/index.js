@@ -18,6 +18,8 @@ create_room_button.onclick = function() {
 }   */
 
 
+
+
 webSocketConnect(345,"join "); 
 
 /* let camera_button = document.getElementById("camera-button");

@@ -1,11 +1,21 @@
 .chatandcall{
     display: grid; 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: min-content;
+    background-color: bisque;
+    grid-template-areas: 
+    "video video video chat"
+    "controls controls controls controls";
 }
 
-.video-call{
+.streams{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(500px,1fr));
+    border: solid; 
+    border-color: black;
+    margin: 0 auto; 
+    background-color: #ff009d;
+    grid-area: video;
 }
 
 .stream-controls {
@@ -13,6 +23,19 @@
     flex-direction: row;
     list-style: none;
     background-color: grey;
+    grid-area: controls;
+}
+
+/* this will get added dynamically when there's a new stream */
+.stream_container{
+    max-height: 100%; /*  maximum height is the maximun height of streams div*/
+    border: 1em solid black; 
+    background-color: #6aff00;
+}
+
+.video_player{
+    max-height: 100%;
+    max-width: 100%;
 }
 
 .stream-controls li:hover{
@@ -20,7 +43,15 @@
 }
 
 .chat{
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 10em;
     background-color: aliceblue;
+    grid-area: chat;
+    height: 30em;
+    overflow-y: auto; /* adds scrollbar effect */
+    border: solid; 
+    border-color: black;
 }
 
 

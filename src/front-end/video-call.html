@@ -13,17 +13,32 @@
         <main>
             <!-- TODO: find the method that adds video when event happens -->
             <div class="chatandcall">
-                <div class="chat">
-                </div>
+
                 <div class="video-call"> 
-                    <div class="streams"></div>
-                    <ul class="stream-controls">
-                        <li><button type="button" id="disconnect"> <img id="disconnect-image" src="../images/end-call-image.png"></button></li>
-                        <li><button type="button" id="camera-button"><img id="camera-image" src="../images/camera-button.png"></button></li>
-                        <li><button type="button" id="mic-button"><img id="microphone-image" src="../images/microphone-button.png"></button></li>
-                        <li><button type="button" id="chat-button"><img id="chat-image" src="../images/chat-button.png"></button><li>
-                    </ul>
+                    
+                    <div class="streams">
+                        <!-- adding .stream_containers dynamically -->
+                    </div>
+
+                    
+
                 </div>
+
+                <ul class="stream-controls">
+                    <li><button type="button" id="disconnect"> <img id="disconnect-image" src="../images/end-call-image.png"></button></li>
+                    <li><button type="button" id="camera-button"><img id="camera-image" src="../images/camera-button.png"></button></li>
+                    <li><button type="button" id="mic-button"><img id="microphone-image" src="../images/microphone-button.png"></button></li>
+                    <li><button type="button" id="chat-button"><img id="chat-image" src="../images/chat-button.png"></button><li>
+                </ul>
+
+                <div class="chat">
+                    <div class="chat-title">
+
+                    </div>
+
+                    <div class="chat-input"></div>
+                </div>
+                
             </div>
         </main>
     </body>
