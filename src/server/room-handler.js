@@ -1,3 +1,4 @@
+
 let rooms = []; 
 
 function log(text){
@@ -9,12 +10,14 @@ function log(text){
  * Room handlers. 
  */
 module.exports = {
+
     /**
-     * Creates a new room with the code given. 
+     * Creates a new room with the code given. Also add the creator to the room's connection list. 
      * @param {*} room_code the room code that the new room will have 
+     * @param {*} connection the connection of the user that will create the room 
      * @throws {*} throws room already exists if the room already exists.  
     */
-    createRoom: function(room_code){
+    createRoom: function(room_code, connection){
         log("Creating new room"); 
 
         let room = this.doesRoomExists(room_code);
@@ -22,14 +25,72 @@ module.exports = {
         if(room){
             throw new Error("Room already exists"); 
         }
+
+        //IMPORTANT IOUOUOUOUOU add room code to connection 
+        connection.room_code = room_code;  
+
         //users are added on the connection based on the room code 
         let new_room = {
             code: room_code,
             users: [], 
         }
-        rooms.push(new_room); 
 
-        log("Created new room: " + JSON.stringify(new_room));
+        //the user that created the room should be given elevated privilages for the connection 
+        connection.creator = true; 
+        //push the connection to the active users of the room 
+        new_room.users.push(connection); 
+
+        rooms.push(new_room); 
+    },
+
+
+    /**
+     * Returns all connections with the specified room code. 
+     * @param {*} room_code the room code that we want to receive the connections for
+     * @returns the room and the connections (or connection) with the specified room code. These are encapsulated in an object {current_room: room, current_room_connections: room.users}
+     * @throws {*} connection with the specified room code does not exist error
+     */
+    getConnectionsFromRoom: function(room_code){
+        let room = this.doesRoomExists(room_code); 
+
+        if(!room){
+            throw new Error("Room doesn't exist"); 
+        }
+        
+        return {
+            current_room: room,
+            current_room_connections: room.users,
+        }; 
+    },
+
+    /**
+     * Removes the client connection based on the roomcode and the client ID. This can be done not only when a connection terminates but 
+     * when a privileged user wants to remove a user from the connection(reminder creator connections have the creator field set to true). 
+     * @param {*} room_code the room code to find the client connection 
+     * @param {*} clientID the client ID for find the corresponding connection we want to remove 
+     * @throws {*} the error that getconnectionsFromRoom throws 
+     */
+    removeConnectionFromRoom: function(room_code, clientID){
+        let current_room = null ,current_room_connections = null; 
+        try{
+            ({current_room,current_room_connections} = this.getConnectionsFromRoom(room_code));
+        }
+        catch(err){
+            throw err; 
+        }
+        current_room_connections = current_room_connections.filter((connection) => {
+            return clientID !== connection.user_id; 
+        }); 
+
+        current_room.users = current_room_connections; 
+    },
+
+    /**
+     * Removes a room from the active rooms. 
+     * @param {*} room_code 
+     */
+    removeRoom: function(room_code){
+        rooms = rooms.filter((room) => room_code !== room.room_code); 
     },
 
     /**
@@ -43,8 +104,12 @@ module.exports = {
         if(!room){
             throw new Error("Room doesn't exist");   
         }
+        //IMPORTANT IOUOUOUIOIOU add room code to connection 
+        connection.room_code = room_code;
+        connection.creator = false; 
+        //connection should have a user id accompanied with it from the initiation phase of the connection. 
         room.users.push(connection);
-        log("Added new user:" + clientID + " to room:" + JSON.stringify(room));
+        log("Added new user:" + connection.user_id + " to room:" + room.code);
     },
 
     /**
@@ -53,7 +118,7 @@ module.exports = {
      * @returns {*} returns false if the room doesn't exist. Return the room OBJECT if the room exists. 
      */
     doesRoomExists: function(room_code){
-        let room = rooms.find((room) => room.code == room_code);
+        let room = rooms.find((room) => room.code === room_code);
 
         if(!room){
             return false; 
