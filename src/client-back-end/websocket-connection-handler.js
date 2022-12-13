@@ -1,6 +1,7 @@
 "use strict"
 
-import {peer_connection} from "./peer-connection-handler.js"
+import { media_functions } from "./media-handler.js";
+import {createPeerConnection, peer_connection, local_stream, remote_streams} from "./peer-connection-handler.js"
 
 let hostname = window.location.hostname;
 if (!hostname) {
@@ -132,7 +133,9 @@ function onMessageEventHandler(message) {
         case "offer-answer":
             handleOfferAnswer(msg); 
             break; 
-
+        case "error": 
+            handleErrorReceivedByServer(msg);
+            break; 
         case "offer":
             handleNewOffer(msg); 
             break; 
@@ -143,16 +146,6 @@ function onMessageEventHandler(message) {
 
 function onOpenEventHandler(event) {
     log("New connection has been opened"); 
-
-    //send room code to server 
-    //client id is not yet defined 
-    //REMINDER: this is checked by the server: 
-    /* 
-        case "create_room_code": 
-            break; 
-        case "join_room_code":
-            break; 
-    */
 
     //TODO handle the corresponding html and css 
 
@@ -175,14 +168,80 @@ async function handleNewICECandidate(message){
     }
 }
 
+/**
+ * Receives a new offer from the remote peer through the signalling server. 
+ * Creates the peer connection if it's not already created. 
+ * 
+ * @param {*} msg this message should have the following structure: 
+ * 
+ * {id:clientID, type: "offer",  room_code: current_room_code, sdp: peer_connection.localDescription,} 
+ */
 async function handleNewOffer(msg){
+
+    //if there isn't a peer connection underway it must be created 
+    if(!peer_connection){
+        createPeerConnection(); 
+    }
+
+
+    //create a new description from the sdp received 
+    let new_remote_description = new RTCSessionDescription(msg.sdp);
+ 
+
     
+    log("Setting remote description because new offer was received");
+    try{
+        await peer_connection.setRemoteDescription(new_remote_description);
+    }catch(err){
+        log("Error:(" + err + ") while trying to set remote description");
+    }
+
+    if(!local_stream){
+        try{
+            local_stream = media_functions.getMedia({
+                audio: true, 
+                video: true, 
+            }); 
+        }catch(err){
+            media_functions.handleGetUserMediaError(err); 
+        }
+    }
+
+    //create answer and set local description 
+    try{
+        let answer = await peer_connection.createAnswer(); 
+        await peer_connection.setLocalDescription(answer);
+    }catch(err){
+        log("Error:(" + err + ") while trying to create answer");
+    }
+
+    sendToServer({
+        room_code: current_room_code, 
+        type: "offer-answer", 
+        id: clientID, 
+        sdp: peer_connection.localDescription 
+    })
 }
 
+/**
+ * Receives an offer answer message from the remote peer through the signalling server. 
+ * @param {*} msg 
+ */
 async function handleOfferAnswer(msg){
 
+    //create a new description from the sdp received 
+    let new_remote_description = new RTCSessionDescription(msg.sdp);
+    try{
+        await peer_connection.setRemoteDescription(desc);
+    }catch(err){
+        log("Error:(" + err + ") while trying to set remote description");
+    }
 }
 
 function handleUserLeaving(clientID){
 
+}
+
+function handleErrorReceivedByServer(error){
+    alert(error.error_data);
 }

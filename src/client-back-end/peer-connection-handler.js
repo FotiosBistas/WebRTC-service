@@ -7,12 +7,16 @@ function log(text){
     console.log("[" + time.toLocaleTimeString() + "] " + text);
 }
 
+//types of media we want permission from user 
 let media_config = {
     video: true, 
     audio: true, 
 }
 
-let remote_streams = []; 
+//remote streams that will come to conneciton 
+export let remote_streams = []; 
+//local stream 
+export let local_stream = null; 
 
 const default_configuration = {
     iceServers: [
@@ -31,7 +35,7 @@ const default_configuration = {
 export let peer_connection = null; 
 
 /**
- * Creates a RTCPeerConnection 
+ * Creates a RTCPeerConnection assigning the result. 
  * @returns the peer connection created with the appropriate handlers 
  */
 export async function createPeerConnection(){
@@ -134,7 +138,7 @@ function handleTrackEvent(event){
         //TODO add tracks to the remote stream(s) and handle the html/css 
 
         // ----- TASK  -------
-        peer_connection.addTrack(track,); 
+        peer_connection.addTrack(track); 
     });
 }
 

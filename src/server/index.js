@@ -181,6 +181,8 @@ function onMessageEventHandler(message) {
                 }); 
             }
             break; 
+        case "offer-answer":
+        case "new-ice-candidate":
         case "offer": 
             try{
                 send_data.sendToRoomParticipants(data.room_code, data);
