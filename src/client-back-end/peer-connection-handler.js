@@ -102,20 +102,33 @@ function handleConnectionStateChangeEvent(event){
 }
 
 function closeConnection(){
+    let local_video = document.getElementById("local_video");  
+    if(peer_connection){
+        log("Closing the peer connection");
+        //avoid having additional events coming to the connection 
+        peer_connection.onconnectionstatechange = null;
+        peer_connection.onicecandidate = null;
+        peer_connection.onicegatheringstatechange = null; 
+        peer_connection.ontrack = null;
+        peer_connection.onnegotiationneeded = null; 
+        peer_connection.oniceconnectionstatechange = null;
 
-    //avoid having additional events coming to the connection 
-    peer_connection.onconnectionstatechange = null;
-    peer_connection.onicecandidate = null;
-    peer_connection.onicegatheringstatechange = null; 
-    peer_connection.ontrack = null;
-    peer_connection.onnegotiationneeded = null; 
-    peer_connection.oniceconnectionstatechange = null;
+        //stopping the transceivers which are pairings of RTCRtp senders and receivers
+        //these essentially send the media stream tracks over the connection. 
+        peer_connection.getTransceivers().forEach((transceiver) => transceiver.stop())
+        
+        if(local_video.srcObject){
+            local_stream.srcObject.getTracks().forEach((track) => track.stop()); 
+        }
 
-    //TODO handle the html,css to end the connection 
+        peer_connection.close();
+        peer_connection = null; 
+        local_stream = null; 
 
-    // ----- TASK  ------- 
+        //TODO handle the html,css to end the connection return back to room page
 
-    peer_connection.close(); 
+        // ----- TASK  ------- 
+    } 
 }
 
 
