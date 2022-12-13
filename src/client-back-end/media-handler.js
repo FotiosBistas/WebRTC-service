@@ -17,7 +17,7 @@ export let media_functions = {
             stream = await navigator.mediaDevices.getUserMedia(constraints);
             return Promise.resolve(stream); 
         }catch(err){
-            console.log("Error in get media", err.name);     
+            return Promise.reject(err);    
         }
         
     },
@@ -30,7 +30,7 @@ export let media_functions = {
             let devices = await navigator.mediaDevices.enumerateDevices(); 
             return Promise.resolve(devices); 
         }catch(err){
-            console.log("Error in get Devices",err.name); 
+            return Promise.reject(err);
         }
     },
 
@@ -48,6 +48,23 @@ export let media_functions = {
                 log("adding track to connection: " + track); 
                 connection.addTrack(track,stream); 
             });
+        }
+    },
+
+    handleGetUserMediaError: function(error){
+        log("Error:(" + error + ") while getting media stream");
+        switch(error.name) {
+            case "NotFoundError":
+            alert("Unable to open your call because no camera and/or microphone" +
+                    "were found.");
+            break;
+            case "SecurityError":
+            case "PermissionDeniedError":
+            // Do nothing; this is the same as the user canceling the call.
+            break;
+            default:
+            alert("Error opening your camera and/or microphone: " + error.message);
+            break;
         }
     }
 }
