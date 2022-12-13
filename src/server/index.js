@@ -165,7 +165,7 @@ function onMessageEventHandler(message) {
                 log("Error(" + err + ")while trying to create new room"); 
                 send_data.sendToOneUser(this, {
                     type: "error", 
-                    error_data:err, 
+                    error_data:err.message, 
                 }); 
             }
             
@@ -177,7 +177,7 @@ function onMessageEventHandler(message) {
                 log("Error(" + err + ")while trying to add user to room"); 
                 send_data.sendToOneUser(this, {
                     type: "error", 
-                    error_data:err, 
+                    error_data:err.message, 
                 }); 
             }
             break; 
@@ -188,7 +188,7 @@ function onMessageEventHandler(message) {
                 log("Error(" + err + ")while trying to send offer to room participants");
                 send_data.sendToOneUser(this, {
                     type: "error", 
-                    error_data:err, 
+                    error_data:err.message, 
                 });
             }
         default: 
