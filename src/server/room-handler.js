@@ -41,6 +41,7 @@ module.exports = {
         new_room.users.push(connection); 
 
         rooms.push(new_room); 
+        log("Successfully created new room");
     },
 
 
@@ -56,7 +57,7 @@ module.exports = {
         if(!room){
             throw new Error("Room doesn't exist"); 
         }
-        
+        log("Returning connections from room");
         return {
             current_room: room,
             current_room_connections: room.users,
@@ -87,6 +88,7 @@ module.exports = {
         if(!(current_room.users.length)){
             this.removeRoom(room_code); 
         }
+        log("Removed connection from room");
     },
 
     /**
@@ -95,6 +97,7 @@ module.exports = {
      */
     removeRoom: function(room_code){
         rooms = rooms.filter((room) => room_code !== room.code); 
+        log("Removed room from active rooms");
     },
 
     /**

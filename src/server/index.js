@@ -192,7 +192,7 @@ function onMessageEventHandler(message) {
                 });
             }
         default: 
-            log("Unhandled message type: " + json_msg.type);
+            log("Unhandled message type: " + data.type);
     }
 
 }

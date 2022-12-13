@@ -1,5 +1,8 @@
 const room_handlers = require('./room-handler.js');
-
+function log(text){
+    var time = new Date();
+    console.log("[" + time.toLocaleTimeString() + "] " + " " + text);
+}
 /**
  * This module will handle all the sending to user related functionality 
  */
@@ -12,6 +15,7 @@ module.exports = {
      * @throws {*} any error caught by the underlying active connection handler functions 
      */
     sendToOneUser: function(connection, message){
+        log("Sending data to specific user");
         connection.send(JSON.stringify(message)); 
     },
 
@@ -33,6 +37,8 @@ module.exports = {
         if(!(current_room_connections.length)){
             throw new Error("no connection to send the data to"); 
         }
+
+        log("Sending data to room participants");
 
         current_room_connections.forEach((connection) => {
             connection.send(JSON.stringify(message));
