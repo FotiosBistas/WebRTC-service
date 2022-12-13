@@ -163,6 +163,10 @@ function onMessageEventHandler(message) {
                 room_handlers.createRoom(data.room_code, this);
             }catch(err){
                 log("Error(" + err + ")while trying to create new room"); 
+                send_data.sendToOneUser(this, {
+                    type: "error", 
+                    error_data:err, 
+                }); 
             }
             
             break; 
@@ -171,6 +175,10 @@ function onMessageEventHandler(message) {
                 room_handlers.addUserToRoom(data.room_code, this); 
             }catch(err){
                 log("Error(" + err + ")while trying to add user to room"); 
+                send_data.sendToOneUser(this, {
+                    type: "error", 
+                    error_data:err, 
+                }); 
             }
             break; 
         case "offer": 
@@ -178,6 +186,10 @@ function onMessageEventHandler(message) {
                 send_data.sendToRoomParticipants(data.room_code, data);
             }catch(err){
                 log("Error(" + err + ")while trying to send offer to room participants");
+                send_data.sendToOneUser(this, {
+                    type: "error", 
+                    error_data:err, 
+                });
             }
         default: 
             log("Unhandled message type: " + json_msg.type);

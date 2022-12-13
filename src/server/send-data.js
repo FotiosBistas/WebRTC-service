@@ -1,5 +1,4 @@
 const room_handlers = require('./room-handler.js');
-const active_connection_handlers = require("./connection-array-handler.js"); 
 
 /**
  * This module will handle all the sending to user related functionality 
@@ -12,15 +11,7 @@ module.exports = {
      * @param {*} message 
      * @throws {*} any error caught by the underlying active connection handler functions 
      */
-    sendToOneUser: function(clientID, message){
-        let connection = null; 
-
-        try{
-            connection = active_connection_handlers.getClientIDConnection(clientID); 
-        }catch(err){
-            throw err; 
-        }
-
+    sendToOneUser: function(connection, message){
         connection.send(JSON.stringify(message)); 
     },
 

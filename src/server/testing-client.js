@@ -103,7 +103,9 @@ function onMessageEventHandler(message){
         case "user-left": 
             log("Received user left message"); 
             break; 
-
+        case "error": 
+            log("Received error message");
+            break; 
         default: 
             log("Unhanlded message type"); 
     }
