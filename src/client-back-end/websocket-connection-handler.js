@@ -1,7 +1,7 @@
 "use strict"
 
 import { media_functions } from "./media-handler.js";
-import {createPeerConnection, peer_connection, local_stream, remote_streams} from "./peer-connection-handler.js"
+import {createPeerConnection, peer_connection, closePeerConnection, local_stream, remote_streams} from "./peer-connection-handler.js"
 
 let hostname = window.location.hostname;
 if (!hostname) {
@@ -67,7 +67,7 @@ export function sendToServer(message){
  * @param {*} room_code the room code that was specified 
  * @param {*} action create or join a room 
  */
-export async function webSocketConnect(room_code, action){
+export function webSocketConnect(room_code, action){
     let serverURL; 
     let scheme = "ws"; 
     current_room_code = room_code; 
@@ -93,7 +93,8 @@ export async function webSocketConnect(room_code, action){
 
 function onCloseEventHandler(event) {
     log("Connection has been closed with code: " + event.code + " reason: " + event.reason + " was clean: " + event.wasClean); 
-
+    closeWebSocketConnection(); 
+    closePeerConnection();
 }
 
 function onErrorEventHandler(error) {
@@ -239,9 +240,26 @@ async function handleOfferAnswer(msg){
 }
 
 function handleUserLeaving(clientID){
+    //TODO HANDLE HTML CSS 
 
+    //-------TASK---------
 }
 
 function handleErrorReceivedByServer(error){
     alert(error.error_data);
+    
+    //TODO HANDLE HTML CSS 
+
+    //-------TASK---------
+}
+
+function closeWebSocketConnection(){
+    log("Closing the web socket connection");
+    if(!web_socket_connection){
+        web_socket_connection.onclose = null; 
+        web_socket_connection.onerror = null; 
+        web_socket_connection.onmessage = null; 
+        web_socket_connection.onopen = null; 
+        web_socket_connection.close(); 
+    }
 }
