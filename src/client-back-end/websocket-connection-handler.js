@@ -127,7 +127,7 @@ function onMessageEventHandler(message) {
             let left_user = msg.identifier; 
             handleUserLeaving(left_user); 
             break; 
-        case "new-ice-candindate": 
+        case "new-ice-candidate": 
             handleNewICECandidate(msg); 
             break; 
         case "offer-answer":
