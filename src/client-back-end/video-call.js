@@ -5,8 +5,8 @@ import { webSocketConnect } from "./websocket-connection-handler.js";
 
 
 async function initiateCall(){
-    webSocketConnect(345, "join"); 
-    createPeerConnection();  
+    webSocketConnect(345, "create"); 
+    let peer_connection = createPeerConnection();  
     let webcamStream = null; 
     try{
         webcamStream = await media_functions.getMedia({
@@ -18,6 +18,8 @@ async function initiateCall(){
     }
 
     document.getElementById("local_video").srcObject = webcamStream;
+
+    webcamStream.getTracks().forEach((track) => peer_connection.addTrack(track)); 
 }
 
 await initiateCall(); 
