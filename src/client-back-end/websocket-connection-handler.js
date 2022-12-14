@@ -138,6 +138,7 @@ function onMessageEventHandler(message) {
             handleUserLeaving(left_user); 
             break; 
         case "successful-room":
+            //user created or joined a room successfully 
             log("Received successful room message");
             handleSuccessfulRoom(); 
             break; 
@@ -264,18 +265,32 @@ function handleErrorReceivedByServer(error){
     //TODO HANDLE HTML CSS 
 
     //-------TASK---------
+    let loader = document.getElementsByClassName("loader")[0];
+
+    //message received stop loading 
+    if(loader.style.display !== "none"){
+        loader.style.display = "none";
+    }
     
 }
 
 function handleSuccessfulRoom(){
+
+    let loader = document.getElementsByClassName("loader")[0];
+
+    //message received stop loading 
+    if(loader.style.display !== "none"){
+        loader.style.display = "none";
+    }
+
     let roomElements = document.getElementsByClassName("room");
     let room = roomElements[0];
 
     let chatandcallElements = document.getElementsByClassName("chatandcall");
     let chatandcall = chatandcallElements[0];
 
-    chatandcall.hidden = false; 
-    room.hidden = true; 
+    chatandcall.style.display = "grid"; 
+    room.style.display = "none"; 
 }
 
 function closeWebSocketConnection(){

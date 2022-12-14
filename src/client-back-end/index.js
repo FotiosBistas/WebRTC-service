@@ -6,10 +6,13 @@ let join_room_input = document.getElementById("join_roomcode");
 
 let join_room_button = document.getElementById("join-room-button");
 
+let loader = document.getElementsByClassName("loader")[0];
+
 join_room_button.onclick = function() {
     let value = join_room_input.value; 
     webSocketConnect(value, "join"); 
     createPeerConnection(); 
+    loader.style.display = "block";
 } 
 
 let create_room_button = document.getElementById("create-room-button");
