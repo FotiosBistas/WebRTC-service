@@ -161,6 +161,10 @@ function onMessageEventHandler(message) {
             //create room and add room code to connection 
             try{
                 room_handlers.createRoom(data.room_code, this);
+                //confirm to user that it has created the room 
+                send_data.sendToOneUser(this, {
+                    type:"successful-room", 
+                })
             }catch(err){
                 log("Error(" + err + ")while trying to create new room"); 
                 send_data.sendToOneUser(this, {
@@ -173,6 +177,10 @@ function onMessageEventHandler(message) {
         case "join_room_code":
             try{
                 room_handlers.addUserToRoom(data.room_code, this); 
+                //confirm to user that it was added to the room 
+                send_data.sendToOneUser(this, {
+                    type:"successful-room", 
+                })
             }catch(err){
                 log("Error(" + err + ")while trying to add user to room"); 
                 send_data.sendToOneUser(this, {
@@ -185,7 +193,7 @@ function onMessageEventHandler(message) {
             try{
                 send_data.sendToRoomParticipants(data.room_code, data);
             }catch(err){
-                log("Error(" + err + ")while trying to send offer to room participants");
+                log("Error(" + err + ")while trying to send offer/new-ice-candidate/offer-answer message to room participants");
                 send_data.sendToOneUser(this, {
                     type: "error", 
                     error_data:err.message, 
