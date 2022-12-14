@@ -16,15 +16,48 @@
                 <fieldset>
                     <legend> Create new Room </legend>
                     <label for="roomcode">Room Code</label>
-                    <input type="number" id="roomcode" name="room_code" pattern="{0-9}{4}" min="0">
+                    <input type="number" id="create_roomcode" name="room_code" pattern="{0-9}{4}" min="0">
                 </fieldset>
                 <button type="CreateRoom" id="create-room-button" form="join-room-form" value="Create Room"> Create Room </button>
                 <fieldset>
                     <legend>Join Room</legend>
                     <label for="roomcode"> Room code</label>
-                    <input type="number" id="roomcode" name="room_code" pattern="{0-9}{4}" min="0">
+                    <input type="number" id="join_roomcode" name="room_code" pattern="{0-9}{4}" min="0">
                 </fieldset>
                 <button type="button" id="join-room-button" form="join-room-form" value = "Join Room"> Join Room </button>
+            </div>
+
+
+
+             <!-- TODO: find the method that adds video when event happens -->
+             <div hidden class="chatandcall">
+
+                <div class="video-call"> 
+                    
+                    <div class="streams">
+                        <video id="local_video" autoplay> </video>
+                        <!-- adding .stream_containers dynamically -->
+                    </div>
+
+                    
+
+                </div>
+
+                <ul class="stream-controls">
+                    <li><button type="button" id="disconnect"> <img id="disconnect-image" src="../images/end-call-image.png"></button></li>
+                    <li><button type="button" id="camera-button"><img id="camera-image" src="../images/camera-button.png"></button></li>
+                    <li><button type="button" id="mic-button"><img id="microphone-image" src="../images/microphone-button.png"></button></li>
+                    <li><button type="button" id="chat-button"><img id="chat-image" src="../images/chat-button.png"></button><li>
+                </ul>
+
+                <div class="chat">
+                    <div class="chat-title">
+
+                    </div>
+
+                    <div class="chat-input"></div>
+                </div>
+                
             </div>
         </main>
     </body>
