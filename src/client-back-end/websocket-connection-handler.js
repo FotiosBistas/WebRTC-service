@@ -95,6 +95,15 @@ function onCloseEventHandler(event) {
     log("Connection has been closed with code: " + event.code + " reason: " + event.reason + " was clean: " + event.wasClean); 
     closeWebSocketConnection(); 
     closePeerConnection();
+
+    let roomElements = document.getElementsByClassName("room");
+    let room = roomElements[0];
+
+    let chatandcallElements = document.getElementsByClassName("chatandcall");
+    let chatandcall = chatandcallElements[0];
+
+    chatandcall.hidden = true; 
+    room.hidden = false; 
 }
 
 function onErrorEventHandler(error) {
@@ -124,9 +133,13 @@ function onMessageEventHandler(message) {
             break; 
         case "user-left": 
             //some other user left the call 
-            log("Received user left message"); 
+            log("Received user left message. User was: " + msg.id); 
             let left_user = msg.identifier; 
             handleUserLeaving(left_user); 
+            break; 
+        case "successful-room":
+            log("Received successful room message");
+            handleSuccessfulRoom(); 
             break; 
         case "new-ice-candidate": 
             handleNewICECandidate(msg); 
@@ -251,6 +264,18 @@ function handleErrorReceivedByServer(error){
     //TODO HANDLE HTML CSS 
 
     //-------TASK---------
+    
+}
+
+function handleSuccessfulRoom(){
+    let roomElements = document.getElementsByClassName("room");
+    let room = roomElements[0];
+
+    let chatandcallElements = document.getElementsByClassName("chatandcall");
+    let chatandcall = chatandcallElements[0];
+
+    chatandcall.hidden = false; 
+    room.hidden = true; 
 }
 
 function closeWebSocketConnection(){
