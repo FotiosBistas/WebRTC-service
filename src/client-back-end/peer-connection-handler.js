@@ -96,13 +96,13 @@ function handleConnectionStateChangeEvent(event){
             log("Peers successfully connected");
             break; 
         case "closed":
-            closeConnection(); 
+            closePeerConnection(); 
             break;  
     } 
 }
 
-function closeConnection(){
-    let local_video = document.getElementById("local_video");  
+export function closePeerConnection(){
+    let local_video = document.getElementById("local_video");   
     if(peer_connection){
         log("Closing the peer connection");
         //avoid having additional events coming to the connection 
@@ -183,7 +183,7 @@ function handleICEConnectionStateChangeEvent(event) {
         case "closed":
         case "failed":
         case "disconnected":
-            closeConnection();
+            closePeerConnection();
             break;
     }
 }
