@@ -38,7 +38,7 @@ export let peer_connection = null;
  * Creates a RTCPeerConnection assigning the result. 
  * @returns the peer connection created with the appropriate handlers 
  */
-export async function createPeerConnection(){
+export function createPeerConnection(){
     log("Creating new peer connection"); 
     peer_connection = new RTCPeerConnection(default_configuration); 
     peer_connection.onconnectionstatechange = handleConnectionStateChangeEvent;
@@ -65,10 +65,10 @@ async function handleNegotiationNeededEvent(){
             return; 
         }
 
-        const offer = await connection.createOffer(); 
+        const offer = await peer_connection.createOffer(); 
 
         log("Setting local description with offer: " + offer); 
-        await connection.setLocalDescription(offer);
+        await peer_connection.setLocalDescription(offer);
 
         log("Sending the offer to the remote peer")
         
@@ -80,7 +80,7 @@ async function handleNegotiationNeededEvent(){
         });
         
     }catch(error){
-        log("error while handling negotiation needed", error);
+        log("Error:(" + error + ")while handling negotiation needed", error);
     }
 }
 
