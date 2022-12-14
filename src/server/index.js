@@ -181,9 +181,7 @@ function onMessageEventHandler(message) {
                 }); 
             }
             break; 
-        case "offer-answer":
-        case "new-ice-candidate":
-        case "offer": 
+        case "offer":  case "new-ice-candidate":  case "offer-answer":
             try{
                 send_data.sendToRoomParticipants(data.room_code, data);
             }catch(err){
@@ -193,6 +191,7 @@ function onMessageEventHandler(message) {
                     error_data:err.message, 
                 });
             }
+            break; 
         default: 
             log("Unhandled message type: " + data.type);
     }
