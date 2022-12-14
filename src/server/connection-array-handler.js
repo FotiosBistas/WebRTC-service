@@ -49,7 +49,7 @@ module.exports =  {
 
         let message = {
             type: "user-left",
-            identifier: clientID,
+            id: clientID,
             room_code: connection_room_code, 
         }
 
