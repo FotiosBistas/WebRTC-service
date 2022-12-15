@@ -74,3 +74,13 @@
     width: 50%; 
     height: 50%; 
 }
+
+.local_video{
+    width: 10px;
+    height: 10px; 
+}
+
+.remote_video{
+    width: 10px; 
+    height: 10px; 
+}

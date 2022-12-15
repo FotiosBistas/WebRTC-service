@@ -133,13 +133,11 @@ function onMessageEventHandler(message) {
             break; 
         case "user-left": 
             //some other user left the call 
-            log("Received user left message. User was: " + msg.id); 
-            let left_user = msg.identifier; 
-            handleUserLeaving(left_user); 
+            
+            handleUserLeaving(msg.identifier); 
             break; 
         case "successful-room":
             //user created or joined a room successfully 
-            log("Received successful room message");
             handleSuccessfulRoom(); 
             break; 
         case "new-ice-candidate": 
@@ -170,6 +168,8 @@ function onOpenEventHandler(event) {
 
 async function handleNewICECandidate(message){
     
+    log("Received new ice candidate from the remote peer.")
+
     if (!("candidate" in message) || !message.candidate){
         log("Received new ice candidate event without candidate value")
         return 
@@ -193,6 +193,7 @@ async function handleNewICECandidate(message){
  */
 async function handleNewOffer(msg){
 
+    log("Received new offer from the remote peer");
     //if there isn't a peer connection underway it must be created 
     if(!peer_connection){
         createPeerConnection(); 
@@ -244,16 +245,19 @@ async function handleNewOffer(msg){
  */
 async function handleOfferAnswer(msg){
 
+    log("Received offer answer message");
     //create a new description from the sdp received 
     let new_remote_description = new RTCSessionDescription(msg.sdp);
     try{
-        await peer_connection.setRemoteDescription(desc);
+        await peer_connection.setRemoteDescription(new_remote_description);
     }catch(err){
         log("Error:(" + err + ") while trying to set remote description");
     }
 }
 
 function handleUserLeaving(clientID){
+    log("Received user left message. User was: " + clientID); 
+
     //TODO HANDLE HTML CSS 
 
     //-------TASK---------
@@ -275,6 +279,9 @@ function handleErrorReceivedByServer(error){
 }
 
 function handleSuccessfulRoom(){
+
+    log("Received successful room message");
+
 
     let loader = document.getElementsByClassName("loader")[0];
 
