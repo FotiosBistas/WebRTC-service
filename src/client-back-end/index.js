@@ -45,6 +45,8 @@ create_room_button.onclick = function() {
         stream.getTracks().forEach((track) => {
             peer_connection.addTrack(track);
         });
+    }).reject((err) => {
+        console.log(err); 
     });  
 }   
 

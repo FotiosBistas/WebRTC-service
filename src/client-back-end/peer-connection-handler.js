@@ -149,12 +149,12 @@ function handleTrackEvent(event){
     log("Handling track event");
     let remote_video = document.getElementById("remote_video");
     remote_video.srcObject = event.streams[0]; 
-    event.streams[0].getTrack().forEach((track) =>{
+    /* event.streams[0].getTrack().forEach((track) =>{
         //TODO add tracks to the remote stream(s) and handle the html/css 
 
         // ----- TASK  -------
         peer_connection.addTrack(track); 
-    }); 
+    });  */
 }
 
 /**

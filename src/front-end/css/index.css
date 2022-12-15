@@ -75,12 +75,12 @@
     height: 50%; 
 }
 
-.local_video{
+#local_video{
     width: 10px;
     height: 10px; 
 }
 
-.remote_video{
+#remote_video{
     width: 10px; 
     height: 10px; 
 }
