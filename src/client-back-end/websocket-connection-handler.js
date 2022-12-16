@@ -1,7 +1,7 @@
 "use strict"
 
 import { media_functions } from "./media-handler.js";
-import {createPeerConnection, peer_connection, closePeerConnection, local_stream, remote_streams} from "./peer-connection-handler.js"
+import {createPeerConnection, peer_connection, closePeerConnection, setLocalStream, getLocalStream} from "./peer-connection-handler.js"
 
 let hostname = window.location.hostname;
 if (!hostname) {
@@ -82,8 +82,11 @@ export function webSocketConnect(room_code, action){
     serverURL = scheme + "://" + hostname + ":" + server_port; 
     log("Server URL is: " + serverURL);
 
-    web_socket_connection = new WebSocket(serverURL, "json"); 
-    
+    try{
+        web_socket_connection = new WebSocket(serverURL, "json"); 
+    }catch(err){
+        throw new Error("couldn't connect you to the server"); 
+    }
     //assing event handlers 
     web_socket_connection.onclose = onCloseEventHandler; 
     web_socket_connection.onerror = onErrorEventHandler; 
@@ -102,8 +105,8 @@ function onCloseEventHandler(event) {
     let chatandcallElements = document.getElementsByClassName("chatandcall");
     let chatandcall = chatandcallElements[0];
 
-    chatandcall.hidden = true; 
-    room.hidden = false; 
+    chatandcall.style.display = "none"; 
+    room.style.display = "block"; 
 }
 
 function onErrorEventHandler(error) {
@@ -129,6 +132,27 @@ function onMessageEventHandler(message) {
                 id: clientID, 
                 room_code: current_room_code 
             });
+
+            //after that get the media devices of the user and add them into the remote connection 
+            media_functions.getMedia({
+                audio: true, 
+                video: true, 
+            }).then((stream) => {
+                setLocalStream(stream);
+
+                let video = document.createElement('video'); 
+                video.setAttribute('autoplay', true); 
+                video.srcObject = getLocalStream(); 
+        
+                getLocalStream().getTracks().forEach((track) => {
+                    peer_connection.addTrack(track);
+                });
+        
+                let video_grid = document.getElementsByClassName("streams")[0];
+
+
+                video_grid.append(video); 
+            }); 
              
             break; 
         case "user-left": 
@@ -212,11 +236,27 @@ async function handleNewOffer(msg){
         log("Error:(" + err + ") while trying to set remote description");
     }
 
-    if(!local_stream){
+    if(!getLocalStream()){
         try{
-            local_stream = media_functions.getMedia({
+            //after that get the media devices of the user and add them into the remote connection 
+            media_functions.getMedia({
                 audio: true, 
                 video: true, 
+            }).then((stream) => {
+                setLocalStream(stream);
+
+                let video = document.createElement('video'); 
+                video.setAttribute('autoplay', true); 
+                video.srcObject = getLocalStream(); 
+        
+                getLocalStream().getTracks().forEach((track) => {
+                    peer_connection.addTrack(track);
+                });
+        
+                let video_grid = document.getElementsByClassName("streams")[0];
+
+
+                video_grid.append(video); 
             }); 
         }catch(err){
             media_functions.handleGetUserMediaError(err); 

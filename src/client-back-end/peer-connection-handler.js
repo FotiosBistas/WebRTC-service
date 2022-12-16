@@ -18,6 +18,14 @@ export let remote_streams = [];
 //local stream 
 export let local_stream = null; 
 
+export function setLocalStream(stream){
+    local_stream = stream; 
+}
+
+export function getLocalStream(){
+    return local_stream; 
+}
+
 const default_configuration = {
     iceServers: [
         {
@@ -40,14 +48,17 @@ export let peer_connection = null;
  */
 export function createPeerConnection(){
     log("Creating new peer connection"); 
-    peer_connection = new RTCPeerConnection(default_configuration); 
+    try{
+        peer_connection = new RTCPeerConnection(default_configuration); 
+    }catch(err){
+        throw new Error("couldn't establish peer connection"); 
+    }
+    
     peer_connection.onconnectionstatechange = handleConnectionStateChangeEvent;
     peer_connection.onicecandidate = handleICECandidateEvent;
     peer_connection.ontrack = handleTrackEvent;
     peer_connection.onnegotiationneeded = handleNegotiationNeededEvent; 
     peer_connection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
-
-    return peer_connection; 
 }
 
 
@@ -102,7 +113,7 @@ function handleConnectionStateChangeEvent(event){
 }
 
 export function closePeerConnection(){
-    let local_video = document.getElementById("local_video");   
+    /* let local_video = document.getElementById("local_video");    */
     if(peer_connection){
         log("Closing the peer connection");
         //avoid having additional events coming to the connection 
@@ -117,9 +128,9 @@ export function closePeerConnection(){
         //these essentially send the media stream tracks over the connection. 
         peer_connection.getTransceivers().forEach((transceiver) => transceiver.stop())
         
-        if(local_video.srcObject){
+        /* if(local_video.srcObject){
             local_stream.srcObject.getTracks().forEach((track) => track.stop()); 
-        }
+        } */
 
         peer_connection.close();
         peer_connection = null; 
@@ -147,14 +158,28 @@ export function closePeerConnection(){
  */
 function handleTrackEvent(event){
     log("Handling track event");
-    let remote_video = document.getElementById("remote_video");
-    remote_video.srcObject = event.streams[0]; 
+    let remote_stream = new MediaStream(); 
+
+    let remote_video = document.createElement("video");
+    remote_video.setAttribute('autoplay', true); 
+
+
+    let video_grid = document.getElementsByClassName("streams")[0];
+
+    video_grid.append(remote_video);
+
     /* event.streams[0].getTrack().forEach((track) =>{
         //TODO add tracks to the remote stream(s) and handle the html/css 
+        // ----- TASK  -------   
+        remote_stream.addTrack(event.track); 
+        remote_streams.append(remote_stream);
+    });   */
 
-        // ----- TASK  -------
-        peer_connection.addTrack(track); 
-    });  */
+    remote_stream.addTrack(event.track); 
+    remote_streams.push(remote_stream);
+ 
+    remote_video.srcObject = remote_stream; 
+
 }
 
 /**
@@ -189,3 +214,4 @@ function handleICEConnectionStateChangeEvent(event) {
             break;
     }
 }
+
