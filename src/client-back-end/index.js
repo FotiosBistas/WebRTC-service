@@ -43,7 +43,22 @@ create_room_button.onclick = function() {
 }
 
 
+let chat_input = document.getElementById("chat-input"); 
 
+chat_input.onkeyup = function(event){
+    let data = event.target.value; 
+    if(data.length > 100){
+        alert("Can't enter more that a hundred");
+    }
+}
+
+/* chat_input.oninput = function(event){
+    this.style.height = this.value.length + "ch";
+} */
+
+function resizeInput(){
+
+}
 
 /* webSocketConnect(345,"join "); 
 
