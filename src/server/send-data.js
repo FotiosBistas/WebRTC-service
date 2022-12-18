@@ -35,6 +35,10 @@ module.exports = {
             throw new Error("message doesn't have an ID specified");
         }
 
+        if(("type") in message && message.type === "text-message"){
+            room_handlers.addMessageToRoomHistory(room_code, message);
+        }
+
         let current_room = null , current_room_connections = null; 
         try{
             ({current_room,current_room_connections}= room_handlers.getConnectionsFromRoom(room_code));

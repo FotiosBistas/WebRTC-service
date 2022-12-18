@@ -32,6 +32,7 @@ module.exports = {
         //users are added on the connection based on the room code 
         let new_room = {
             code: room_code,
+            room_history: [], //array of messages sent over the server 
             users: [], 
         }
 
@@ -44,6 +45,35 @@ module.exports = {
         log("Successfully created new room");
     },
 
+    /**
+     * Returns all sent messages in the room. 
+     * @param {*} room_code The room code we want to retrive the message history for
+     * @returns the message history of the room
+     */
+    getMessageHistory: function(room_code){
+        let room = this.doesRoomExists(room_code); 
+
+        if(!room){
+            throw new Error("Room doesn't exist"); 
+        }
+        return room.room_history; 
+    },
+
+    /**
+     * Adds a new message to the room's history. 
+     * @param {*} room_code the room code that the message is going to be added to. 
+     * @param {*} message the message added to the history 
+     */
+    addMessageToRoomHistory: function(room_code, message){
+        let room = this.doesRoomExists(room_code); 
+
+        if(!room){
+            throw new Error("Room doesn't exist"); 
+        }
+
+        room.room_history.push(message);
+        log("Added message to room history");
+    },
 
     /**
      * Returns all connections with the specified room code. 

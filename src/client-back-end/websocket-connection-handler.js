@@ -166,6 +166,9 @@ function onMessageEventHandler(message) {
             //user created or joined a room successfully 
             handleSuccessfulRoom(); 
             break;
+        case "message-history":
+            handleMessageHistory(msg);
+            break; 
         case "text-message":
             handleNewTextMessage(msg); 
             break; 
@@ -382,6 +385,30 @@ function handleNewTextMessage(message){
 
 }
 
+/**
+ * 
+ * @param {*} message the message received from the websocket connection. It contains a list of messages. 
+ */
+function handleMessageHistory(message){
+    message.messages.forEach((msg) => {
+        let new_message = document.createElement("div");
+        //specifies it's the peer who sent the message 
+        new_message.setAttribute('class', "message_container"); 
+        new_message.innerHTML = `<h3>` + msg.username + `</h3>`; 
+        new_message.insertAdjacentHTML("beforeend",`<p>` + msg.message_data + `</p>`);
+
+
+        let chat = document.getElementsByClassName("chat")[0];
+        
+
+        let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
+
+        chat.insertBefore(new_message, chat_input_box);
+        // Scroll to the bottom of the div
+        chat.scrollTop = chat.scrollHeight;
+    });
+}
+
 function handleSuccessfulRoom(){
 
     log("Received successful room message");
@@ -414,3 +441,4 @@ function closeWebSocketConnection(){
         web_socket_connection.close(); 
     }
 }
+

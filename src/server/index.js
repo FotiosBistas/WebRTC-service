@@ -180,7 +180,13 @@ function onMessageEventHandler(message) {
                 //confirm to user that it was added to the room 
                 send_data.sendToOneUser(this, {
                     type:"successful-room", 
+                });
+
+                send_data.sendToOneUser(this,{
+                    type:"message-history", 
+                    messages: room_handlers.getMessageHistory(data.room_code), 
                 })
+
             }catch(err){
                 log("Error(" + err + ")while trying to add user to room"); 
                 send_data.sendToOneUser(this, {
