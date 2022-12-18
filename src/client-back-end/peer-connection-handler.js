@@ -161,6 +161,7 @@ function handleTrackEvent(event){
     let remote_stream = new MediaStream(); 
 
     let remote_video = document.createElement("video");
+    //TODO adds remote peers id. 
     remote_video.setAttribute('autoplay', true); 
 
 

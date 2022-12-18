@@ -1,5 +1,5 @@
-import { webSocketConnect,sendNewTextMessage } from "./websocket-connection-handler.js"
-import { createPeerConnection } from "./peer-connection-handler.js";
+import { webSocketConnect,sendNewTextMessage, closeWebSocketConnection } from "./websocket-connection-handler.js"
+import { createPeerConnection,getLocalStream ,closePeerConnection} from "./peer-connection-handler.js";
 import { media_functions } from "./media-handler.js";
 
 let create_room_input = document.getElementById("create_roomcode"); 
@@ -60,15 +60,44 @@ chat_input.addEventListener(("keypress"), function(event){
     }
 })
 
-/* chat_input.oninput = function(event){
-    this.style.height = this.value.length + "ch";
-} */
+let disconnect = document.getElementById("disconnect-image");
+let camera = document.getElementById("camera-image");
+let microphone = document.getElementById("microphone-image");
+let chat = document.getElementsByClassName("chat")[0];
+let toggle_chat_panel = document.getElementById("chat-image");
 
-/* webSocketConnect(345,"join "); 
 
-let camera_button = document.getElementById("camera-button");
+disconnect.onclick = function(event){
+    closePeerConnection(); 
+    closeWebSocketConnection(); 
+    //TODO HANDLE HTML CSS
+}
 
-camera_button.onclick = function(event) {
-    let local_stream = media_functions.getMedia({video:true}); 
-}  */
+camera.onclick = function(event){
+    
+    getLocalStream().getTracks().forEach((track) => {
+        if (track.kind === 'video') {
+            //inverts it each time 
+            track.enabled = !track.enabled;
+        }
+    }); 
+}
+
+microphone.onclick = function(event){
+    getLocalStream().getTracks().forEach((track) => {
+        if (track.kind === 'audio') {
+            //inverts it each time 
+            track.enabled = !track.enabled;
+        }
+    }); 
+}
+
+toggle_chat_panel.onclick = function(event){
+    if(chat.style.display === "none"){
+        chat.style.display = "flex";
+    }else{
+        chat.style.display = "none";
+    }
+    
+}
 

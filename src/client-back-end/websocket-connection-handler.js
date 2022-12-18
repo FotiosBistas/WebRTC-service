@@ -143,6 +143,7 @@ function onMessageEventHandler(message) {
                 setLocalStream(stream);
 
                 let video = document.createElement('video'); 
+                video.clientID = clientID;
                 video.setAttribute('autoplay', true); 
                 video.srcObject = getLocalStream(); 
         
@@ -254,6 +255,8 @@ async function handleNewOffer(msg){
                 setLocalStream(stream);
 
                 let video = document.createElement('video'); 
+                //add client ID into the connection to enable the removal when the time arises. 
+                video.clientID = clientID; 
                 video.setAttribute('autoplay', true); 
                 video.srcObject = getLocalStream(); 
         
@@ -386,7 +389,7 @@ function handleNewTextMessage(message){
 }
 
 /**
- * 
+ * Gets called when there's a new message-history type message received from the websocket connection. 
  * @param {*} message the message received from the websocket connection. It contains a list of messages. 
  */
 function handleMessageHistory(message){
@@ -431,7 +434,7 @@ function handleSuccessfulRoom(){
     room.style.display = "none"; 
 }
 
-function closeWebSocketConnection(){
+export function closeWebSocketConnection(){
     log("Closing the web socket connection");
     if(!web_socket_connection){
         web_socket_connection.onclose = null; 
