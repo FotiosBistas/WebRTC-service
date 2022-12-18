@@ -143,8 +143,8 @@ function onMessageEventHandler(message) {
                 setLocalStream(stream);
 
                 let video = document.createElement('video'); 
-                video.clientID = clientID;
                 video.setAttribute('autoplay', true); 
+                video.setAttribute("id",clientID)
                 video.srcObject = getLocalStream(); 
         
                 getLocalStream().getTracks().forEach((track) => {
@@ -161,7 +161,7 @@ function onMessageEventHandler(message) {
         case "user-left": 
             //some other user left the call 
             
-            handleUserLeaving(msg.identifier); 
+            handleUserLeaving(msg); 
             break; 
         case "successful-room":
             //user created or joined a room successfully 
@@ -255,9 +255,10 @@ async function handleNewOffer(msg){
                 setLocalStream(stream);
 
                 let video = document.createElement('video'); 
-                //add client ID into the connection to enable the removal when the time arises. 
-                video.clientID = clientID; 
+                //add client ID to video to remove it. 
                 video.setAttribute('autoplay', true); 
+                video.setAttribute('id', clientID); 
+
                 video.srcObject = getLocalStream(); 
         
                 getLocalStream().getTracks().forEach((track) => {
@@ -306,12 +307,15 @@ async function handleOfferAnswer(msg){
     }
 }
 
-function handleUserLeaving(clientID){
-    log("Received user left message. User was: " + clientID); 
+function handleUserLeaving(message){
+    log("Received user left message. User was: " + message.id); 
 
     //TODO HANDLE HTML CSS 
 
     //-------TASK---------
+    let remote_video = document.getElementById(message.id);
+    //TODO remove stream from remote streams 
+    remote_video.remove(); 
 }
 
 function handleErrorReceivedByServer(error){
@@ -436,7 +440,7 @@ function handleSuccessfulRoom(){
 
 export function closeWebSocketConnection(){
     log("Closing the web socket connection");
-    if(!web_socket_connection){
+    if(web_socket_connection){
         web_socket_connection.onclose = null; 
         web_socket_connection.onerror = null; 
         web_socket_connection.onmessage = null; 

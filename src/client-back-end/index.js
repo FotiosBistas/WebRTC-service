@@ -5,23 +5,17 @@ import { media_functions } from "./media-handler.js";
 let create_room_input = document.getElementById("create_roomcode"); 
 let join_room_input = document.getElementById("join_roomcode"); 
 let join_username_input = document.getElementById("join_username");
-
-
 let join_room_button = document.getElementById("join-room-button");
 
 let loader = document.getElementsByClassName("loader")[0];
 
-let local_video = document.getElementById("local_video"); 
-
-
-let peer_connection = null; 
 
 join_room_button.onclick = function() {
     let value = join_room_input.value;
     let username = join_username_input.value; 
     try{
         webSocketConnect(value, "join", username); 
-        peer_connection = createPeerConnection(); 
+        createPeerConnection(); 
     }catch(err){
         alert("Error: " + err + " while trying to join the server")
     }
@@ -39,7 +33,7 @@ create_room_button.onclick = function() {
     let username = create_username_input.value; 
     try{
         webSocketConnect(value, "create", username); 
-        peer_connection = createPeerConnection(); 
+        createPeerConnection(); 
     }catch(err){
         alert("Error: " + err + " while trying to create the server")
     }   
@@ -66,11 +60,14 @@ let microphone = document.getElementById("microphone-image");
 let chat = document.getElementsByClassName("chat")[0];
 let toggle_chat_panel = document.getElementById("chat-image");
 
+let room = document.getElementsByClassName("room")[0]; 
+let chat_and_call = document.getElementsByClassName("chatandcall")[0];
 
 disconnect.onclick = function(event){
     closePeerConnection(); 
     closeWebSocketConnection(); 
-    //TODO HANDLE HTML CSS
+    room.style.display = "block"; 
+    chat_and_call.style.display = "none"; 
 }
 
 camera.onclick = function(event){

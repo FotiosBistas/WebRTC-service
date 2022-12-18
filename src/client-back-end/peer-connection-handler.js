@@ -113,7 +113,7 @@ function handleConnectionStateChangeEvent(event){
 }
 
 export function closePeerConnection(){
-    /* let local_video = document.getElementById("local_video");    */
+    let local_video = document.getElementById(clientID);    
     if(peer_connection){
         log("Closing the peer connection");
         //avoid having additional events coming to the connection 
@@ -128,17 +128,16 @@ export function closePeerConnection(){
         //these essentially send the media stream tracks over the connection. 
         peer_connection.getTransceivers().forEach((transceiver) => transceiver.stop())
         
-        /* if(local_video.srcObject){
-            local_stream.srcObject.getTracks().forEach((track) => track.stop()); 
-        } */
+        if(local_video.srcObject){
+            local_video.srcObject.getTracks().forEach((track) => track.stop()); 
+        } 
 
+        
         peer_connection.close();
         peer_connection = null; 
         local_stream = null; 
 
-        //TODO handle the html,css to end the connection return back to room page
-
-        // ----- TASK  ------- 
+        local_video.remove(); 
     } 
 }
 
@@ -161,20 +160,13 @@ function handleTrackEvent(event){
     let remote_stream = new MediaStream(); 
 
     let remote_video = document.createElement("video");
-    //TODO adds remote peers id. 
+    //TODO ADD REMOTE PEER ID
     remote_video.setAttribute('autoplay', true); 
 
 
     let video_grid = document.getElementsByClassName("streams")[0];
 
     video_grid.append(remote_video);
-
-    /* event.streams[0].getTrack().forEach((track) =>{
-        //TODO add tracks to the remote stream(s) and handle the html/css 
-        // ----- TASK  -------   
-        remote_stream.addTrack(event.track); 
-        remote_streams.append(remote_stream);
-    });   */
 
     remote_stream.addTrack(event.track); 
     remote_streams.push(remote_stream);
