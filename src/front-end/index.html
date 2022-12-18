@@ -16,13 +16,17 @@
                 <fieldset>
                     <legend> Create new Room </legend>
                     <label for="roomcode">Room Code</label>
-                    <input type="number" id="create_roomcode" name="room_code" pattern="{0-9}{4}" min="0">
+                    <input type="number" id="create_roomcode" name="room_code" pattern="{0-9}{4}" min="0" required>
+                    <label for="create_user_name"> Username</label>
+                    <input type="text" id="create_username" name="create_user_name" required>
                 </fieldset>
                 <button type="CreateRoom" id="create-room-button" form="join-room-form" value="Create Room"> Create Room </button>
                 <fieldset>
                     <legend>Join Room</legend>
                     <label for="roomcode"> Room code</label>
-                    <input type="number" id="join_roomcode" name="room_code" pattern="{0-9}{4}" min="0">
+                    <input type="number" id="join_roomcode" name="room_code" pattern="{0-9}{4}" min="0" required>
+                    <label for="join_user_name"> Username</label>
+                    <input type="text" id="join_username" name="join_user_name" required>
                 </fieldset>
                 <button type="button" id="join-room-button" form="join-room-form" value = "Join Room"> Join Room </button>
             </div>
@@ -54,32 +58,7 @@
                 </ul>
 
                 <div class="chat">
-                    <!-- dynamically add message containers -->
-                    <!--  lighter container specifies another peer-->
-                    <div class="message_container"> 
-                        <h3>Fotis</h3>
-                        <p>Hello. How are you today?</p>
-                        <span class="time-left">11:00</span>
-                    </div>
 
-                    <div class="message_container"> 
-                        <h3>Fotis</h3>
-                        <p>Hello. How are you today?</p>
-                        <span class="time-left">11:00</span>
-                    </div>
-
-                    <div class="message_container"> 
-                        <h3>Fotis</h3>
-                        <p>Hello. How are you today?</p>
-                        <span class="time-left">11:00</span>
-                    </div>
-
-                    <!-- darker container specifies that its you who sent the message -->
-                    <div class="message_container_darker">
-                        <h3>Tasos</h3>
-                        <p>Hi back to you</p>
-                        <span class="time-right"> 11:01</span>
-                    </div>
                     <div class="chat-input-box">
                         <textarea id="chat-input" placeholder="Enter message here"></textarea>
                         <img src="">

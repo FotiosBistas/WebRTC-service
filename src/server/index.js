@@ -189,11 +189,12 @@ function onMessageEventHandler(message) {
                 }); 
             }
             break; 
-        case "offer":  case "new-ice-candidate":  case "offer-answer":
+        case "offer":  case "new-ice-candidate":  case "offer-answer": 
+        case "text-message":
             try{
                 send_data.sendToRoomParticipants(data.room_code, data);
             }catch(err){
-                log("Error(" + err + ")while trying to send offer/new-ice-candidate/offer-answer message to room participants");
+                log("Error(" + err + ")while trying to send offer/new-ice-candidate/offer-answer/text-message message to room participants");
                 send_data.sendToOneUser(this, {
                     type: "error", 
                     error_data:err.message, 

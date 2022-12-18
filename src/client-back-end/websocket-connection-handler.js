@@ -13,6 +13,7 @@ let server_port = 62000;
 let web_socket_connection = null; 
 export let current_room_code = null; 
 export let clientID = null; 
+let current_username = null; 
 let current_action = null; 
 
 function log(text){
@@ -67,11 +68,12 @@ export function sendToServer(message){
  * @param {*} room_code the room code that was specified 
  * @param {*} action create or join a room 
  */
-export function webSocketConnect(room_code, action){
+export function webSocketConnect(room_code, action, username){
     let serverURL; 
     let scheme = "ws"; 
     current_room_code = room_code; 
     current_action = action; 
+    current_username = username; 
     /* If the protocol is https you must use web socket secured */
     //--------TASK------- 
     //add extras on the scheme in order to do a web sockets secured 
@@ -163,6 +165,9 @@ function onMessageEventHandler(message) {
         case "successful-room":
             //user created or joined a room successfully 
             handleSuccessfulRoom(); 
+            break;
+        case "text-message":
+            handleNewTextMessage(msg); 
             break; 
         case "new-ice-candidate": 
             handleNewICECandidate(msg); 
@@ -316,6 +321,65 @@ function handleErrorReceivedByServer(error){
         loader.style.display = "none";
     }
     
+}
+
+/**
+ * Sends a new text message to the server when enter is pressed or the image button is pressed(TODO). Adds the message to the self send messages. 
+ * @param {*} data the message contents 
+ * @throws {*} whatever error occurs in sendToServer 
+ */
+export function sendNewTextMessage(data){
+    try{
+        sendToServer({
+            type:"text-message",
+            id: clientID, 
+            username: current_username, 
+            room_code: current_room_code,  
+            message_data: data, 
+        })
+    }catch(err){
+        throw err; 
+    }
+
+
+    let new_message = document.createElement("div");
+    //specifies it's you who sent the message 
+    new_message.setAttribute('class', "message_container_darker"); 
+    new_message.innerHTML = `<h3>` + current_username + `</h3>`; 
+    new_message.insertAdjacentHTML("beforeend",`<p>` + data + `</p>`);
+
+
+    let chat = document.getElementsByClassName("chat")[0];
+    
+
+    let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
+
+    chat.insertBefore(new_message, chat_input_box);
+    // Scroll to the bottom of the div
+    chat.scrollTop = chat.scrollHeight;
+}
+
+/**
+ * Gets called the the websocket connection receives a new text message from the server. It adds it into the chat elements. 
+ * @param {*} message the text message received from the server
+ */
+function handleNewTextMessage(message){
+    let new_message = document.createElement("div");
+    //specifies it's the peer who sent the message 
+    new_message.setAttribute('class', "message_container"); 
+    new_message.innerHTML = `<h3>` + message.username + `</h3>`; 
+    new_message.insertAdjacentHTML("beforeend",`<p>` + message.message_data + `</p>`);
+
+
+    let chat = document.getElementsByClassName("chat")[0];
+    
+
+    let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
+
+    chat.insertBefore(new_message, chat_input_box);
+    // Scroll to the bottom of the div
+    chat.scrollTop = chat.scrollHeight;
+
 }
 
 function handleSuccessfulRoom(){
