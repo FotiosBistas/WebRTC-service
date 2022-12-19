@@ -98,8 +98,26 @@ module.exports =  {
         const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         log("Created new identifier: " + hashHex);
         return hashHex;
-    }
+    },
 
+    /**
+     * Check if username is unique from the active connection array. 
+     * @param {*} username the new username 
+     * @returns true if the username is unique and error "Username is not unique if it's not"
+     */
+    isUsenameUnique: function(username){
+        let no = active_connections.find((con) => {
+            if(con.username === username){
+                return con; 
+            }
+        });
+
+        if(no){
+            throw new Error("Username is not unique"); 
+        }
+
+        return true; 
+    },
 
 }
 
