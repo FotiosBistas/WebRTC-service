@@ -35,7 +35,7 @@ module.exports = {
             throw new Error("message doesn't have an ID specified");
         }
 
-        if(("type") in message && message.type === "text-message"){
+        if(("type") in message && (message.type === "text-message" || message.type === "new-file-metadata")){
             room_handlers.addMessageToRoomHistory(room_code, message);
         }
 

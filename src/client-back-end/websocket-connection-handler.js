@@ -191,7 +191,9 @@ function onMessageEventHandler(message) {
         case "message-history":
             websocket_front_end_handlers.handleMessageHistory(msg);
             break; 
-
+        case "new-file-metadata":
+            websocket_front_end_handlers.handleNewFileMetadata(msg);
+            break; 
         case "active-members":
             websocket_front_end_handlers.handleActiveMembers(msg); 
             break; 
@@ -248,6 +250,8 @@ export function sendFileOverChat(file){
         fileSize: file.size, 
         lastModified: file.lastModified, 
     })
+
+    front_end_handlers.addNewFileMetadata(getUsername.get(), file);
 }
 
 export function closeWebSocketConnection(){

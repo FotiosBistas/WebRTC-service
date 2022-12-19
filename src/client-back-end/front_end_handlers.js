@@ -64,21 +64,11 @@ export let websocket_front_end_handlers = {
      */
     handleMessageHistory: function(message){
         message.messages.forEach((msg) => {
-            let new_message = document.createElement("div");
-            //specifies it's the peer who sent the message 
-            new_message.setAttribute('class', "message_container"); 
-            new_message.innerHTML = `<h3>` + msg.username + `</h3>`; 
-            new_message.insertAdjacentHTML("beforeend",`<p>` + msg.message_data + `</p>`);
-
-
-            let chat = document.getElementsByClassName("chat")[0];
-            
-
-            let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
-
-            chat.insertBefore(new_message, chat_input_box);
-            // Scroll to the bottom of the div
-            chat.scrollTop = chat.scrollHeight;
+            if(msg.type === "new-file-metadata"){
+                this.handleNewFileMetadata(msg);
+            }else if(msg.type === "text-message"){
+                this.handleNewTextMessage(msg); 
+            }
         });
     },
 
@@ -92,6 +82,23 @@ export let websocket_front_end_handlers = {
         new_message.setAttribute('class', "message_container"); 
         new_message.innerHTML = `<h3>` + message.username + `</h3>`; 
         new_message.insertAdjacentHTML("beforeend",`<p>` + message.message_data + `</p>`);
+
+
+        let chat = document.getElementsByClassName("chat")[0];
+        
+
+        let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
+
+        chat.insertBefore(new_message, chat_input_box);
+        // Scroll to the bottom of the div
+        chat.scrollTop = chat.scrollHeight;
+    },
+
+    handleNewFileMetadata: function(message){
+        let new_message = document.createElement("div");
+        //specifies it's the peer who sent the message 
+        new_message.setAttribute('class', "message_container"); 
+        new_message.innerHTML = `<h3>` + message.username + `</h3>` + `<h4>` + message.fileName + message.fileType + `</h4>` + `<br>` + message.fileSize + `<br>` + message.lastModified;  
 
 
         let chat = document.getElementsByClassName("chat")[0];
@@ -219,6 +226,23 @@ export let front_end_handlers = {
         new_message.setAttribute('class', "message_container_darker"); 
         new_message.innerHTML = `<h3>` + username + `</h3>`; 
         new_message.insertAdjacentHTML("beforeend",`<p>` + data + `</p>`);
+
+
+        let chat = document.getElementsByClassName("chat")[0];
+        
+
+        let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
+
+        chat.insertBefore(new_message, chat_input_box);
+        // Scroll to the bottom of the div
+        chat.scrollTop = chat.scrollHeight;
+    },
+
+    addNewFileMetadata: function(username, file){
+        let new_message = document.createElement("div");
+        //specifies it's you who sent the message 
+        new_message.setAttribute('class', "message_container_darker"); 
+        new_message.innerHTML = `<h3>` + username + `</h3>` + `<h4>` + file.name + file.type + `</h4>` + `<br>` + file.size + `<br>` + file.lastModified; 
 
 
         let chat = document.getElementsByClassName("chat")[0];

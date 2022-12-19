@@ -1,4 +1,4 @@
-import { webSocketConnect,sendNewTextMessage, closeWebSocketConnection } from "./websocket-connection-handler.js"
+import { webSocketConnect,sendNewTextMessage, closeWebSocketConnection,sendFileOverChat } from "./websocket-connection-handler.js"
 import { createPeerConnection,getLocalStream ,closePeerConnection} from "./peer-connection-handler.js";
 import { media_functions } from "./media-handler.js";
 
@@ -59,7 +59,7 @@ let camera = document.getElementById("camera-image");
 let microphone = document.getElementById("microphone-image");
 let chat = document.getElementsByClassName("chat")[0];
 let toggle_chat_panel = document.getElementById("chat-image");
-
+let fileInput = document.getElementById("file-input"); 
 let room = document.getElementsByClassName("room")[0]; 
 let chat_and_call = document.getElementsByClassName("chatandcall")[0];
 
@@ -89,12 +89,20 @@ microphone.onclick = function(event){
     }); 
 }
 
+// Add an event listener to the file input element to handle file selection
+fileInput.onchange = function(event){
+    // Get the selected file
+    const file = event.target.files[0];
+    
+    // Send the file over the chat 
+    sendFileOverChat(file);
+};
+
 toggle_chat_panel.onclick = function(event){
     if(chat.style.display === "none"){
         chat.style.display = "flex";
     }else{
         chat.style.display = "none";
-    }
-    
+    }  
 }
 
