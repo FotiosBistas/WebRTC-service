@@ -80,8 +80,8 @@ module.exports = {
 
     /**
      * Adds the file contents on to the file contents array in case the user wants to download it. 
-     * @param {*} room_code 
-     * @param {*} contents 
+     * @param {*} room_code the room code that is going to contain the file contents.
+     * @param {*} contents the contents of the file. 
      */
     addFileContentsToFileContentsArray(room_code, contents){
         let room = this.doesRoomExists(room_code); 

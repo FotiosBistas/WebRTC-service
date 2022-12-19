@@ -106,3 +106,7 @@ toggle_chat_panel.onclick = function(event){
     }  
 }
 
+
+
+
+

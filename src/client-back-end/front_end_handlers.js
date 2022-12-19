@@ -1,6 +1,6 @@
 import { media_functions } from "./media-handler.js";
 import {setLocalStream, getLocalStream, getLocalPeerConnection} from "./peer-connection-handler.js"; 
-import { getClientID } from "./websocket-connection-handler.js";
+import { getClientID, sendToServer } from "./websocket-connection-handler.js";
 
 function log(text){
     var time = new Date();
@@ -80,6 +80,7 @@ export let websocket_front_end_handlers = {
         let new_message = document.createElement("div");
         //specifies it's the peer who sent the message 
         new_message.setAttribute('class', "message_container"); 
+        new_message.setAttribute('id', message.id + " message_container");
         new_message.innerHTML = `<h3>` + message.username + `</h3>`; 
         new_message.insertAdjacentHTML("beforeend",`<p>` + message.message_data + `</p>`);
 
@@ -98,16 +99,30 @@ export let websocket_front_end_handlers = {
         let new_message = document.createElement("div");
         //specifies it's the peer who sent the message 
         new_message.setAttribute('class', "message_container"); 
-        new_message.innerHTML = `<h3>` + message.username + `</h3>` + `<h4>` + message.fileName + message.fileType + `</h4>` + `<br>` + message.fileSize + `<br>` + message.lastModified;  
+        new_message.setAttribute('id', message.id + " message_container");
+        new_message.innerHTML = `<h3>` + message.username + `</h3>` + `<a class="metadata_link" href="#"><h4>` + message.fileName + message.fileType + `</h4></a>` + `<br>` + message.fileSize + `<br>` + message.lastModified;  
 
-
+        
         let chat = document.getElementsByClassName("chat")[0];
         
 
         let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
 
         chat.insertBefore(new_message, chat_input_box);
+        let links = Array.from(document.getElementsByClassName("metadata_link"));
         // Scroll to the bottom of the div
+        links.forEach((element) => {
+            element.addEventListener("click", function(event) {
+              let id = new_message.getAttribute('id').split(" ")[0];
+              log("client " + id + " id for message");
+
+              sendToServer({
+                type: "download-file",
+                remote_id: id, 
+              })
+            });
+          });
+    
         chat.scrollTop = chat.scrollHeight;
     },
 
@@ -224,6 +239,7 @@ export let front_end_handlers = {
         let new_message = document.createElement("div");
         //specifies it's you who sent the message 
         new_message.setAttribute('class', "message_container_darker"); 
+        new_message.setAttribute('id', getClientID.get() + " message_container_darker");
         new_message.innerHTML = `<h3>` + username + `</h3>`; 
         new_message.insertAdjacentHTML("beforeend",`<p>` + data + `</p>`);
 
@@ -242,8 +258,10 @@ export let front_end_handlers = {
         let new_message = document.createElement("div");
         //specifies it's you who sent the message 
         new_message.setAttribute('class', "message_container_darker"); 
-        new_message.innerHTML = `<h3>` + username + `</h3>` + `<h4>` + file.name + file.type + `</h4>` + `<br>` + file.size + `<br>` + file.lastModified; 
+        new_message.setAttribute('id', getClientID.get() + " message_container_darker");
+        new_message.innerHTML = `<h3>` + username + `</h3>` + `<a class="metadata_link" href="#"><h4>` + file.name + file.type + `</h4></a>` + `<br>` + file.size + `<br>` + file.lastModified; 
 
+        
 
         let chat = document.getElementsByClassName("chat")[0];
         
@@ -251,7 +269,19 @@ export let front_end_handlers = {
         let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
 
         chat.insertBefore(new_message, chat_input_box);
+        let links = Array.from(document.getElementsByClassName("metadata_link")); 
         // Scroll to the bottom of the div
+        links.forEach((element) => {
+            element.addEventListener("click", function(event) {
+              let id = new_message.getAttribute('id').split(" ")[0];
+              log("client " + id + " id for message");
+
+              sendToServer({
+                type: "download-file",
+                remote_id: id, 
+              })
+            });
+          });
         chat.scrollTop = chat.scrollHeight;
     },
 

@@ -239,9 +239,11 @@ async function onMessageEventHandler(message) {
             }
             break; 
         case "new-file-contents":
+            log("Received new file contents");
             break; 
         // in case the user decides to download the file. 
         case "download-file": 
+            log("Received new download file message");  
             break; 
         default: 
             log("Unhandled message type: " + data.type);
