@@ -1,7 +1,7 @@
 
 import { front_end_handlers } from "./front_end_handlers.js";
 import { media_functions } from "./media-handler.js";
-import {sendToServer,getClientID} from "./websocket-connection-handler.js"
+import {sendToServer,getClientID, closeWebSocketConnection} from "./websocket-connection-handler.js"
 
 function log(text){
     var time = new Date();
@@ -74,6 +74,11 @@ export function createPeerConnection(){
     peer_connection.onicecandidate = handleICECandidateEvent;
     peer_connection.ontrack = handleTrackEvent;
     peer_connection.onnegotiationneeded = handleNegotiationNeededEvent; 
+    peer_connection.onclose = function(){
+        closePeerConnection(); 
+        closeWebSocketConnection(); 
+        front_end_handlers.restoreJoinRoomScreen(); 
+    }
     peer_connection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
 }
 
@@ -122,6 +127,8 @@ function handleConnectionStateChangeEvent(event){
             break; 
         case "closed":
             closePeerConnection(); 
+            closeWebSocketConnection(); 
+            front_end_handlers.restoreJoinRoomScreen(); 
             break;  
     } 
 }
@@ -143,7 +150,7 @@ export function closePeerConnection(){
         peer_connection.close();
         peer_connection = null; 
         local_stream = null; 
-        front_end_handlers.terminateStreamTracks(getClientID.get()); 
+        front_end_handlers.terminateStreamTracks(); 
     } 
 }
 
@@ -208,6 +215,8 @@ function handleICEConnectionStateChangeEvent(event) {
         case "failed":
         case "disconnected":
             closePeerConnection();
+            closeWebSocketConnection(); 
+            front_end_handlers.restoreJoinRoomScreen();
             break;
     }
 }
