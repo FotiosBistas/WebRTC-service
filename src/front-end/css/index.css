@@ -1,11 +1,11 @@
 .chatandcall{
     display: grid; 
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 3fr 1fr 1fr;
     grid-template-rows: min-content;  
     background-color: rgb(19, 130, 163);
     grid-template-areas: 
-    "video video video chat"
-    "controls controls controls controls";  
+    "video video video active-members chat"
+    "controls controls controls controls controls";  
 }
 
 
@@ -106,7 +106,16 @@ video{
 .chat-input-box{
     position: sticky;
     bottom: 0;
+    display: flex; 
+    flex-direction: row; 
+    align-items: center;
 }
+
+.chat-input-icon{
+    display: flex;
+    align-items: center;
+}
+
 
 #chat-input {
     display: block;
@@ -118,3 +127,18 @@ video{
     line-height: 20px;
 }
   
+#file-input-image{
+    width: 30px;
+    height: 10%;
+}
+
+
+.active-members{
+    display: flex;
+    flex-direction: column;
+    grid-area: active-members;
+}
+
+.active-member-box{
+    background-color: #999;
+}
