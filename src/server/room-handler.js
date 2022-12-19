@@ -12,12 +12,13 @@ function log(text){
 module.exports = {
 
     /**
-     * Creates a new room with the code given. Also add the creator to the room's connection list. 
+     * Creates a new room with the code given. Also add the creator to the room's connection list.  Adds the username and the room-code to the connection list. 
      * @param {*} room_code the room code that the new room will have 
      * @param {*} connection the connection of the user that will create the room 
+     * @param {*} username the username of the users to add into the connection. 
      * @throws {*} throws room already exists if the room already exists.  
     */
-    createRoom: function(room_code, connection){
+    createRoom: function(room_code, username,connection){
         log("Creating new room"); 
 
         let room = this.doesRoomExists(room_code);
@@ -33,11 +34,13 @@ module.exports = {
         let new_room = {
             code: room_code,
             room_history: [], //array of messages sent over the server 
+            files_content:[], //array of file content sent over the server 
             users: [], 
         }
 
         //the user that created the room should be given elevated privilages for the connection 
         connection.creator = true; 
+        connection.username = username; 
         //push the connection to the active users of the room 
         new_room.users.push(connection); 
 
@@ -76,6 +79,21 @@ module.exports = {
     },
 
     /**
+     * Adds the file contents on to the file contents array in case the user wants to download it. 
+     * @param {*} room_code 
+     * @param {*} contents 
+     */
+    addFileContentsToFileContentsArray(room_code, contents){
+        let room = this.doesRoomExists(room_code); 
+
+        if(!room){
+            throw new Error("Room doesn't exist"); 
+        }
+        room.files_content.push(contents); 
+        log("Added file contents to room"); 
+    },
+
+    /**
      * Returns all connections with the specified room code. 
      * @param {*} room_code the room code that we want to receive the connections for
      * @returns the room and the connections (or connection) with the specified room code. These are encapsulated in an object {current_room: room, current_room_connections: room.users}
@@ -92,6 +110,20 @@ module.exports = {
             current_room: room,
             current_room_connections: room.users,
         }; 
+    },
+
+    getUsernamesFromRoom: function(room_code){
+        let current_room = null ,current_room_connections = null; 
+        log("Returning usernames from room");
+        try{
+            ({current_room,current_room_connections} = this.getConnectionsFromRoom(room_code));
+        }catch(err){
+            throw err; 
+        }
+        let usernames = current_room_connections.map((connection) => {
+            return {username:connection.username,id:connection.user_id}; 
+        });
+        return usernames; 
     },
 
     /**
@@ -131,18 +163,20 @@ module.exports = {
     },
 
     /**
-     * Adds user to the specific room if it exists. 
+     * Adds user to the specific room if it exists. Adds the room_code and username to the connection and also specifies if the user is the creator. 
      * @param {*} room_code the room code that the user is going to be added to 
      * @param {*} connection the user connection that is going to be added to the room 
+     * @param {*} username the username of the user connection. 
      * @throws {*} room doesn't exist error if room doesn't exist.  
     */
-    addUserToRoom: function(room_code, connection){
+    addUserToRoom: function(room_code, username, connection){
         let room = this.doesRoomExists(room_code);
         if(!room){
             throw new Error("Room doesn't exist");   
         }
-        //IMPORTANT IOUOUOUIOIOU add room code to connection 
+        //IMPORTANT IOUOUOUIOIOU add room code,username, creator to connection 
         connection.room_code = room_code;
+        connection.username = username; 
         connection.creator = false; 
         //connection should have a user id accompanied with it from the initiation phase of the connection. 
         room.users.push(connection);
