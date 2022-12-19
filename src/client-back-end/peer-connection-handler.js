@@ -1,6 +1,7 @@
 
+import { front_end_handlers } from "./front_end_handlers.js";
 import { media_functions } from "./media-handler.js";
-import {sendToServer,clientID, current_room_code} from "./websocket-connection-handler.js"
+import {sendToServer,getClientID} from "./websocket-connection-handler.js"
 
 function log(text){
     var time = new Date();
@@ -18,10 +19,17 @@ export let remote_streams = [];
 //local stream 
 export let local_stream = null; 
 
+/**
+ * Sets the local stream to the parameter stream 
+ * @param {*} stream the stream to be set 
+ */
 export function setLocalStream(stream){
     local_stream = stream; 
 }
-
+/**
+ * 
+ * @returns the local stream (video,audio) of the peer connection. 
+ */
 export function getLocalStream(){
     return local_stream; 
 }
@@ -41,6 +49,14 @@ const default_configuration = {
 
 
 export let peer_connection = null; 
+
+/**
+ * 
+ * @returns the local peer connection. 
+ */
+export function getLocalPeerConnection(){
+    return peer_connection; 
+}
 
 /**
  * Creates a RTCPeerConnection assigning the result. 
@@ -84,9 +100,7 @@ async function handleNegotiationNeededEvent(){
         log("Sending the offer to the remote peer")
         
         sendToServer({
-            id: clientID, 
             type: "offer", 
-            room_code: current_room_code, 
             sdp: peer_connection.localDescription, 
         });
         
@@ -113,7 +127,6 @@ function handleConnectionStateChangeEvent(event){
 }
 
 export function closePeerConnection(){
-    let local_video = document.getElementById(clientID);    
     if(peer_connection){
         log("Closing the peer connection");
         //avoid having additional events coming to the connection 
@@ -127,17 +140,10 @@ export function closePeerConnection(){
         //stopping the transceivers which are pairings of RTCRtp senders and receivers
         //these essentially send the media stream tracks over the connection. 
         peer_connection.getTransceivers().forEach((transceiver) => transceiver.stop())
-        
-        if(local_video.srcObject){
-            local_video.srcObject.getTracks().forEach((track) => track.stop()); 
-        } 
-
-        
         peer_connection.close();
         peer_connection = null; 
         local_stream = null; 
-
-        local_video.remove(); 
+        front_end_handlers.terminateStreamTracks(getClientID.get()); 
     } 
 }
 
@@ -188,8 +194,6 @@ function handleICECandidateEvent(event){
         //this means that the ICE negotiation has finished. s
 
         sendToServer({
-            id: clientID, 
-            room_code: current_room_code, 
             type: "new-ice-candidate",
             candidate: event.candidate
         });
@@ -205,6 +209,116 @@ function handleICEConnectionStateChangeEvent(event) {
         case "disconnected":
             closePeerConnection();
             break;
+    }
+}
+
+// ALL THE BELOW HANDLERS ARE CALLED THROUGH THE WEBSOCKET CONNECTION ON MESSAGE EVENT. 
+
+/**
+ * Get's called by the websocket-connection-handler module whenever there's a new "offer"/"offer-answer"/"new-ice-candidate" message type. 
+ * @param {*} message the message received by the signalling server. 
+ */
+export function callAppropriateHandler(message){
+    switch (message.type){
+        case "offer": 
+            handleNewOffer(message);
+            break; 
+        case "offer-answer":
+            handleOfferAnswer(message); 
+            break; 
+        case "new-ice-candidate": 
+            handleNewICECandidate(message); 
+            break; 
+    }
+}
+
+/**
+ * Get's called whenever there's a new message of type "new-ice-candidate" from the signalling server. 
+ * @param {*} message the message received by the signalling server. 
+ */
+async function handleNewICECandidate(message){
+    
+    log("Received new ice candidate from the remote peer.")
+
+    if (!("candidate" in message) || !message.candidate){
+        log("Received new ice candidate event without candidate value")
+        return 
+    }
+
+    let new_candidate = new RTCIceCandidate(message.candidate);
+    try{
+        await peer_connection.addIceCandidate(new_candidate);
+    }catch(err){
+        log("Error while adding new ICE candidate: " + err); 
+    }
+}
+
+/**
+ * Receives a new offer from the remote peer through the signalling server. 
+ * Creates the peer connection if it's not already created. 
+ * 
+ * @param {*} msg this message should have the following structure: 
+ * 
+ * {id:clientID, type: "offer",  room_code: current_room_code, sdp: peer_connection.localDescription,} 
+ */
+async function handleNewOffer(msg){
+
+    log("Received new offer from the remote peer");
+    //if there isn't a peer connection underway it must be created 
+    if(!peer_connection){
+        createPeerConnection(); 
+    }
+
+
+    //create a new description from the sdp received 
+    let new_remote_description = new RTCSessionDescription(msg.sdp);
+ 
+
+    
+    log("Setting remote description because new offer was received");
+    try{
+        await peer_connection.setRemoteDescription(new_remote_description);
+    }catch(err){
+        log("Error:(" + err + ") while trying to set remote description");
+    }
+
+    if(!getLocalStream()){
+        try{
+            //after that get the media devices of the user and add them into the remote connection 
+            front_end_handlers.getLocalMediaAndHandleHtml(); 
+        }catch(err){
+            media_functions.handleGetUserMediaError(err); 
+        }
+    }
+
+    //create answer and set local description 
+    try{
+        let answer = await peer_connection.createAnswer(); 
+        await peer_connection.setLocalDescription(answer);
+    }catch(err){
+        log("Error:(" + err + ") while trying to create answer");
+    }
+
+    sendToServer({
+        type: "offer-answer", 
+        sdp: peer_connection.localDescription 
+    })
+}
+
+
+/**
+ * Receives an offer answer message from the remote peer through the signalling server. 
+ * @param {*} msg the message received from the signalling server. It must contains a message description. s
+ */
+async function handleOfferAnswer(msg){
+
+    log("Received offer answer message");
+    //create a new description from the sdp received 
+    let new_remote_description = new RTCSessionDescription(msg.sdp);
+    try{
+        await peer_connection.setRemoteDescription(new_remote_description);
+    }catch(err){
+        log("Error:(" + err + ") while trying to set remote description");
     }
 }
 
