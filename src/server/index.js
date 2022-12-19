@@ -105,7 +105,7 @@ web_socket_server.on('request',async function(request) {
     let connection = request.accept("json", request.origin); 
     assignConnectionHandlers(connection); 
     /* unique identifer for user */
-    let user_id = await active_connection_handlers.createIdentifierForUser(++nextID); 
+    let user_id = await active_connection_handlers.createIdentifierForUser("initial"); 
 
     //IMPORTANT IOUOUOUOUOU add user id to connection 
     connection.user_id = user_id; 
@@ -115,7 +115,7 @@ web_socket_server.on('request',async function(request) {
     //TODO temporary way to send data 
     connection.send(JSON.stringify({
         type: "id",
-        identifier: user_id 
+        identifier: user_id,
     }))
 
 
@@ -153,14 +153,14 @@ function onErrorEventHandler(error) {
  * Gets called whenever there's a new message on the connection. 
  * @param {*} message a utf8 type message received from the connection 
  */
-function onMessageEventHandler(message) {
+async function onMessageEventHandler(message) {
     log("New message received from connection"); 
     let data = JSON.parse(message.utf8Data); 
     switch (data.type){
         case "create_room_code": 
             //create room and add room code to connection 
             try{
-                room_handlers.createRoom(data.room_code, this);
+                room_handlers.createRoom(data.room_code, data.username,this);
                 //confirm to user that it has created the room 
                 send_data.sendToOneUser(this, {
                     type:"successful-room", 
@@ -176,7 +176,7 @@ function onMessageEventHandler(message) {
             break; 
         case "join_room_code":
             try{
-                room_handlers.addUserToRoom(data.room_code, this); 
+                room_handlers.addUserToRoom(data.room_code, data.username,this); 
                 //confirm to user that it was added to the room 
                 send_data.sendToOneUser(this, {
                     type:"successful-room", 
@@ -187,8 +187,39 @@ function onMessageEventHandler(message) {
                     messages: room_handlers.getMessageHistory(data.room_code), 
                 })
 
+                send_data.sendToOneUser(this,{
+                    type:"active-members", 
+                    active_members: room_handlers.getUsernamesFromRoom(data.room_code), 
+                }); 
+
+                send_data.sendToRoomParticipants(data.room_code, ({
+                    type:"user-joined",
+                    id: data.id, 
+                    username: data.username,  
+                }));
+
+
             }catch(err){
                 log("Error(" + err + ")while trying to add user to room"); 
+                send_data.sendToOneUser(this, {
+                    type: "error", 
+                    error_data:err.message, 
+                }); 
+            }
+            break; 
+        //create new client id on connection based on username 
+        case "received-id":
+            try{
+                let unique = active_connection_handlers.isUsenameUnique(data.username); 
+                if(unique){
+                    this.user_id = this.user_id + await active_connection_handlers.createIdentifierForUser(data.username); 
+                    send_data.sendToOneUser(this, {
+                        type: "successful-username", 
+                        id: this.user_id, 
+                    });
+                }
+            }catch(err){
+                log("Error(" + err + ")while trying to create identifier for user"); 
                 send_data.sendToOneUser(this, {
                     type: "error", 
                     error_data:err.message, 
@@ -206,6 +237,23 @@ function onMessageEventHandler(message) {
                     error_data:err.message, 
                 });
             }
+            break; 
+        case "new-file-metadata": 
+            try{
+                send_data.sendToRoomParticipants(data.room_code, data);
+            }catch(err){
+                log("Error(" + err + ")while trying to send offer/new-ice-candidate/offer-answer/text-message message to room participants");
+                send_data.sendToOneUser(this, {
+                    type: "error", 
+                    error_data:err.message, 
+                });
+            } 
+            break; 
+        // in case the user decides to download the file. 
+        case "new-file-contents":
+            break; 
+
+        case "download-file": 
             break; 
         default: 
             log("Unhandled message type: " + data.type);
