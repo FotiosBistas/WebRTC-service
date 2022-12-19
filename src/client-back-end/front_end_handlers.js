@@ -47,9 +47,15 @@ export let websocket_front_end_handlers = {
      */
     handleActiveMembers: function(message){
         let active_members_list = document.getElementsByClassName("active-members")[0]; 
-        let new_active_user_box = document.createElement("div");
-        new_active_user_box.setAttribute("class", "active-member-box");  
-        new_active_user_box.setAttribute("id", message.id); 
+        message.active_members.forEach((member) => {
+            if(getClientID.get() !== member.id){
+                let new_active_user_box = document.createElement("div");
+                new_active_user_box.setAttribute("class", "active-member-box"); 
+                new_active_user_box.innerHTML = `<h3>` + member.username + `</h3>` 
+                new_active_user_box.setAttribute("id", member.id + " active_user_box"); 
+                active_members_list.append(new_active_user_box);
+            }
+        });
     },
 
     /**
@@ -124,8 +130,15 @@ export let websocket_front_end_handlers = {
      * @param {*} message message received from the websocket connection.
      */
     handleUserJoining: function(message){
+        let active_members_list = document.getElementsByClassName("active-members")[0]; 
+        let new_active_user_box = document.createElement("div");
+        new_active_user_box.setAttribute("class", "active-member-box"); 
+        new_active_user_box.innerHTML = `<h3>` + message.username + `</h3>` 
+        new_active_user_box.setAttribute("id", message.id + " active_user_box"); 
+        active_members_list.append(new_active_user_box);
 
-    }, 
+        //TODO display user joined message in the chat. 
+    },  
 
 
     /**
@@ -140,10 +153,13 @@ export let websocket_front_end_handlers = {
         //TODO HANDLE HTML CSS 
 
         //-------TASK---------
+        //remove user from active users
+        let member_left = document.getElementById(message.id + " active_user_box"); 
+        member_left.remove(); 
 
-        let remote_video = document.getElementById(message.id);
+        /* let remote_video = document.getElementById(message.id);
         //TODO remove stream from remote streams 
-        remote_video.remove(); 
+        remote_video.remove();  */
     }
 }
 
@@ -159,8 +175,12 @@ export let front_end_handlers = {
         let chatandcallElements = document.getElementsByClassName("chatandcall");
         let chatandcall = chatandcallElements[0];
 
-        chatandcall.style.display = "none"; 
-        room.style.display = "block"; 
+        if(chatandcall.style.display !== "none"){
+            chatandcall.style.display = "none"; 
+        }
+        if(chatandcall.style.display !== "block"){
+            room.style.display = "block"; 
+        }
     },
 
     /**
@@ -179,7 +199,7 @@ export let front_end_handlers = {
 
             let video = document.createElement('video'); 
             video.setAttribute('autoplay', true); 
-            video.setAttribute("id",getClientID.get());
+            video.setAttribute("id",getClientID.get() + " video");
             video.srcObject = getLocalStream(); 
     
             let video_grid = document.getElementsByClassName("streams")[0];
@@ -211,12 +231,15 @@ export let front_end_handlers = {
         chat.scrollTop = chat.scrollHeight;
     },
 
-
-    terminateStreamTracks: function(clientID){
-        let local_video = document.getElementById(getClientID.get());    
-        if(local_video.srcObject){
+    /**
+     * Closes the webrtc's stream's tracks and removes the video from the html file. 
+     */
+    terminateStreamTracks: function(){
+        let local_video = document.getElementById(getClientID.get() + " video");    
+        if(local_video && local_video.srcObject){
             local_video.srcObject.getTracks().forEach((track) => track.stop()); 
+            local_video.remove(); 
         } 
-        local_video.remove(); 
+        
     }
 }
