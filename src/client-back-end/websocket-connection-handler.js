@@ -1,7 +1,7 @@
 "use strict"
 
 import { media_functions } from "./media-handler.js";
-import {callAppropriateHandler} from "./peer-connection-handler.js"
+import {callAppropriateHandler, closePeerConnection} from "./peer-connection-handler.js"
 import { websocket_front_end_handlers,front_end_handlers } from "./front_end_handlers.js";
 
 let hostname = window.location.hostname;
@@ -29,6 +29,9 @@ function createGetterForParam(param){
                 hasBeenCalled = true;
             }
             return param_value;
+        },
+        set:function(new_param){
+            param_value = new_param;
         },
         reset: function() {
             param_value = null;
@@ -139,7 +142,9 @@ export function webSocketConnect(room_code, action, username){
 }
 
 function onCloseEventHandler(event) {
-    log("Connection has been closed with code: " + event.code + " reason: " + event.reason + " was clean: " + event.wasClean); 
+    log("Connection has been closed with code: " + event.code + " reason: " + event.reason + " was clean: " + event.wasClean);
+    closeWebSocketConnection(); 
+    closePeerConnection();  
     front_end_handlers.restoreJoinRoomScreen(); 
 }
 
@@ -155,16 +160,22 @@ function onMessageEventHandler(message) {
     switch(msg.type){
         //TODO handle all the messages types  
 
-        // ----- TASK  ------- 
+        // ----- TASK  -------
         case "id": 
             //user is initialized in the server 
             log("Received new ID message from connection"); 
             getClientID = createGetterForParam(msg.identifier);
+
+            sendToServer({
+                type:"received-id",
+            })
+            break; 
+        case "successful-username": 
+            getClientID.set(msg.id);
             //after that send immediately which room you want to join/create 
             sendToServer({
                 type: current_action + "_room_code", 
             });
-             
             break; 
         case "user-left": 
             //some other user left the call  
