@@ -178,6 +178,9 @@ module.exports = {
         connection.room_code = room_code;
         connection.username = username; 
         connection.creator = false; 
+        if(room.users.length == 2){
+            throw new Error("currently only two peers are supported");
+        }
         //connection should have a user id accompanied with it from the initiation phase of the connection. 
         room.users.push(connection);
         log("Added new user:" + connection.user_id + " to room:" + room.code);

@@ -19,6 +19,18 @@ export let remote_streams = [];
 //local stream 
 export let local_stream = null; 
 
+//temporary solutions works fine for one to one connections
+let remote_peer_id = null; 
+let remote_stream = new MediaStream(); 
+let remote_video = null;
+
+export function setRemotePeerId(id){
+    remote_peer_id = id; 
+}
+
+export function getRemotePeerId(id){
+    return remote_peer_id;
+}
 /**
  * Sets the local stream to the parameter stream 
  * @param {*} stream the stream to be set 
@@ -69,16 +81,16 @@ export function createPeerConnection(){
     }catch(err){
         throw new Error("couldn't establish peer connection"); 
     }
-    
     peer_connection.onconnectionstatechange = handleConnectionStateChangeEvent;
     peer_connection.onicecandidate = handleICECandidateEvent;
     peer_connection.ontrack = handleTrackEvent;
     peer_connection.onnegotiationneeded = handleNegotiationNeededEvent; 
-    peer_connection.onclose = function(){
+    //temporary solution for one to one connection
+    /* peer_connection.onclose = function(){
         closePeerConnection(); 
         closeWebSocketConnection(); 
         front_end_handlers.restoreJoinRoomScreen(); 
-    }
+    }  */
     peer_connection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
 }
 
@@ -98,7 +110,6 @@ async function handleNegotiationNeededEvent(){
         }
 
         const offer = await peer_connection.createOffer(); 
-
         log("Setting local description with offer: " + offer); 
         await peer_connection.setLocalDescription(offer);
 
@@ -126,9 +137,10 @@ function handleConnectionStateChangeEvent(event){
             log("Peers successfully connected");
             break; 
         case "closed":
+            //temporary solution works fine for one to one connections
             closePeerConnection(); 
             closeWebSocketConnection(); 
-            front_end_handlers.restoreJoinRoomScreen(); 
+            front_end_handlers.restoreJoinRoomScreen();  
             break;  
     } 
 }
@@ -150,6 +162,7 @@ export function closePeerConnection(){
         peer_connection.close();
         peer_connection = null; 
         local_stream = null; 
+        remote_stream = new MediaStream(); 
         front_end_handlers.terminateStreamTracks(); 
     } 
 }
@@ -170,19 +183,21 @@ export function closePeerConnection(){
  */
 function handleTrackEvent(event){
     log("Handling track event");
-    let remote_stream = new MediaStream(); 
-
-    let remote_video = document.createElement("video");
+    
+    remote_video = document.getElementById(remote_peer_id + " video"); 
+    if(!remote_video){
+        remote_video = document.createElement("video");
+        remote_video.setAttribute('id', remote_peer_id + " video");
+    }
+    
     //TODO ADD REMOTE PEER ID
     remote_video.setAttribute('autoplay', true); 
-
 
     let video_grid = document.getElementsByClassName("streams")[0];
 
     video_grid.append(remote_video);
 
     remote_stream.addTrack(event.track); 
-    remote_streams.push(remote_stream);
  
     remote_video.srcObject = remote_stream; 
 
@@ -214,6 +229,7 @@ function handleICEConnectionStateChangeEvent(event) {
         case "closed":
         case "failed":
         case "disconnected":
+            //temporary solution works fine for one to one connections
             closePeerConnection();
             closeWebSocketConnection(); 
             front_end_handlers.restoreJoinRoomScreen();
@@ -281,14 +297,13 @@ async function handleNewOffer(msg){
 
     //create a new description from the sdp received 
     let new_remote_description = new RTCSessionDescription(msg.sdp);
- 
 
     
     log("Setting remote description because new offer was received");
     try{
         await peer_connection.setRemoteDescription(new_remote_description);
     }catch(err){
-        log("Error:(" + err + ") while trying to set remote description");
+        log("Error:(" + err + ") while trying to set remote description inside new offer");
     }
 
     if(!getLocalStream()){
@@ -327,7 +342,7 @@ async function handleOfferAnswer(msg){
     try{
         await peer_connection.setRemoteDescription(new_remote_description);
     }catch(err){
-        log("Error:(" + err + ") while trying to set remote description");
+        log("Error:(" + err + ") while trying to set remote description inside offer answer");
     }
 }
 

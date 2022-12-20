@@ -1,7 +1,7 @@
 "use strict"
 
 import { media_functions } from "./media-handler.js";
-import {callAppropriateHandler, closePeerConnection} from "./peer-connection-handler.js"
+import {callAppropriateHandler, closePeerConnection, createPeerConnection} from "./peer-connection-handler.js"
 import { websocket_front_end_handlers,front_end_handlers } from "./front_end_handlers.js";
 
 let hostname = window.location.hostname;
@@ -43,6 +43,7 @@ function createGetterForParam(param){
 export let getUsername = null;
 export let getClientID = null; 
 export let getRoomCode = null; 
+export let remote_peers = new Map(); 
 
 let current_action = null; 
 
@@ -185,6 +186,7 @@ function onMessageEventHandler(message) {
             websocket_front_end_handlers.handleUserJoining(msg); 
             break;
         case "successful-room":
+            createPeerConnection(); 
             //user created or joined a room successfully 
             websocket_front_end_handlers.handleSuccessfulRoom(); 
             break;
@@ -219,6 +221,18 @@ function onOpenEventHandler(event) {
 
     // ----- TASK  ------- 
 }
+
+/**
+ * Adds new user to the list of remote peers
+ * @param {*} message the message received by the webrtc connection 
+ */
+/* function addNewUserToArray(message){
+    remote_peers.push(*)
+}
+
+function removeUserFromArray(message){
+
+} */
 
 /**
  * Sends a new text message to the server when enter is pressed or the image button is pressed(TODO). Adds the message to the self send messages. 

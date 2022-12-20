@@ -1,6 +1,6 @@
 import { media_functions } from "./media-handler.js";
-import {setLocalStream, getLocalStream, getLocalPeerConnection} from "./peer-connection-handler.js"; 
-import { getClientID, sendToServer } from "./websocket-connection-handler.js";
+import {setLocalStream, getLocalStream, getLocalPeerConnection, setRemotePeerId, getRemotePeerId} from "./peer-connection-handler.js"; 
+import { closeWebSocketConnection, getClientID, sendToServer } from "./websocket-connection-handler.js";
 
 function log(text){
     var time = new Date();
@@ -54,6 +54,7 @@ export let websocket_front_end_handlers = {
                 new_active_user_box.innerHTML = `<h3>` + member.username + `</h3>` 
                 new_active_user_box.setAttribute("id", member.id + " active_user_box"); 
                 active_members_list.append(new_active_user_box);
+                setRemotePeerId(member.id);
             }
         });
     },
@@ -132,7 +133,9 @@ export let websocket_front_end_handlers = {
      */
     handleErrorReceivedByServer: function(error){
         alert(error.error_data);
-        
+        if(error.error_data === "currently only two peers are supported"){
+            closeWebSocketConnection(); 
+        }
         //TODO HANDLE HTML CSS 
     
         //-------TASK---------
@@ -159,6 +162,7 @@ export let websocket_front_end_handlers = {
         new_active_user_box.setAttribute("id", message.id + " active_user_box"); 
         active_members_list.append(new_active_user_box);
 
+        setRemotePeerId(message.id); 
         //TODO display user joined message in the chat. 
     },  
 
@@ -177,11 +181,18 @@ export let websocket_front_end_handlers = {
         //-------TASK---------
         //remove user from active users
         let member_left = document.getElementById(message.id + " active_user_box"); 
-        member_left.remove(); 
+        if(member_left){
+            member_left.remove(); 
+        }
 
-        /* let remote_video = document.getElementById(message.id);
+        let remote_video = document.getElementById(message.id + " video");
         //TODO remove stream from remote streams 
-        remote_video.remove();  */
+        if(remote_video){
+            remote_video.srcObject.getTracks().forEach((track) => {
+                track.stop(); 
+            });
+            remote_video.remove();  
+        }
     }
 }
 
@@ -294,6 +305,10 @@ export let front_end_handlers = {
             local_video.srcObject.getTracks().forEach((track) => track.stop()); 
             local_video.remove(); 
         } 
-        
+        //terminate and remove remote videos
+        let streams = document.getElementsByClassName("streams")[0]; 
+        streams.innerHTML = ""; 
+        let members = document.getElementsByClassName("active-members")[0];
+        members.innerHTML = "";
     }
 }

@@ -1,5 +1,5 @@
-import { webSocketConnect,sendNewTextMessage, closeWebSocketConnection,sendFileOverChat } from "./websocket-connection-handler.js"
-import { createPeerConnection,getLocalStream ,closePeerConnection} from "./peer-connection-handler.js";
+import { webSocketConnect,sendNewTextMessage, closeWebSocketConnection,sendFileOverChat, getClientID } from "./websocket-connection-handler.js"
+import {getLocalStream ,closePeerConnection} from "./peer-connection-handler.js";
 import { media_functions } from "./media-handler.js";
 
 let create_room_input = document.getElementById("create_roomcode"); 
@@ -15,7 +15,6 @@ join_room_button.onclick = function() {
     let username = join_username_input.value; 
     try{
         webSocketConnect(value, "join", username); 
-        createPeerConnection(); 
     }catch(err){
         alert("Error: " + err + " while trying to join the server")
     }
@@ -33,7 +32,6 @@ create_room_button.onclick = function() {
     let username = create_username_input.value; 
     try{
         webSocketConnect(value, "create", username); 
-        createPeerConnection(); 
     }catch(err){
         alert("Error: " + err + " while trying to create the server")
     }   
