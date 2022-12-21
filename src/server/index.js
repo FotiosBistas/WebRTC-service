@@ -76,26 +76,31 @@ https_server.listen(port, function(){
  */
 function handleHttpsRequest(request, response){
     log(`Received request for ${request.url}`);
+    let processed_url = request.url.split("?")[0];
+    let params =  request.url.split("?")[1]; 
     if (request.method === 'POST' && request.url === '/sendFile') {
         handleSendFile(request, response); 
-    } else if(request.method === 'GET' && request.url === '/getFile'){
-        handleGetFile(request, response); 
+    } else if(request.method === 'GET' && request.url === '/Files'){
+        handleGetFile(request, response, params); 
     }else {
         send405(request,response);
     }
 }
 
-function handleGetFile(request, response){
+function handleGetFile(request, response, params){
+    log("Handling get file request");
+    let chunks = "";
+    //TODO send file over to the client 
 
 }
 
 function handleSendFile(request, response){
     log("Handling send file request");
-    const chunks = "";
+    let chunks = "";
     request.on('data', chunk => {
         chunks += chunk; 
         // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
-        if (body.length > 1e6) { 
+        if (chunks.length > 1e6) { 
             response.writeHead(413, {'Content-Type': 'text/plain'}); 
             response.end;
             request.connection.destroy();     
@@ -103,9 +108,8 @@ function handleSendFile(request, response){
     });
     request.on('end', () => {
         log("end of request");
-        let parsed_body = qs.parse(chunks);
-        console.log(parsed_body);
-        log(parsed_body.username); 
+        console.log(chunks);
+        //SAVE FILE BASED ON FILENAME; 
     }); 
 }
 
@@ -278,13 +282,6 @@ async function onMessageEventHandler(message) {
                     error_data:err.message, 
                 });
             }
-            break; 
-        case "new-file-contents":
-            log("Received new file contents");
-            break; 
-        // in case the user decides to download the file. 
-        case "download-file": 
-            log("Received new download file message");  
             break; 
         default: 
             log("Unhandled message type: " + data.type);

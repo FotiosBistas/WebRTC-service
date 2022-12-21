@@ -12,7 +12,7 @@ if (!hostname) {
 log("Hostname: " + hostname); 
 let server_port = 62000; 
 let web_socket_connection = null; 
-let serverURL = null; 
+
 
 /**
  * When first called it creates a closure that acts as a getter for the parameter. 
@@ -44,7 +44,7 @@ function createGetterForParam(param){
 export let getUsername = null;
 export let getClientID = null; 
 export let getRoomCode = null; 
-export let remote_peers = new Map(); 
+export let getServerURL = null; 
 
 let current_action = null; 
 
@@ -126,8 +126,8 @@ export function webSocketConnect(room_code, action, username){
     if(document.location.protocol === "https:"){
         scheme += "s";
     }
-    serverURL = hostname + ":" + server_port; 
-    let websocketScheme = scheme + "://" + serverURL; 
+    getServerURL = createGetterForParam(hostname + ":" + server_port); 
+    let websocketScheme = scheme + "://" + getServerURL.get(); 
     log("Server URL is: " + websocketScheme);
 
     try{
@@ -255,7 +255,7 @@ export function sendNewTextMessage(data){
  * Sends the file over the websocket connection and the server broadcasts it over the server. 
  * @param {*} file the file to be sent over the connection 
  */
-export function sendFileOverChat(file){
+export function sendFileOverChat(form, file){
     //send the file metadata over the server 
     sendToServer({
         type: "new-file-metadata",
@@ -264,36 +264,27 @@ export function sendFileOverChat(file){
         fileSize: file.size, 
         lastModified: file.lastModified, 
     })
+    front_end_handlers.addNewFileMetadata(getUsername.get(), getRoomCode.get(), getClientID.get() , file);
 
-    front_end_handlers.addNewFileMetadata(getUsername.get(), file);
-
-    let form = document.createElement("form");
-    form.method = "POST"; 
-    form.action = "http://" + serverURL + '/sendFile'; 
-    form.enctype = "application/x-www-form-urlencoded";
-
-    let username = document.createElement("input"); 
-    username.setAttribute("type", "text");
-    username.setAttribute("name", "username");
-    username.setAttribute("id","username_form");
-    username.value = getUsername.get(); 
-    document.body.appendChild(form); 
-
-    form.submit(); 
-
-    form.remove(); 
-
-    /* let formData = new FormData();
-    formData.append("username", getUsername.get()); 
-    formData.append("clientID", getClientID.get()); */
-    /* formData.append("file", file); */
-
-    /* fetch("http://" + serverURL + '/sendFile', {
-        method: 'POST',
-        body: formData,
-    }).then((response) => response.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.error(error)); */
+    let new_filename = getClientID.get() + "_" + getRoomCode.get() + "_" + file.name;  
+    let formdata = new FormData(); 
+    formdata.append("file", file, new_filename); 
+    fetch("http://" + getServerURL.get() + "/sendFile", {
+        method: "POST",
+        headers: {
+            "Content-Type": "multipart/form-data"
+        },
+        body: formdata
+    })
+    .then(response => {
+    // handle the response here
+    })
+    .then(data => {
+    // handle the data here
+    })
+    .catch(err => {
+    log(err);
+    });
 }
 
 export function closeWebSocketConnection(){

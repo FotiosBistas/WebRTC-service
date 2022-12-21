@@ -1,6 +1,6 @@
 import { media_functions } from "./media-handler.js";
 import {setLocalStream, getLocalStream, getLocalPeerConnection, setRemotePeerId, getRemotePeerId} from "./peer-connection-handler.js"; 
-import { closeWebSocketConnection, getClientID, sendToServer } from "./websocket-connection-handler.js";
+import { closeWebSocketConnection, getClientID, getServerURL,sendToServer } from "./websocket-connection-handler.js";
 
 function log(text){
     var time = new Date();
@@ -114,13 +114,22 @@ export let websocket_front_end_handlers = {
         // Scroll to the bottom of the div
         links.forEach((element) => {
             element.addEventListener("click", function(event) {
-              let id = new_message.getAttribute('id').split(" ")[0];
-              log("client " + id + " id for message");
+                let id = new_message.getAttribute('id').split(" ")[0];
+                log("client " + id + " id for message");
 
-              sendToServer({
-                type: "download-file",
-                remote_id: id, 
-              })
+                const formData = new FormData(); 
+                formData.append('clientID', message.id);
+                formData.append('room_code', message.room_code);
+                formData.append('username', message.username);
+                
+                const params = new URLSearchParams(formData).toString();
+                
+                const url = `http://${getServerURL.get()}/Files?${params}`;
+                
+                fetch(url)
+                  .then(response => response.text())
+                  .then(result => console.log(result))
+                  .catch((err) => log(err));
             });
           });
     
@@ -265,7 +274,7 @@ export let front_end_handlers = {
         chat.scrollTop = chat.scrollHeight;
     },
 
-    addNewFileMetadata: function(username, file){
+    addNewFileMetadata: function(username, room_code, clientID, file){
         let new_message = document.createElement("div");
         //specifies it's you who sent the message 
         new_message.setAttribute('class', "message_container_darker"); 
@@ -283,14 +292,22 @@ export let front_end_handlers = {
         let links = Array.from(document.getElementsByClassName("metadata_link")); 
         // Scroll to the bottom of the div
         links.forEach((element) => {
-            element.addEventListener("click", function(event) {
+            element.addEventListener("click", async function(event) {
               let id = new_message.getAttribute('id').split(" ")[0];
               log("client " + id + " id for message");
-
-              sendToServer({
-                type: "download-file",
-                remote_id: id, 
-              })
+                const formData = new FormData(); 
+                formData.append('clientID', clientID);
+                formData.append('room_code', room_code);
+                formData.append('username', username);
+                
+                const params = new URLSearchParams(formData).toString();
+                
+                const url = `http://${getServerURL.get()}/Files?${params}`;
+                
+                fetch(url)
+                  .then(response => response.text())
+                  .then(result => console.log(result))
+                  .catch((err) => log(err));
             });
           });
         chat.scrollTop = chat.scrollHeight;

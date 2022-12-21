@@ -86,14 +86,13 @@ microphone.onclick = function(event){
         }
     }); 
 }
-
 // Add an event listener to the file input element to handle file selection
 fileInput.onchange = function(event){
     // Get the selected file
     const file = event.target.files[0];
     
     // Send the file over the chat 
-    sendFileOverChat(file);
+    sendFileOverChat(this.parentNode,file);
 };
 
 toggle_chat_panel.onclick = function(event){
