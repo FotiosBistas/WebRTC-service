@@ -13,6 +13,9 @@ const fs = require('fs');
 const active_connection_handlers = require('./connection-array-handler.js'); 
 const room_handlers = require('./room-handler.js'); 
 const send_data = require('./send-data.js'); 
+var qs = require('querystring');
+
+
 
 
 const private_key = './privateKey.key'
@@ -23,6 +26,7 @@ const https_options = {
     cert: fs.readFileSync(certificate)
 }
 
+const localFilePath = './files';
 
 let https_server = null; 
 let web_socket_server = null;
@@ -71,10 +75,46 @@ https_server.listen(port, function(){
  * @param {*} response 
  */
 function handleHttpsRequest(request, response){
-    log("Received request for the web server" + request.url); 
-    response.writeHead(404); 
+    log(`Received request for ${request.url}`);
+    if (request.method === 'POST' && request.url === '/sendFile') {
+        handleSendFile(request, response); 
+    } else if(request.method === 'GET' && request.url === '/getFile'){
+        handleGetFile(request, response); 
+    }else {
+        send405(request,response);
+    }
+}
+
+function handleGetFile(request, response){
+
+}
+
+function handleSendFile(request, response){
+    log("Handling send file request");
+    const chunks = "";
+    request.on('data', chunk => {
+        chunks += chunk; 
+        // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+        if (body.length > 1e6) { 
+            response.writeHead(413, {'Content-Type': 'text/plain'}); 
+            response.end;
+            request.connection.destroy();     
+        }
+    });
+    request.on('end', () => {
+        log("end of request");
+        let parsed_body = qs.parse(chunks);
+        console.log(parsed_body);
+        log(parsed_body.username); 
+    }); 
+}
+
+function send405(request,response){
+    log("Sending 405 method not allowed");
+    response.writeHead(405, {'Content-Type': 'text/plain'}); 
     response.end;
 }
+
 
 function allowOrigin(origin){
     return true; 
