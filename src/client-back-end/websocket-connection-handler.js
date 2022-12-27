@@ -6,7 +6,7 @@ import { websocket_front_end_handlers,front_end_handlers } from "./front_end_han
 
 let hostname = window.location.hostname;
 if (!hostname) {
-  hostname = "localhost";
+  hostname = "192.168.1.2";
 }
 
 log("Hostname: " + hostname); 
