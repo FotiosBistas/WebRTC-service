@@ -89,9 +89,9 @@ export let websocket_front_end_handlers = {
         let chat = document.getElementsByClassName("chat")[0];
         
 
-        let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
+        let chat_input_box = document.getElementsByClassName("messages")[0];
 
-        chat.insertBefore(new_message, chat_input_box);
+        chat_input_box.appendChild(new_message);
         // Scroll to the bottom of the div
         chat.scrollTop = chat.scrollHeight;
     },
@@ -112,9 +112,9 @@ export let websocket_front_end_handlers = {
         let chat = document.getElementsByClassName("chat")[0];
         
 
-        let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
+        let chat_input_box = document.getElementsByClassName("messages")[0];
 
-        chat.insertBefore(new_message, chat_input_box);
+        chat_input_box.appendChild(new_message);
         let links = Array.from(document.getElementsByClassName("metadata_link"));
         // Scroll to the bottom of the div
         links.forEach((element) => {
@@ -274,9 +274,9 @@ export let front_end_handlers = {
         let chat = document.getElementsByClassName("chat")[0];
         
 
-        let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
+        let chat_input_box = document.getElementsByClassName("messages")[0];
 
-        chat.insertBefore(new_message, chat_input_box);
+        chat_input_box.appendChild(new_message);
         // Scroll to the bottom of the div
         chat.scrollTop = chat.scrollHeight;
     },
@@ -302,9 +302,9 @@ export let front_end_handlers = {
         let chat = document.getElementsByClassName("chat")[0];
         
 
-        let chat_input_box = document.getElementsByClassName("chat-input-box")[0];
+        let chat_input_box = document.getElementsByClassName("messages")[0];
 
-        chat.insertBefore(new_message, chat_input_box);
+        chat_input_box.appendChild(new_message);
         let links = Array.from(document.getElementsByClassName("metadata_link")); 
         // Scroll to the bottom of the div
         links.forEach((element) => {
@@ -339,6 +339,10 @@ export let front_end_handlers = {
             local_video.srcObject.getTracks().forEach((track) => track.stop()); 
             local_video.remove(); 
         } 
+
+        let chat_input_box = document.getElementsByClassName("messages")[0];
+
+        chat_input_box.innerHTML = "";
         //terminate and remove remote videos
         let streams = document.getElementsByClassName("streams")[0]; 
         streams.innerHTML = ""; 
