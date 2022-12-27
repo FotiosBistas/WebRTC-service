@@ -245,7 +245,8 @@ export let front_end_handlers = {
                 getLocalPeerConnection().addTrack(track);
             });
 
-            let video = document.createElement('video'); 
+            let video = document.createElement('video');
+            video.muted = true; // The peer must not hear its own audio.
             video.setAttribute('autoplay', true); 
             video.setAttribute("id",getClientID.get() + " video");
             video.srcObject = getLocalStream(); 
