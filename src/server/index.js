@@ -8,6 +8,7 @@
 var WebSocketServer = require('websocket').server;
 //https for initial request and the upgrading in into websockets 
 const https = require('https'); 
+const http = require('http');
 const fs = require('fs'); 
 const active_connection_handlers = require('./connection-array-handler.js'); 
 const room_handlers = require('./room-handler.js'); 
@@ -24,7 +25,7 @@ const https_options = {
 
 const localFilePath = './files';
 
-let https_server = null; 
+let http_s_server = null; 
 let web_socket_server = null;
 const port = 62000; 
 
@@ -34,9 +35,9 @@ function log(text){
 }
 
 // Try to create https server:
-if(https_server === null){
+if(!http_s_server){
     try{
-        https_server = https.createServer(
+        http_s_server = https.createServer(
             https_options, 
             handleHttpsRequest
         );
@@ -44,11 +45,24 @@ if(https_server === null){
     }catch(err){
         log("Error while trying to create https server: " + err); 
     }
+    http_s_server.listen(port, function(){
+        log("Https server is listening on port: " + port); 
+    }); 
+}  
+
+if(!http_s_server){
+    try{
+        http_s_server = http.createServer({}, handleHttpsRequest); 
+        log("Created http server"); 
+    }catch(err){
+        log("Error while trying to create http server: " + err);
+    }
+    http_s_server.listen(port, function(){
+        log("Http server is listening on port: " + port); 
+    }); 
 }
 
-https_server.listen(port, function(){
-    log("Server is listening on port: " + port); 
-}); 
+
 
 /**
  * We don't want to send any http data to the users. All is handled locally. 
@@ -122,7 +136,7 @@ function allowOrigin(origin){
  * Connection: Upgrade
  */
 web_socket_server = new WebSocketServer({
-    httpServer: https_server,
+    httpServer: http_s_server,
     autoAcceptConnections: false, 
 }); 
 
