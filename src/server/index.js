@@ -8,18 +8,14 @@
 var WebSocketServer = require('websocket').server;
 //https for initial request and the upgrading in into websockets 
 const https = require('https'); 
-const http = require('http'); 
 const fs = require('fs'); 
 const active_connection_handlers = require('./connection-array-handler.js'); 
 const room_handlers = require('./room-handler.js'); 
 const send_data = require('./send-data.js'); 
 var qs = require('querystring');
 
-
-
-
-const private_key = './privateKey.key'
-const certificate = './certificate.crt' 
+const private_key = 'tls/key.pem';
+const certificate = 'tls/cert.pem';
 
 const https_options = {
     key: fs.readFileSync(private_key), 
@@ -30,7 +26,6 @@ const localFilePath = './files';
 
 let https_server = null; 
 let web_socket_server = null;
-let nextID = 0;
 const port = 62000; 
 
 function log(text){
@@ -38,30 +33,16 @@ function log(text){
     console.log("[" + time.toLocaleTimeString() + "] " + " " + text);
 }
 
-
-/* 
-
-Best idea would be to create an https server but it doesn't work for some reason 
-*/
-/* try{
-    if(https_options.key && https_options.cert){
-        https_server = https.createServer(
-            https_options,
-            handleHttpsRequest,
-            ); 
-        log("Created a https server");
-    }
-}catch(err){
-    log(err + "while starting https server"); 
-}  */
-
-// Try to create https server without the options, meaning an http server
+// Try to create https server:
 if(https_server === null){
     try{
-        https_server = http.createServer({}, handleHttpsRequest);
-        log("Created a http server");
+        https_server = https.createServer(
+            https_options, 
+            handleHttpsRequest
+        );
+        log("Created a https server");
     }catch(err){
-        log("Error while trying to create http server: " + err); 
+        log("Error while trying to create https server: " + err); 
     }
 }
 
