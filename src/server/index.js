@@ -80,7 +80,7 @@ function handleHttpsRequest(request, response){
     let params =  request.url.split("?")[1]; 
     if (request.method === 'POST' && request.url === '/sendFile') {
         handleSendFile(request, response); 
-    } else if(request.method === 'GET' && request.url === '/Files'){
+    } else if(request.method === 'GET' && processed_url === '/Files'){
         handleGetFile(request, response, params); 
     }else {
         send405(request,response);
@@ -88,6 +88,15 @@ function handleHttpsRequest(request, response){
 }
 
 function handleGetFile(request, response, params){
+    let parameters = new URLSearchParams(params);
+    let clientID = parameters.get('clientID');
+    let room_code = parameters.get('room_code');
+    let username = parameters.get('username'); 
+    let filename = parameters.get('filename');
+    log(clientID); 
+    log(room_code); 
+    log(username); 
+    log(filename);
     log("Handling get file request");
     let chunks = "";
     //TODO send file over to the client 

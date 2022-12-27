@@ -265,8 +265,8 @@ export function sendFileOverChat(form, file){
         lastModified: file.lastModified, 
     })
     front_end_handlers.addNewFileMetadata(getUsername.get(), getRoomCode.get(), getClientID.get() , file);
-
-    let new_filename = getClientID.get() + "_" + getRoomCode.get() + "_" + file.name;  
+    //uniquely identify filename using client id,username and roomcode 
+    let new_filename = getUsername.get() + "_" + getClientID.get() + "_" + getRoomCode.get() + "_" + file.name;  
     let formdata = new FormData(); 
     formdata.append("file", file, new_filename); 
     fetch("http://" + getServerURL.get() + "/sendFile", {

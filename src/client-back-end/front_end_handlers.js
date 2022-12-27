@@ -96,6 +96,11 @@ export let websocket_front_end_handlers = {
         chat.scrollTop = chat.scrollHeight;
     },
 
+    /**
+     * Adds new file metadata to chatroom received by the websocket connection. 
+     * IMPORTANT: also adds a listener for each link so the users can press it and download the files. 
+     * @param {*} message the message received by the websocket connection.
+     */
     handleNewFileMetadata: function(message){
         let new_message = document.createElement("div");
         //specifies it's the peer who sent the message 
@@ -121,6 +126,7 @@ export let websocket_front_end_handlers = {
                 formData.append('clientID', message.id);
                 formData.append('room_code', message.room_code);
                 formData.append('username', message.username);
+                formData.append('filename', message.fileName);
                 
                 const params = new URLSearchParams(formData).toString();
                 
@@ -274,6 +280,15 @@ export let front_end_handlers = {
         chat.scrollTop = chat.scrollHeight;
     },
 
+    /**
+     * When users adds a new file to the chatroom locally the metadata are put into the chatroom 
+     * using this function. 
+     * IMPORTANT: the metadata put here username,room_code, clientID
+     * @param {*} username 
+     * @param {*} room_code 
+     * @param {*} clientID 
+     * @param {*} file 
+     */
     addNewFileMetadata: function(username, room_code, clientID, file){
         let new_message = document.createElement("div");
         //specifies it's you who sent the message 
@@ -299,6 +314,7 @@ export let front_end_handlers = {
                 formData.append('clientID', clientID);
                 formData.append('room_code', room_code);
                 formData.append('username', username);
+                formData.append('filename', file.name);
                 
                 const params = new URLSearchParams(formData).toString();
                 
