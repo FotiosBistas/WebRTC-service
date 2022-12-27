@@ -41,6 +41,8 @@ function createGetterForParam(param){
     }
 }; 
 
+
+
 export let getUsername = null;
 export let getClientID = null; 
 export let getRoomCode = null; 
@@ -269,7 +271,7 @@ export function sendFileOverChat(form, file){
     let new_filename = getUsername.get() + "_" + getClientID.get() + "_" + getRoomCode.get() + "_" + file.name;  
     let formdata = new FormData(); 
     formdata.append("file", file, new_filename); 
-    fetch("http://" + getServerURL.get() + "/sendFile", {
+    fetch( document.location.protocol + "//" + getServerURL.get() + "/sendFile", {
         method: "POST",
         headers: {
             "Content-Type": "multipart/form-data"
