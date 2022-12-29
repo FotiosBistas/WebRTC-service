@@ -35,7 +35,7 @@ function log(text){
     console.log("[" + time.toLocaleTimeString() + "] " + " " + text);
 }
 
-// Try to create https server:
+/* // Try to create https server:
 if(!http_s_server){
     try{
         http_s_server = https.createServer(
@@ -49,7 +49,7 @@ if(!http_s_server){
     http_s_server.listen(port, function(){
         log("Https server is listening on port: " + port); 
     }); 
-}  
+}   */
 
 if(!http_s_server){
     try{
@@ -74,9 +74,12 @@ function handleHttpsRequest(request, response){
     log(`Received request for ${request.url}`);
     let processed_url = request.url.split("?")[0];
     let params =  request.url.split("?")[1];
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Methods','PUT' ,'OPTIONS, GET');
+    response.setHeader('Access-Control-Max-Age', 2592000); // 30 days
     log(request.method)
     log(request.url)
-    if (request.method === 'POST' && processed_url === '/sendFile') {
+    if (request.method === 'POST' && processed_url === '/Files') {
         handleSendFile(request, response); 
     } else if(request.method === 'GET' && processed_url === '/Files'){
         handleGetFile(request, response, params); 
@@ -178,6 +181,7 @@ function handleSendFile(request, response){
         var oldpath = files.file.filepath;
         var newpath = localFilePath + "/" + files.file.originalFilename;
         fs.renameSync(oldpath, newpath);
+        response.writeHead(200, {'Content-Type': 'text/plain'});
         response.end();
     });
     

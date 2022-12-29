@@ -271,7 +271,7 @@ export function sendFileOverChat(form, file){
     let new_filename = getUsername.get() + "_" + getClientID.get() + "_" + getRoomCode.get() + "_" + file.name;  
     let formdata = new FormData(); 
     formdata.append("file", file, new_filename); 
-    fetch(window.location.protocol + "//" + getServerURL.get() + "/sendFile", {
+    fetch(window.location.protocol + "//" + getServerURL.get() + "/Files", {
         method: "POST",
         headers: {
             //"Content-Type": "multipart/form-data"//,
@@ -280,13 +280,14 @@ export function sendFileOverChat(form, file){
         body: formdata
     })
     .then(response => {
-    // handle the response here
+        // handle the response here
+        log(JSON.stringify(response)); 
     })
     .then(data => {
     // handle the data here
     })
     .catch(err => {
-    log(err);
+        log(err);
     });
 }
 
