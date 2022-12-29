@@ -257,7 +257,7 @@ export function sendNewTextMessage(data){
  * Sends the file over the websocket connection and the server broadcasts it over the server. 
  * @param {*} file the file to be sent over the connection 
  */
-export async function sendFileOverChat(form, file){
+export function sendFileOverChat(form, file){
     //send the file metadata over the server 
     sendToServer({
         type: "new-file-metadata",
@@ -279,17 +279,12 @@ export async function sendFileOverChat(form, file){
         },
         body: formdata
     })
-    .then(async (response) =>  {
+    .then(response => {
         // handle the response here
-        if(!response.ok){
-            let error = await response.text(); 
-            throw new Error(error); 
-        }
-        return response.json(); 
+        log(JSON.stringify(response)); 
     })
     .then(data => {
-        // handle the data here
-        log(JSON.stringify(data));
+    // handle the data here
     })
     .catch(err => {
         log(err);
