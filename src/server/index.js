@@ -24,7 +24,7 @@ const https_options = {
     cert: fs.readFileSync(certificate)
 }
 
-const localFilePath = './files';
+const localFilePath = './files/';
 
 let http_s_server = null; 
 let web_socket_server = null;
@@ -148,11 +148,6 @@ function handleGetFile(request, response, params){
 
 function handleSendFile(request, response){
     log("Handling send file request");
-    //let parameters = new URLSearchParams(params);
-    /*let clientID = ""; //parameters.get('clientID');
-    let room_code = ""; //parameters.get('room_code');
-    let username = ""; //parameters.get('username'); 
-    let filename = "leppa.jpeg"; //parameters.get('filename');
     let chunks = "";
     request.on('data', chunk => {
         chunks += chunk; 
@@ -164,28 +159,28 @@ function handleSendFile(request, response){
         }
     });
     request.on('end', () => {
-        let parts = chunks.split("image/jpeg")
-        console.log(parts[0])
-        //Check if local file storage directory exists:
-        if (!fs.existsSync(localFilePath)){
-            // Create directory:
-            fs.mkdirSync(localFilePath);
-        }
-        let target_filename = username + "_" + clientID + "_" + room_code + "_" + filename;
-        fs.writeFileSync(localFilePath+"/"+"leoa.txt", parts[1]);
-        
-        
-    });*/
-    var form = new formidable.IncomingForm();
-    form.parse(request, function (err, fields, files) {
-        var oldpath = files.file.filepath;
-        var newpath = localFilePath + "/" + files.file.originalFilename;
-        fs.renameSync(oldpath, newpath);
+        log("end of request");
+        console.log(chunks);
+        //SAVE FILE BASED ON FILENAME; 
+        log("end of request");
+        const filenameRegex = /filename="([^"]+)"/;
+        const matches = filenameRegex.exec(chunks);
+        const filename = matches[1];
+        const arr = chunks.split('image/png'); 
+
+        log(filename);
+        fs.WriteStream(localFilePath + filename, arr[1],(err) => {
+            if (err) {
+                // Handle error
+                log(err);
+                return;
+            }
+            log('File saved!');
+        });
+
         response.writeHead(200, {'Content-Type': 'text/plain'});
         response.end();
     });
-    
-
 }
 
 function send405(request,response){
