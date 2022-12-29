@@ -6,7 +6,7 @@ import { websocket_front_end_handlers,front_end_handlers } from "./front_end_han
 
 let hostname = window.location.hostname;
 if (!hostname) {
-  hostname = "localhost";
+  hostname = "192.168.1.17";
 }
 
 log("Hostname: " + hostname); 
@@ -269,10 +269,11 @@ export function sendFileOverChat(form, file){
     let new_filename = getUsername.get() + "_" + getClientID.get() + "_" + getRoomCode.get() + "_" + file.name;  
     let formdata = new FormData(); 
     formdata.append("file", file, new_filename); 
-    fetch("http://" + getServerURL.get() + "/sendFile", {
+    fetch(window.location.protocol + "//" + getServerURL.get() + "/sendFile", {
         method: "POST",
         headers: {
-            "Content-Type": "multipart/form-data"
+            //"Content-Type": "multipart/form-data"//,
+            //"boundary": "------gayaamf"
         },
         body: formdata
     })

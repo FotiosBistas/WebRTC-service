@@ -130,7 +130,7 @@ export let websocket_front_end_handlers = {
                 
                 const params = new URLSearchParams(formData).toString();
                 
-                const url = `http://${getServerURL.get()}/Files?${params}`;
+                const url = `${window.location.protocol}//${getServerURL.get()}/Files?${params}`;
                 
                 fetch(url)
                   .then(response => response.text())
@@ -319,7 +319,7 @@ export let front_end_handlers = {
                 
                 const params = new URLSearchParams(formData).toString();
                 
-                const url = `http://${getServerURL.get()}/Files?${params}`;
+                const url = `${window.location.protocol}//${getServerURL.get()}/Files?${params}`;
                 
                 fetch(url)
                   .then(response => response.text())

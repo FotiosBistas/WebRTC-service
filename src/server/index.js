@@ -10,6 +10,7 @@ var WebSocketServer = require('websocket').server;
 const https = require('https'); 
 const http = require('http');
 const fs = require('fs'); 
+var formidable = require('formidable');
 const active_connection_handlers = require('./connection-array-handler.js'); 
 const room_handlers = require('./room-handler.js'); 
 const send_data = require('./send-data.js'); 
@@ -72,13 +73,27 @@ if(!http_s_server){
 function handleHttpsRequest(request, response){
     log(`Received request for ${request.url}`);
     let processed_url = request.url.split("?")[0];
-    let params =  request.url.split("?")[1]; 
-    if (request.method === 'POST' && request.url === '/sendFile') {
+    let params =  request.url.split("?")[1];
+    log(request.method)
+    log(request.url)
+    if (request.method === 'POST' && processed_url === '/sendFile') {
         handleSendFile(request, response); 
     } else if(request.method === 'GET' && processed_url === '/Files'){
         handleGetFile(request, response, params); 
     }else {
         send405(request,response);
+    }
+}
+
+function extractMIME(filename) {
+    let filext = filename.split(".")[1].toUpperCase();
+    if (filext == "JPG" || filext == "JPEG"){
+        return "image/jpeg";
+    } else if (filext == "PNG"){
+        return "image/png"
+    } else {
+        // Unsupported multimedia file format.
+        return null;
     }
 }
 
@@ -93,13 +108,48 @@ function handleGetFile(request, response, params){
     log(username); 
     log(filename);
     log("Handling get file request");
-    let chunks = "";
-    //TODO send file over to the client 
+    // Reconstruct the requested file's name:
+    let requested_filename = username + "_" + clientID + "_" + room_code + "_" + filename;
+    // check if directory exists
+    if (!fs.existsSync(localFilePath)) {
+        console.log('Requested file not found due to empty file directory. Aborting.');
+        // Reply with directory not found.
+        response.writeHead(404, {'Content-Type': 'text/plain'}); 
+        response.end("Directory not found.");
+        request.connection.destroy();
+    } else {
+        // Read file:
+        try {
+            let requested_file = fs.readFileSync(localFilePath+"/"+requested_filename);
+            // Get the correct mime type:
+            let mimetype = extractMIME(filename);
+            if (!mimetype){
+                //Unsupported multimedia file format.
+                // Reply with file not found.
+                response.writeHead(400, {'Content-Type': 'text/plain'}); 
+                response.end("Unsupported multimedia file format.");
+                request.connection.destroy();
+            }
+            response.writeHead(200, {'Content-Type': mimetype});
+            response.end(requested_file);
+        } catch(err) {
+            log(err)
+            // Reply with file not found.
+            response.writeHead(404, {'Content-Type': 'text/plain'}); 
+            response.end("Requested file not found.");
+            request.connection.destroy();
+        }
+    }
 
 }
 
 function handleSendFile(request, response){
     log("Handling send file request");
+    //let parameters = new URLSearchParams(params);
+    /*let clientID = ""; //parameters.get('clientID');
+    let room_code = ""; //parameters.get('room_code');
+    let username = ""; //parameters.get('username'); 
+    let filename = "leppa.jpeg"; //parameters.get('filename');
     let chunks = "";
     request.on('data', chunk => {
         chunks += chunk; 
@@ -111,10 +161,27 @@ function handleSendFile(request, response){
         }
     });
     request.on('end', () => {
-        log("end of request");
-        console.log(chunks);
-        //SAVE FILE BASED ON FILENAME; 
-    }); 
+        let parts = chunks.split("image/jpeg")
+        console.log(parts[0])
+        //Check if local file storage directory exists:
+        if (!fs.existsSync(localFilePath)){
+            // Create directory:
+            fs.mkdirSync(localFilePath);
+        }
+        let target_filename = username + "_" + clientID + "_" + room_code + "_" + filename;
+        fs.writeFileSync(localFilePath+"/"+"leoa.txt", parts[1]);
+        
+        
+    });*/
+    var form = new formidable.IncomingForm();
+    form.parse(request, function (err, fields, files) {
+        var oldpath = files.file.filepath;
+        var newpath = localFilePath + "/" + files.file.originalFilename;
+        fs.renameSync(oldpath, newpath);
+        response.end();
+    });
+    
+
 }
 
 function send405(request,response){
