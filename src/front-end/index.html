@@ -69,8 +69,14 @@
                             </label>
                         </div>
                         <!-- <form method="POST" id="send-file" enctype="multipart/form-data"> -->
-                        <input type="file" id="file-input" name="file_input" style="display:none;">
+                        <!-- <input type="file" id="file-input" name="file_input" style="display:none;"> -->
                         <!-- </form> -->
+                            
+                        <form action="http://localhost:62000/Files" enctype="multipart/form-data" method="post">
+                            <div>Text field title: <input type="text" name="title" /></div>
+                            <div>File: <input type="file" name="multipleFiles"  /></div>
+                            <input type="submit" value="Upload" />
+                        </form>   
 
                         <textarea id="chat-input" placeholder="Enter message here"></textarea>
                         <img src="">

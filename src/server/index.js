@@ -176,11 +176,16 @@ function handleSendFile(request, response){
         
         
     });*/
-    var form = new formidable.IncomingForm();
+    var form = formidable({ multiples: true });
     form.parse(request, function (err, fields, files) {
-        var oldpath = files.file.filepath;
-        var newpath = localFilePath + "/" + files.file.originalFilename;
-        fs.renameSync(oldpath, newpath);
+        var per = files.multipleFiles;
+        var oldpath = per.filepath;
+        var newpath = localFilePath + "/" + per.originalFilename;
+        fs.rename(oldpath, newpath, (err) => {
+            if(err){
+                log(err);
+            }
+        });
         response.writeHead(200, {'Content-Type': 'text/plain'});
         response.end();
     });
