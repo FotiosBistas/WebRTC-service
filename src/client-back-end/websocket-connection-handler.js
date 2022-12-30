@@ -4,9 +4,10 @@ import { media_functions } from "./media-handler.js";
 import {callAppropriateHandler, closePeerConnection, createPeerConnection} from "./peer-connection-handler.js"
 import { websocket_front_end_handlers,front_end_handlers } from "./front_end_handlers.js";
 
-let hostname = window.location.hostname;
+let hostname = window.location.hostname; 
+/* let hostname = "192.168.85.1"; */
 if (!hostname) {
-  hostname = "192.168.1.17";
+  hostname = "localhost";
 }
 
 log("Hostname: " + hostname); 
@@ -257,7 +258,7 @@ export function sendNewTextMessage(data){
  * Sends the file over the websocket connection and the server broadcasts it over the server. 
  * @param {*} file the file to be sent over the connection 
  */
-export function sendFileOverChat(form, file){
+export function sendFileOverChat(file){
     //send the file metadata over the server 
     sendToServer({
         type: "new-file-metadata",
@@ -268,15 +269,13 @@ export function sendFileOverChat(form, file){
     })
     front_end_handlers.addNewFileMetadata(getUsername.get(), getRoomCode.get(), getClientID.get() , file);
     //uniquely identify filename using client id,username and roomcode 
-    let new_filename = getUsername.get() + "_" + getClientID.get() + "_" + getRoomCode.get() + "_" + file.name;  
+
+    //enable this to experience the bug 
+   /*  let new_filename = getUsername.get() + "_" + getClientID.get() + "_" + getRoomCode.get() + "_" + file.name;  
     let formdata = new FormData(); 
     formdata.append("file", file, new_filename); 
     fetch(window.location.protocol + "//" + getServerURL.get() + "/Files", {
         method: "POST",
-        headers: {
-            //"Content-Type": "multipart/form-data"//,
-            //"boundary": "------gayaamf"
-        },
         body: formdata
     })
     .then(response => {
@@ -288,7 +287,7 @@ export function sendFileOverChat(form, file){
     })
     .catch(err => {
         log(err);
-    });
+    });  */
 }
 
 export function closeWebSocketConnection(){

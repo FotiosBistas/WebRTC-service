@@ -24,7 +24,7 @@ const https_options = {
     cert: fs.readFileSync(certificate)
 }
 
-const localFilePath = './files';
+const localFilePath = './files/';
 
 let http_s_server = null; 
 let web_socket_server = null;
@@ -35,7 +35,7 @@ function log(text){
     console.log("[" + time.toLocaleTimeString() + "] " + " " + text);
 }
 
-/* // Try to create https server:
+// Try to create https server:
 if(!http_s_server){
     try{
         http_s_server = https.createServer(
@@ -49,7 +49,7 @@ if(!http_s_server){
     http_s_server.listen(port, function(){
         log("Https server is listening on port: " + port); 
     }); 
-}   */
+}  
 
 if(!http_s_server){
     try{
@@ -61,7 +61,7 @@ if(!http_s_server){
     http_s_server.listen(port, function(){
         log("Http server is listening on port: " + port); 
     }); 
-}
+} 
 
 
 
@@ -148,49 +148,19 @@ function handleGetFile(request, response, params){
 
 function handleSendFile(request, response){
     log("Handling send file request");
-    //let parameters = new URLSearchParams(params);
-    /*let clientID = ""; //parameters.get('clientID');
-    let room_code = ""; //parameters.get('room_code');
-    let username = ""; //parameters.get('username'); 
-    let filename = "leppa.jpeg"; //parameters.get('filename');
-    let chunks = "";
-    request.on('data', chunk => {
-        chunks += chunk; 
-        // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
-        if (chunks.length > 1e6) { 
-            response.writeHead(413, {'Content-Type': 'text/plain'}); 
-            response.end;
-            request.connection.destroy();     
-        }
+    var form = formidable.IncomingForm();
+    form.on('fileBegin', function(name, file){
+        file.path = localFilePath + file.name; 
     });
-    request.on('end', () => {
-        let parts = chunks.split("image/jpeg")
-        console.log(parts[0])
-        //Check if local file storage directory exists:
-        if (!fs.existsSync(localFilePath)){
-            // Create directory:
-            fs.mkdirSync(localFilePath);
-        }
-        let target_filename = username + "_" + clientID + "_" + room_code + "_" + filename;
-        fs.writeFileSync(localFilePath+"/"+"leoa.txt", parts[1]);
-        
-        
-    });*/
-    var form = formidable({ multiples: true });
-    form.parse(request, function (err, fields, files) {
-        var per = files.multipleFiles;
-        var oldpath = per.filepath;
-        var newpath = localFilePath + "/" + per.originalFilename;
-        fs.rename(oldpath, newpath, (err) => {
-            if(err){
-                log(err);
-            }
-        });
-        response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.end();
-    });
-    
 
+    form.on('file', function(name,file){
+        log('Uploaded file: ' + file.name);
+    });
+
+    form.parse(request);
+
+    response.writeHead(200, {'Content-Type': 'text/plain'}); 
+    response.end(); 
 }
 
 function send405(request,response){
@@ -228,7 +198,7 @@ web_socket_server.on('request',async function(request) {
     log("request received");
     let connection = request.accept("json", request.origin); 
     assignConnectionHandlers(connection); 
-    /* unique identifer for user */
+    //unique identifer for user 
     let user_id = await active_connection_handlers.createIdentifierForUser("initial"); 
 
     //IMPORTANT IOUOUOUOUOU add user id to connection 
@@ -243,7 +213,7 @@ web_socket_server.on('request',async function(request) {
     }))
 
 
-});
+}); 
 
 
 /**

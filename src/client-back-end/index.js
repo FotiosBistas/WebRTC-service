@@ -1,4 +1,4 @@
-import { webSocketConnect,sendNewTextMessage, closeWebSocketConnection,sendFileOverChat, getClientID } from "./websocket-connection-handler.js"
+import { webSocketConnect,getServerURL,sendNewTextMessage, closeWebSocketConnection,sendFileOverChat, getClientID } from "./websocket-connection-handler.js"
 import {getLocalStream ,closePeerConnection} from "./peer-connection-handler.js";
 import { media_functions } from "./media-handler.js";
 
@@ -92,8 +92,33 @@ fileInput.onchange = function(event){
     const file = event.target.files[0];
     
     // Send the file over the chat 
-    sendFileOverChat(this.parentNode,file);
+    sendFileOverChat(file);
 };
+
+
+let form = document.getElementById('upload-file-form');
+
+/* form.addEventListener('submit', function(event) {
+    event.preventDefault();  // prevent the form submission from navigating away from the page
+     let fileInput = document.querySelector('input[type="file"]');
+    let file = fileInput.files[0];  // get the file object
+
+    // create a form data object and append the file to it
+    let formData = new FormData();
+    formData.append('file', file);
+    let url = new URL(`${document.location.protocol}//${getServerURL.get()}/UploadFiles`); 
+    // send the file to the server using the fetch API
+    fetch(url, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        // handle the response here
+    })
+    .catch(error => {
+        console.error(error);
+    });
+}); */
 
 toggle_chat_panel.onclick = function(event){
     if(chat.style.display === "none"){
