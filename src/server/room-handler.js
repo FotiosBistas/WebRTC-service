@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 
 let rooms = []; 
 
@@ -149,6 +151,7 @@ module.exports = {
         //if length is equal to zero means no more users are using the room 
         if(!(current_room.users.length)){
             this.removeRoom(room_code); 
+            this.removeFilesFromRoom(room_code);  
         }
         log("Removed connection from room");
     },
@@ -160,6 +163,38 @@ module.exports = {
     removeRoom: function(room_code){
         rooms = rooms.filter((room) => room_code !== room.code); 
         log("Removed room from active rooms");
+    },
+
+    /**
+     * Removes all files for the specific room 
+     * @param {*} room_code the room code we will delete the files for 
+     */
+    removeFilesFromRoom: function(room_code){
+        log("Removing files from room");
+        const targetString = `_${room_code}_`; 
+        if(fs.existsSync('./files/')){
+            fs.readdir('./files/', (err, files) => {
+                if (err) {
+                    // handle the error
+                    log("Error: " + err + " while trying to remove files from room"); 
+                    return;
+                }
+            
+                // filter the file names that contain the target string
+                const filteredFiles = files.filter((file) => file.includes(targetString));
+                
+                // delete the filtered files
+                filteredFiles.forEach((file) => {
+                    log("Removing file: " + file);
+                    fs.unlink(`./files/${file}`, (unlinkErr) => {
+                        if (unlinkErr) {
+                        // handle the error
+                        log("Unlink error: " + unlinkErr + " while removing file: " + file);
+                        }
+                    });
+                });
+            });
+        }
     },
 
     /**

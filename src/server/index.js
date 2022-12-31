@@ -115,7 +115,7 @@ function handleGetFile(request, response, params){
     let requested_filename = username + "_" + clientID + "_" + room_code + "_" + filename;
     // check if directory exists
     if (!fs.existsSync(localFilePath)) {
-        console.log('Requested file not found due to empty file directory. Aborting.');
+        log('Requested file not found due to empty file directory. Aborting.');
         // Reply with directory not found.
         response.writeHead(404, {'Content-Type': 'text/plain'}); 
         response.end("Directory not found.");
