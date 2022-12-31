@@ -133,9 +133,14 @@ export let websocket_front_end_handlers = {
                 const url = `${window.location.protocol}//${getServerURL.get()}/Files?${params}`;
                 
                 fetch(url)
-                  .then(response => response.text())
-                  .then(result => console.log(result))
-                  .catch((err) => log(err));
+                  .then(response => response.blob())
+                  .then(blob => {
+                    log("Turned file into blob");
+                    const file = new File([blob], message.fileName, { type: blob.type });
+                    // use saveAs to save the file to the user's device
+                    saveAs(file);
+                   })
+                  .catch((err) => log("Error while saving file received from remote peer:" + err));
             });
           });
     
@@ -316,15 +321,20 @@ export let front_end_handlers = {
                 formData.append('room_code', room_code);
                 formData.append('username', username);
                 formData.append('filename', file.name);
-                
+                let filename = file.name;
                 const params = new URLSearchParams(formData).toString();
                 
                 const url = `${window.location.protocol}//${getServerURL.get()}/Files?${params}`;
                 
                 fetch(url)
-                  .then(response => response.text())
-                  .then(result => console.log(result))
-                  .catch((err) => log(err));
+                .then(response => response.blob())
+                .then(blob => {
+                    log("Turned file into blob");
+                  const file = new File([blob], filename, { type: blob.type });
+                  // use saveAs to save the file to the user's device
+                  saveAs(file);
+                 })
+                .catch((err) => log("Error while saving file that was sent locally: " + err));
             });
           });
         chat.scrollTop = chat.scrollHeight;
