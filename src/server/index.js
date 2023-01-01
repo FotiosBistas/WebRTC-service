@@ -172,6 +172,10 @@ function extractMIME(filename) {
         return "image/png";
     }else if(filext == ".ICO") {
         return "image/x-icon";
+    }else if(filext == ".MP4"){
+        return "video/mp4";
+    }else if(filext == ".MKV"){
+        return "video/x-matroska";
     }else {
         // Unsupported multimedia file format.
         return null;
