@@ -1,3 +1,27 @@
+* {
+    font-size: medium;
+}
+
+.room {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: fit-content;
+}
+
+.room * {
+    margin: 10px;
+    width: 300px;
+    align-self: center;
+}
+
+
 .chatandcall{
     display: grid; 
     grid-template-columns: 3fr 1fr 1fr;
