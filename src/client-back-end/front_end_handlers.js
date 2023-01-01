@@ -263,10 +263,9 @@ export let front_end_handlers = {
             video.setAttribute('autoplay', true); 
             video.setAttribute("id",getClientID.get() + " video");
             video.srcObject = getLocalStream(); 
-    
-            let video_grid = document.getElementsByClassName("streams")[0];
-    
-            video_grid.append(video); 
+
+            let local_video_preview = document.getElementsByClassName("localstream")[0];
+            local_video_preview.append(video);
         }); 
     },
 
