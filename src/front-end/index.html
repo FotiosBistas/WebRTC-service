@@ -34,27 +34,20 @@
 
             
 
-            <!-- <video id="local_video" autoplay> </video>
-            <video id="remote_video" autoplay> </video> -->
-
             <div class="loader" style="display:none;"> </div>
             
-             <!-- TODO: find the method that adds video when event happens  -->
              <div style="display:none;" class="chatandcall">
                     
 
-                <div class="streams">
-                    
-                    <!-- adding .stream_containers dynamically  -->
-                </div>
+                <div class="streams"></div>           
 
                 
 
                 <ul class="stream-controls">
-                    <li><!-- <button type="button" id="disconnect">  --><img id="disconnect-image" src="../images/end-call-image.png"></button></li>
-                    <li><!-- <button type="button" id="camera-button"> --><img id="camera-image" src="../images/camera-button.png"></button></li>
-                    <li><!-- <button type="button" id="mic-button"> --><img id="microphone-image" src="../images/microphone-button.png"></button></li>
-                    <li><!-- <button type="button" id="chat-button"> --><img id="chat-image" src="../images/chat-button.png"></button><li>
+                    <li><img id="disconnect-image" src="../images/end-call-image.png"></button></li>
+                    <li><img id="camera-image" src="../images/camera-button.png"></button></li>
+                    <li><img id="microphone-image" src="../images/microphone-button.png"></button></li>
+                    <li><img id="chat-image" src="../images/chat-button.png"></button><li>
                 </ul>
                 
                 <div class="active-members">
@@ -68,16 +61,9 @@
                                 <img id="file-input-image" src="../images/open-explorer.png" alt="File icon">
                             </label>
                         </div>
-                        <!-- <form method="POST" id="send-file" enctype="multipart/form-data"> -->
+                       
                         <input type="file" id="file-input" name="file_input" style="display:none;"> 
-                        <!-- </form> -->
-                            
-                        <!-- <form action="https://localhost:62000/Files" id="upload-file-form" enctype="multipart/form-data" method="post">
-                            <div>Text field title: <input type="text" name="title" /></div>
-                            <div>File: <input type="file" name="multipleFiles"  /></div>
-                            <input type="submit" value="Upload" />
-                        </form>   -->  
-
+                    
                         <textarea id="chat-input" placeholder="Enter message here"></textarea>
                         <img src="">
                     </div>

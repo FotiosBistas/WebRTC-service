@@ -73,21 +73,23 @@ function handleHttpsRequest(request, response){
     log(`Received request for ${request.url}`);
     let processed_url = request.url.split("?")[0];
     let params =  request.url.split("?")[1];
-    log(request.method)
-    log(request.url)
+    log("Request method is: " + request.method);
+    log("Request url is: " + request.url);
     if (request.method === 'POST' && processed_url === '/Files') {
         handleSendFile(request, response); 
     } else if(request.method === 'GET' && processed_url === '/Files'){
         handleGetRoomFile(request, response, params); 
     } else if(request.method === 'GET' && processed_url === '/'){
-        sendIndexHtml(request, response, `../front-end/index.html`); 
-    } else if(request.method === 'GET' && processed_url.match(/^\/css\/.+\.css$/)){
+        sendHtml(request, response, `../front-end/index.html`); 
+    }else if(request.method === 'GET' && processed_url.match(/^.+\.html$/)){
+        sendHtml(request, response, `../${processed_url}`);
+    } else if(request.method === 'GET' && processed_url.match(/^.+\.css$/)){
         sendCssFile(request, response, `../front-end/${processed_url}`);
-    }else if(request.method === 'GET' && processed_url.match(/^\/client-back-end\/.+\.js$/)){
+    }else if(request.method === 'GET' && processed_url.match(/^.+\.js$/)){
         sendJsFile(request, response, `..${processed_url}`);
     }else if(request.method === 'GET' && processed_url.includes('/images/')){
         sendContentFile(request, response, `..${processed_url}`); 
-    } else {
+    }else {
         send405(request,response);
     }
 }
@@ -109,11 +111,11 @@ function sendContentFile(request, response, path){
             log("Error while sending js file: " + err);
             response.writeHead(500, { "Content-Type": "text/plain" });
             response.end("Error loading content file");
-        } 
+        } else {
+            response.writeHead(200, { "Content-Type": mime_type });
+            response.end(data);
+        }
     }); 
-    
-    response.writeHead(200, {'Content-Type': mime_type});
-    response.end(requested_file);
 
 }
 
@@ -147,7 +149,7 @@ function sendCssFile(request, response, path){
 
 
 
-function sendIndexHtml(request, response, path){
+function sendHtml(request, response, path){
     log("Sending index html file: " + path);
     response.writeHead(200, { "Content-Type": "text/html" });
     fs.readFile(path, (err, data) => {
@@ -167,8 +169,10 @@ function extractMIME(filename) {
     if (filext == ".JPG" || filext == ".JPEG"){
         return "image/jpeg";
     } else if (filext == ".PNG"){
-        return "image/png"
-    } else {
+        return "image/png";
+    }else if(filext == ".ICO") {
+        return "image/x-icon";
+    }else {
         // Unsupported multimedia file format.
         return null;
     }
