@@ -90,7 +90,6 @@ body {
     display: grid; 
     grid-template-columns: 3fr 1fr 1fr;
     grid-template-rows: min-content;  
-    background-color: rgb(19, 130, 163);
     grid-template-areas: 
     "video video video active-members chat"
     "controls controls controls controls controls";  
@@ -114,7 +113,7 @@ video{
     display: flex;
     flex-direction: row;
     list-style: none;
-    background-color:  rgb(19, 130, 163);
+    background-color:  white;
     margin: 10px; 
     grid-area: controls;
 }
@@ -155,8 +154,18 @@ video{
     left: 0;
     right: 0;
     margin: auto;
-    border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #448AFF; /* Blue */
+    background: rgb(255, 255, 255, 0.6);
+}
+
+.loader div {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 16px solid #BDBDBD; 
+    border-top: 16px solid #448AFF; 
     border-radius: 50%;
     width: 120px;
     height: 120px;
