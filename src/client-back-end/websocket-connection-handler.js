@@ -279,13 +279,12 @@ export function sendFileOverChat(file){
     })
     .then(response => {
         // handle the response here
-        log(JSON.stringify(response)); 
-    })
-    .then(data => {
-    // handle the data here
+        if(!response.ok){
+            alert("Error while uploading file to server: " + response.statusText);
+        }
     })
     .catch(err => {
-        log(err);
+        log("Error while uploading the file to the server: " + err);
     });  
 }
 

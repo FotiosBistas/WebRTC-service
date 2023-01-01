@@ -14,7 +14,7 @@ var formidable = require('formidable');
 const active_connection_handlers = require('./connection-array-handler.js'); 
 const room_handlers = require('./room-handler.js'); 
 const send_data = require('./send-data.js'); 
-
+const path = require('path');
 const private_key = 'tls/key.pem';
 const certificate = 'tls/cert.pem';
 
@@ -112,7 +112,7 @@ function sendContentFile(request, response, path){
         } 
     }); 
     
-    response.writeHead(200, {'Content-Type': mimetype});
+    response.writeHead(200, {'Content-Type': mime_type});
     response.end(requested_file);
 
 }
@@ -162,10 +162,11 @@ function sendIndexHtml(request, response, path){
 }
 
 function extractMIME(filename) {
-    let filext = filename.split(".")[1].toUpperCase();
-    if (filext == "JPG" || filext == "JPEG"){
+    let filext =  path.extname(filename).toUpperCase();
+    log("Mime type extracted: " + filext);
+    if (filext == ".JPG" || filext == ".JPEG"){
         return "image/jpeg";
-    } else if (filext == "PNG"){
+    } else if (filext == ".PNG"){
         return "image/png"
     } else {
         // Unsupported multimedia file format.
