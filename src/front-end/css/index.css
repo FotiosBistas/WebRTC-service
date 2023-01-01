@@ -1,8 +1,13 @@
 * {
-    font-size: medium;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #303F9F;
 }
 
 .room {
+    background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -13,14 +18,64 @@
     right: 0;
     margin: auto;
     width: fit-content;
+    height: fit-content;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 1em;
 }
 
+
 .room * {
-    margin: 10px;
+    margin: 15px;
     width: 300px;
     align-self: center;
 }
 
+.room h1 {
+    font-family: sans-serif;
+    display: inline-block;
+    text-align: center;
+}
+
+.room p {
+    display: inline-block;
+    text-align: center;
+    font-size: normal;
+    font-style: italic;
+}
+
+.room fieldset {
+    border-style: none;
+    background-color: rgb(237, 237, 237);
+    border-radius: 10px;
+}
+
+.room fieldset input {
+    font-size: medium;
+    padding: 5px;
+}
+
+.room fieldset label {
+    color: #212121;
+
+}
+
+.room button {
+    background-color: #448AFF;
+    border-radius: 8px;
+    color: white;
+    font-size: large;
+    padding: 5px;
+    width: 100%;
+    border: none;
+}
+
+.room button:hover {
+    background-color: #3b77df;
+    cursor: pointer;
+}
 
 .chatandcall{
     display: grid; 

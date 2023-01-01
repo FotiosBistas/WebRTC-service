@@ -13,8 +13,10 @@
         <main>
             <!-- TODO: find the method that adds video when event happens -->
             <div class="room">
+                <h1>Vζoom</h1>
+                <p id="logodesc">The lightweight video calling web app.</p>
                 <fieldset>
-                    <legend> Create new Room </legend>
+                    <h3> Create Room </h3>
                     <label for="roomcode">Room Code</label>
                     <input type="number" id="create_roomcode" name="room_code" pattern="{0-9}{4}" min="0" required>
                     <label for="create_user_name"> Username</label>
@@ -22,7 +24,7 @@
                 </fieldset>
                 <button type="CreateRoom" id="create-room-button" form="join-room-form" value="Create Room"> Create Room </button>
                 <fieldset>
-                    <legend>Join Room</legend>
+                    <h3>Join Room</h3>
                     <label for="roomcode"> Room code</label>
                     <input type="number" id="join_roomcode" name="room_code" pattern="{0-9}{4}" min="0" required>
                     <label for="join_user_name"> Username</label>
