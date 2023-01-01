@@ -1,19 +1,119 @@
-.chatandcall{
-    display: grid; 
-    grid-template-columns: 3fr 1fr 1fr;
-    grid-template-rows: min-content;  
-    background-color: rgb(19, 130, 163);
-    grid-template-areas: 
-    "video video video active-members chat"
-    "controls controls controls controls controls";  
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #303F9F;
+}
+
+.room {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 10px;
+    border-radius: 1em;
 }
 
 
+.room * {
+    margin: 10px;
+    width: 300px;
+    align-self: center;
+}
+
+.room div {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+
+.room div h1 {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.room div p {
+    font-style: italic;
+    text-align: center;
+}
+
+.room fieldset {
+    border-style: none;
+    background-color: rgb(237, 237, 237);
+    border-radius: 10px;
+}
+
+.room fieldset * {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.room fieldset input {
+    font-size: medium;
+    border-radius: 5px;
+    border-style: none;
+    padding: 8px;
+}
+
+.room fieldset label {
+    color: #212121;
+}
+
+.room button {
+    background-color: #448AFF;
+    border-radius: 8px;
+    color: white;
+    font-size: large;
+    padding: 10px;
+    width: 100%;
+    border: none;
+}
+
+.room button:hover {
+    background-color: #3b77df;
+    cursor: pointer;
+}
+
+.chatandcall{
+    display: grid; 
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: min-content;  
+    grid-template-areas: 
+    "video video video chat"
+    "controls controls controls active-members"; 
+}
+
+.streamcontainer {
+    position: relative;
+}
+
 .streams{
     display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
-    grid-auto-rows: 300px;
-    grid-area: video; 
+    grid-template-columns: repeat(auto-fill, 1fr);
+    grid-auto-rows: 1fr;
+    grid-area: video;
+}
+
+.localstream {
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    height: 120px;
+    width: 200px;
+    background-color: white;
 }
 
 video{
@@ -23,10 +123,14 @@ video{
 }
 
 .stream-controls {
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    right: 0;
     display: flex;
     flex-direction: row;
     list-style: none;
-    background-color:  rgb(19, 130, 163);
+    background-color:  white;
     margin: 10px; 
     grid-area: controls;
 }
@@ -49,7 +153,8 @@ video{
     flex-direction: column; 
     background-color: aliceblue;
     grid-area: chat;
-    height: 30em;
+    height: 100%;
+    width: 100%;
     overflow-y:scroll; /* adds scrollbar effect */
     border: solid; 
     border-color: black;
@@ -61,8 +166,24 @@ video{
 }
 
 .loader {
-    border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #3498db; /* Blue */
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background: rgb(255, 255, 255, 0.6);
+}
+
+.loader div {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 16px solid #BDBDBD; 
+    border-top: 16px solid #448AFF; 
     border-radius: 50%;
     width: 120px;
     height: 120px;

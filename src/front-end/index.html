@@ -13,8 +13,12 @@
         <main>
             <!-- TODO: find the method that adds video when event happens -->
             <div class="room">
+                <div>
+                    <h1 id="logo">Vζoom</h1>
+                    <p id="logodesc">The fast, lightweight video calling app.</p>
+                </div>
                 <fieldset>
-                    <legend> Create new Room </legend>
+                    <h3> Create Room </h3>
                     <label for="roomcode">Room Code</label>
                     <input type="number" id="create_roomcode" name="room_code" pattern="{0-9}{4}" min="0" required>
                     <label for="create_user_name"> Username</label>
@@ -22,7 +26,7 @@
                 </fieldset>
                 <button type="CreateRoom" id="create-room-button" form="join-room-form" value="Create Room"> Create Room </button>
                 <fieldset>
-                    <legend>Join Room</legend>
+                    <h3>Join Room</h3>
                     <label for="roomcode"> Room code</label>
                     <input type="number" id="join_roomcode" name="room_code" pattern="{0-9}{4}" min="0" required>
                     <label for="join_user_name"> Username</label>
@@ -34,24 +38,27 @@
 
             
 
-            <div class="loader" style="display:none;"> </div>
+            <div class="loader" style="display:none;"> <div class="circloader"></div> </div>
             
-             <div style="display:none;" class="chatandcall">
+            <div style="display:none;" class="chatandcall">
                     
+                <div class="streamcontainer">
+                    <div class="streams"></div>
 
-                <div class="streams"></div>           
-
-                
-
-                <ul class="stream-controls">
-                    <li><img id="disconnect-image" src="../images/end-call-image.png"></button></li>
-                    <li><img id="camera-image" src="../images/camera-button.png"></button></li>
-                    <li><img id="microphone-image" src="../images/microphone-button.png"></button></li>
-                    <li><img id="chat-image" src="../images/chat-button.png"></button><li>
-                </ul>
-                
-                <div class="active-members">
+                    <div class="localstream"></div>
+                    
+                    <ul class="stream-controls">
+                        <li><img id="disconnect-image" src="../images/end-call-image.png"></button></li>
+                        <li><img id="camera-image" src="../images/camera-button.png"></button></li>
+                        <li><img id="microphone-image" src="../images/microphone-button.png"></button></li>
+                        <li><img id="chat-image" src="../images/chat-button.png"></button><li>
+                    </ul>
                 </div>
+                
+
+                
+                
+                <div class="active-members"></div>
 
                 <div class="chat">
 
