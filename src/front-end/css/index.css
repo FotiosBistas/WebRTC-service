@@ -21,29 +21,32 @@ body {
     height: fit-content;
     padding-left: 30px;
     padding-right: 30px;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
     border-radius: 1em;
 }
 
 
 .room * {
-    margin: 15px;
+    margin: 10px;
     width: 300px;
     align-self: center;
 }
 
-.room h1 {
+.room div {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+
+.room div h1 {
     font-family: sans-serif;
-    display: inline-block;
     text-align: center;
 }
 
-.room p {
-    display: inline-block;
-    text-align: center;
-    font-size: normal;
+.room div p {
     font-style: italic;
+    text-align: center;
 }
 
 .room fieldset {
@@ -52,14 +55,20 @@ body {
     border-radius: 10px;
 }
 
+.room fieldset * {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .room fieldset input {
     font-size: medium;
-    padding: 5px;
+    border-radius: 5px;
+    border-style: none;
+    padding: 8px;
 }
 
 .room fieldset label {
     color: #212121;
-
 }
 
 .room button {
