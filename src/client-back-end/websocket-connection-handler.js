@@ -5,13 +5,12 @@ import {callAppropriateHandler, closePeerConnection, createPeerConnection} from 
 import { websocket_front_end_handlers,front_end_handlers } from "./front_end_handlers.js";
 
 let hostname = window.location.hostname; 
-/* let hostname = "192.168.85.1"; */
 if (!hostname) {
   hostname = "localhost";
 }
 
 log("Hostname: " + hostname); 
-let server_port = 62000; 
+let server_port = window.location.port; 
 let web_socket_connection = null; 
 
 
@@ -272,7 +271,7 @@ export function sendFileOverChat(file){
 
     //enable this to experience the bug 
     let new_filename = getUsername.get() + "_" + getClientID.get() + "_" + getRoomCode.get() + "_" + file.name;  
-    /* let formdata = new FormData(); 
+    let formdata = new FormData(); 
     formdata.append("file", file, new_filename); 
     fetch(window.location.protocol + "//" + getServerURL.get() + "/Files", {
         method: "POST",
@@ -287,7 +286,7 @@ export function sendFileOverChat(file){
     })
     .catch(err => {
         log(err);
-    });  */ 
+    });  
 }
 
 export function closeWebSocketConnection(){

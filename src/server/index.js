@@ -14,7 +14,6 @@ var formidable = require('formidable');
 const active_connection_handlers = require('./connection-array-handler.js'); 
 const room_handlers = require('./room-handler.js'); 
 const send_data = require('./send-data.js'); 
-var qs = require('querystring');
 
 const private_key = 'tls/key.pem';
 const certificate = 'tls/cert.pem';
@@ -74,18 +73,92 @@ function handleHttpsRequest(request, response){
     log(`Received request for ${request.url}`);
     let processed_url = request.url.split("?")[0];
     let params =  request.url.split("?")[1];
-    response.setHeader('Access-Control-Allow-Origin', '*');
-    response.setHeader('Access-Control-Allow-Methods','PUT' ,'OPTIONS, GET');
-    response.setHeader('Access-Control-Max-Age', 2592000); // 30 days
     log(request.method)
     log(request.url)
     if (request.method === 'POST' && processed_url === '/Files') {
         handleSendFile(request, response); 
     } else if(request.method === 'GET' && processed_url === '/Files'){
-        handleGetFile(request, response, params); 
-    }else {
+        handleGetRoomFile(request, response, params); 
+    } else if(request.method === 'GET' && processed_url === '/'){
+        sendIndexHtml(request, response, `../front-end/index.html`); 
+    } else if(request.method === 'GET' && processed_url.match(/^\/css\/.+\.css$/)){
+        sendCssFile(request, response, `../front-end/${processed_url}`);
+    }else if(request.method === 'GET' && processed_url.match(/^\/client-back-end\/.+\.js$/)){
+        sendJsFile(request, response, `..${processed_url}`);
+    }else if(request.method === 'GET' && processed_url.includes('/images/')){
+        sendContentFile(request, response, `..${processed_url}`); 
+    } else {
         send405(request,response);
     }
+}
+
+function sendContentFile(request, response, path){
+    log("Sending content file: " + path);
+    let mime_type = extractMIME(path); 
+    if (!mime_type){
+        //Unsupported multimedia file format.
+        // Reply with file not found.
+        response.writeHead(400, {'Content-Type': 'text/plain'}); 
+        response.end("Unsupported multimedia file format.");
+        request.connection.destroy();
+        return; 
+    }
+
+    let requested_file = fs.readFile(path, (err, data) => {
+        if (err) {
+            log("Error while sending js file: " + err);
+            response.writeHead(500, { "Content-Type": "text/plain" });
+            response.end("Error loading content file");
+        } 
+    }); 
+    
+    response.writeHead(200, {'Content-Type': mimetype});
+    response.end(requested_file);
+
+}
+
+function sendJsFile(request, response, path){
+    log("Sending javascript file: " + path);
+    response.writeHead(200, { "Content-Type": "text/javascript" });
+    fs.readFile(path, (err, data) => {
+        if (err) {
+            log("Error while sending js file: " + err);
+            response.writeHead(500, { "Content-Type": "text/plain" });
+            response.end("Error loading index.js");
+        } else {
+            response.end(data.toString());
+        }
+    });
+}
+
+function sendCssFile(request, response, path){
+    log("Sending css file: " + path);
+    response.writeHead(200, { "Content-Type": "text/css" });
+    fs.readFile(path, (err, data) => {
+        if (err) {
+            log("Error while sending html file: " + err);
+            response.writeHead(500, { "Content-Type": "text/plain" });
+            response.end("Error loading index.css");
+        } else {
+            response.end(data.toString());
+        }
+    });
+}
+
+
+
+function sendIndexHtml(request, response, path){
+    log("Sending index html file: " + path);
+    response.writeHead(200, { "Content-Type": "text/html" });
+    fs.readFile(path, (err, data) => {
+        if (err) {
+            log("Error while sending html file: " + err);
+            response.writeHead(500, { "Content-Type": "text/plain" });
+            response.end("Error loading index.html");
+        } else {
+            response.end(data.toString());
+        }
+    });
 }
 
 function extractMIME(filename) {
@@ -100,7 +173,7 @@ function extractMIME(filename) {
     }
 }
 
-function handleGetFile(request, response, params){
+function handleGetRoomFile(request, response, params){
     let parameters = new URLSearchParams(params);
     let clientID = parameters.get('clientID');
     let room_code = parameters.get('room_code');
