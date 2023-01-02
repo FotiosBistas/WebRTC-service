@@ -205,7 +205,7 @@ function handleGetRoomFile(request, response, params){
     } else {
         // Read file:
         try {
-            let requested_file = fs.readFileSync(localFilePath+"/"+requested_filename);
+            let requested_file = fs.readFileSync(localFilePath+requested_filename);
             // Get the correct mime type:
             let mimetype = extractMIME(filename);
             if (!mimetype){
@@ -230,19 +230,28 @@ function handleGetRoomFile(request, response, params){
 
 function handleSendFile(request, response){
     log("Handling send file request");
-    var form = formidable.IncomingForm();
-    form.on('fileBegin', function(name, file){
-        file.path = localFilePath + file.name; 
+    var form = new formidable.IncomingForm();
+
+    form.parse(request, function (err, fields, files) {
+        if(err){
+            log("Error: " + err + " while trying to save file"); 
+            response.writeHead(500, {'Content-Type': 'text/plain'}); 
+            response.end('Failed to upload file: ' + err); 
+        }
+        let oldpath = files.file.filepath;
+        let newpath = localFilePath + files.file.originalFilename;
+        fs.rename(oldpath, newpath, function (err) {
+            if (err) {
+                log("Error: " + err + " occured while trying to rename file");
+            };
+            response.writeHead(200, {'Content-Type': 'text/plain'}); 
+            response.end('File uploaded');
+        });
+        
     });
 
-    form.on('file', function(name,file){
-        log('Uploaded file: ' + file.name);
-    });
-
-    form.parse(request);
-
-    response.writeHead(200, {'Content-Type': 'text/plain'}); 
-    response.end(); 
+    
+    
 }
 
 function send405(request,response){
