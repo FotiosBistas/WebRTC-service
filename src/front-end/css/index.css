@@ -327,6 +327,10 @@ video{
 
 .active-member-box{
     background-color: #BDBDBD;
-    width: 100%;
     border-radius: 10px 10px 0px 0px;
+}
+
+.active-member-box * {
+    padding: 10px;
+    word-break: break-all;
 }
