@@ -284,6 +284,8 @@ export function sendFileOverChat(file){
             lastModified: file.lastModified, 
         })
         front_end_handlers.addNewFileMetadata(getUsername.get(), getRoomCode.get(), getClientID.get() , file);
+        let messages = document.getElementsByClassName("messages")[0];
+        messages.scrollTop = messages.scrollHeight;
     })
     .catch(err => {
         log("Error while uploading the file to the server: " + err);

@@ -100,7 +100,7 @@ body {
     display: grid; 
     grid-template-columns: 3fr 1fr;
     grid-template-rows: min-content;  
-    grid-template-areas: "streamcontainer metadatacontainer";
+    grid-template-areas: "streamcontainer chat";
 }
 
 .streamcontainer {
@@ -170,28 +170,23 @@ video{
     cursor: pointer;
 } 
 
-.metadatacontainer {
-    grid-area: metadatacontainer;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 95vh;
-    margin-left: 10px
-}
-
 .chat{
-    display: flex;
-    flex-direction: column; 
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 1fr 5fr 1fr;
     background-color: white;
-    height: 95vh;
     width: 100%;
-    overflow-y:scroll; /* adds scrollbar effect */
+    height: 95vh;
+    margin-left: 10px;
     border-radius: 10px;
 }
 
 .messages{
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
 }
 
 .loader {
@@ -292,7 +287,6 @@ video{
     height: 5vh;
     display: flex;
     flex-direction: column;
-    grid-area: active-members;
 }
 
 .active-member-box{

@@ -89,11 +89,9 @@ export let websocket_front_end_handlers = {
         let chat = document.getElementsByClassName("chat")[0];
         
 
-        let chat_input_box = document.getElementsByClassName("messages")[0];
-
-        chat_input_box.appendChild(new_message);
+        let messages = document.getElementsByClassName("messages")[0];
+        messages.prepend(new_message);
         // Scroll to the bottom of the div
-        chat.scrollTop = chat.scrollHeight;
     },
 
     /**

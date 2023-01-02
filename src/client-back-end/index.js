@@ -49,6 +49,8 @@ chat_input.addEventListener(("keypress"), function(event){
         sendNewTextMessage(data);
         event.target.value = ""; 
         //TODO HANDLE THE IMAGE BUTTON 
+        let messages = document.getElementsByClassName("messages")[0];
+        messages.scrollTop = messages.scrollHeight;
     }
 })
 
@@ -136,7 +138,7 @@ toggle_chat_panel.onclick = function(event){
     if(chat.style.display === "none"){
         chat.style.display = "flex";
         chat_and_call.style.gridTemplateColumns = "3fr 1fr"
-        chat_and_call.style.gridTemplateAreas = "streamcontainer metadatacontainer"
+        chat_and_call.style.gridTemplateAreas = "streamcontainer chat"
     }else{
         chat.style.display = "none";
         chat_and_call.style.gridTemplateColumns = "1fr"
