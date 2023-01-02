@@ -223,26 +223,51 @@ video{
 .message_container {
     background-color: #448AFF;
     border-radius: 10px;
-    padding: 10px; 
-    width: fit-content;
+    max-width: 80%;
     height: fit-content;
     margin: 10px; 
+    padding: 15px;
     align-self: flex-start;
 }
 
 .message_container * {
     color: white;
+    word-break:break-all;
 }
+
+.message_container h3 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.message_container p {
+    margin-bottom: 0px;
+}
+
 
 /* content that was created by you */
 .message_container_darker{
     background-color: #f1f1f1;
     border-radius: 10px;
-    padding: 10px; 
-    width: fit-content;
+    padding: 15px; 
+    max-width: 80%;
     height: fit-content;
     margin: 10px; 
     align-self: flex-end;
+}
+
+.message_container_darker * {
+    word-break:break-all;
+}
+
+.message_container_darker h3 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.message_container_darker p {
+    margin-bottom: 0px;
+    display: block;
 }
 
 .time-right {
