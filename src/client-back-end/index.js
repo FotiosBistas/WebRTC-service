@@ -73,7 +73,13 @@ camera.onclick = function(event){
     getLocalStream().getTracks().forEach((track) => {
         if (track.kind === 'video') {
             //inverts it each time 
-            track.enabled = !track.enabled;
+            if (track.enabled == true) {
+                track.enabled = false;
+                camera.className = "fa-solid fa-video-slash";
+            }else{
+                track.enabled = true;
+                camera.className = "fa-solid fa-video";
+            }
         }
     }); 
 }
@@ -82,7 +88,13 @@ microphone.onclick = function(event){
     getLocalStream().getTracks().forEach((track) => {
         if (track.kind === 'audio') {
             //inverts it each time 
-            track.enabled = !track.enabled;
+            if (track.enabled == true) {
+                track.enabled = false;
+                microphone.className = "fa-solid fa-microphone-slash";
+            }else{
+                track.enabled = true;
+                microphone.className = "fa-solid fa-microphone";
+            }
         }
     }); 
 }
