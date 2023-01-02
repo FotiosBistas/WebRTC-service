@@ -90,7 +90,7 @@ export let websocket_front_end_handlers = {
         
 
         let messages = document.getElementsByClassName("messages")[0];
-        messages.prepend(new_message);
+        messages.appendChild(new_message);
         // Scroll to the bottom of the div
     },
 
