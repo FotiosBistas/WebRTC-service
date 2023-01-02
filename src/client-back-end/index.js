@@ -136,7 +136,7 @@ let form = document.getElementById('upload-file-form');
 
 toggle_chat_panel.onclick = function(event){
     if(chat.style.display === "none"){
-        chat.style.display = "flex";
+        chat.style.display = "grid";
         chat_and_call.style.gridTemplateColumns = "3fr 1fr"
         chat_and_call.style.gridTemplateAreas = "streamcontainer chat"
     }else{
