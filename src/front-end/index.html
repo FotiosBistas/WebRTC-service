@@ -8,6 +8,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="../client-back-end/index.js" type="module" defer></script>
         <link rel="stylesheet" href="./css/index.css">
+        <script src="https://kit.fontawesome.com/c82bcd8173.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css%22%3E">
     </head>
     <body>
         <main>
@@ -47,12 +49,12 @@
 
                     <div class="localstream"></div>
                     
-                    <ul class="stream-controls">
-                        <li><img id="disconnect-image" src="../images/end-call-image.png"></button></li>
-                        <li><img id="camera-image" src="../images/camera-button.png"></button></li>
-                        <li><img id="microphone-image" src="../images/microphone-button.png"></button></li>
-                        <li><img id="chat-image" src="../images/chat-button.png"></button><li>
-                    </ul>
+                    <div class="stream-controls">
+                        <i id="disconnect-image" class="fa-solid fa-phone-slash"></i>
+                        <i id="camera-image" class="fa-solid fa-video"></i>
+                        <i id="microphone-image" class="fa-solid fa-microphone"></i>
+                        <i id="chat-image" class="fa-solid fa-message"></i>
+                    </div>
                 </div>
                 
 
@@ -65,7 +67,7 @@
                     <div class="chat-input-box">
                         <div class="chat-input-icon">
                             <label for="file-input">
-                                <img id="file-input-image" src="../images/open-explorer.png" alt="File icon">
+                                <i id="file-input-image" class="fa-solid fa-paperclip"></i>
                             </label>
                         </div>
                        

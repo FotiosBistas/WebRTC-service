@@ -91,12 +91,13 @@ body {
     grid-template-columns: 3fr 1fr;
     grid-template-rows: min-content;  
     grid-template-areas: 
-    "video video video chat"
+    "streamcontainer streamcontainer streamcontainer chat"
     "controls controls controls active-members"; 
 }
 
 .streamcontainer {
     position: relative;
+    min-height: 600px;
 }
 
 .streams{
@@ -127,25 +128,31 @@ video{
     z-index: 1;
     bottom: 0;
     right: 0;
-    display: flex;
-    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     list-style: none;
-    background-color:  white;
+    background-color:  aliceblue;
     margin: 10px; 
     grid-area: controls;
+    border-radius: 4em;
 }
 
-.stream-controls img{
-    width: 3em;
-    height: 3em;
+.stream-controls i{
+    font-size: 1.5em;
     margin: 1em;
     display: inline-block;
-    border-radius: 50%;
+    color: #757575;
 }
 
-.stream-controls li:hover{
-    background-color: aliceblue;
-    border-radius: 50%;
+#disconnect-image{
+    color: red;
+}
+
+.stream-controls i:hover{
+    color: #464646;
+    cursor: pointer;
 } 
 
 .chat{
