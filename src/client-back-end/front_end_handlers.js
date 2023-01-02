@@ -7,6 +7,13 @@ function log(text){
     console.log("[" + time.toLocaleTimeString() + "] " + text);
 }
 
+function getCurrentDateTime(){
+    const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var currentdate = new Date(); 
+    var datetime = month[currentdate.getMonth()] + " "+ currentdate.getDay() +", " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+    return datetime;
+}
+
 // THIS FILE HANDLES HTML AND CSS 
 
 /*these handlers handle the html and css of the user
@@ -78,19 +85,24 @@ export let websocket_front_end_handlers = {
      * @param {*} message the text message received from the server
      */
     handleNewTextMessage: function(message){
+        let container = document.createElement("div");
+        container.setAttribute('class', "message-container-other");
+
         let new_message = document.createElement("div");
         //specifies it's the peer who sent the message 
         new_message.setAttribute('class', "message_container"); 
         new_message.setAttribute('id', message.id + " message_container");
         new_message.innerHTML = `<h3>` + message.username + `</h3>`; 
         new_message.insertAdjacentHTML("beforeend",`<p>` + message.message_data + `</p>`);
-
-
-        let chat = document.getElementsByClassName("chat")[0];
+        container.appendChild(new_message);    
         
+        let date = document.createElement("div");
+        date.setAttribute('id', "date");
+        date.innerHTML =  `<p>` + getCurrentDateTime() + `</p>`;
+        container.appendChild(date);
 
         let messages = document.getElementsByClassName("messages")[0];
-        messages.appendChild(new_message);
+        messages.appendChild(container);
         // Scroll to the bottom of the div
     },
 
@@ -273,20 +285,28 @@ export let front_end_handlers = {
      * @param {*} data the content of the text message
      */
     addNewTextMessage: function(username, data){
+        let container = document.createElement("div");
+        container.setAttribute('class', "message-container");
+
         let new_message = document.createElement("div");
         //specifies it's you who sent the message 
         new_message.setAttribute('class', "message_container_darker"); 
         new_message.setAttribute('id', getClientID.get() + " message_container_darker");
         new_message.innerHTML = `<h3>` + username + `</h3>`; 
         new_message.insertAdjacentHTML("beforeend",`<p>` + data + `</p>`);
+        container.appendChild(new_message);
 
+        let date = document.createElement("div");
+        date.setAttribute('id', "date");
+        date.innerHTML =  `<p>` + getCurrentDateTime() + `</p>`;
+        container.appendChild(date);
 
         let chat = document.getElementsByClassName("chat")[0];
         
 
         let chat_input_box = document.getElementsByClassName("messages")[0];
 
-        chat_input_box.appendChild(new_message);
+        chat_input_box.appendChild(container);
         // Scroll to the bottom of the div
         chat.scrollTop = chat.scrollHeight;
     },

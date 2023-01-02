@@ -177,7 +177,7 @@ video{
     background-color: white;
     width: 100%;
     height: 95vh;
-    margin-left: 10px;
+    margin-left: 20px;
     border-radius: 10px;
 }
 
@@ -219,14 +219,42 @@ video{
     100% { transform: rotate(360deg); }
 }
 
+.message-container {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-items: center;
+}
+
+.message-container-other {
+    align-self: flex-start;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
+}
+
+#date {
+    color: #757575;
+    font-size: small;
+    font-style: italic;
+    min-width: 30%;
+}
+
+#date * {
+    align-self: center;
+    justify-self: center;
+}
+
 /* content that was received by another peer */
 .message_container {
     background-color: #448AFF;
     border-radius: 10px;
-    max-width: 80%;
+    padding: 15px;
+    max-width: 70%;
     height: fit-content;
     margin: 10px; 
-    padding: 15px;
     align-self: flex-start;
 }
 
@@ -250,10 +278,10 @@ video{
     background-color: #f1f1f1;
     border-radius: 10px;
     padding: 15px; 
-    max-width: 80%;
+    max-width: 50%;
     height: fit-content;
     margin: 10px; 
-    align-self: flex-end;
+    align-self: flex-start;
 }
 
 .message_container_darker * {
@@ -267,7 +295,6 @@ video{
 
 .message_container_darker p {
     margin-bottom: 0px;
-    display: block;
 }
 
 .time-right {
