@@ -258,15 +258,7 @@ export function sendNewTextMessage(data){
  * @param {*} file the file to be sent over the connection 
  */
 export function sendFileOverChat(file){
-    //send the file metadata over the server 
-    sendToServer({
-        type: "new-file-metadata",
-        fileName: file.name, 
-        fileType: file.type, 
-        fileSize: file.size, 
-        lastModified: file.lastModified, 
-    })
-    front_end_handlers.addNewFileMetadata(getUsername.get(), getRoomCode.get(), getClientID.get() , file);
+    
     //uniquely identify filename using client id,username and roomcode 
 
     //enable this to experience the bug 
@@ -282,6 +274,16 @@ export function sendFileOverChat(file){
         if(!response.ok){
             alert("Error while uploading file to server: " + response.statusText);
         }
+
+        //send the file metadata over the server 
+        sendToServer({
+            type: "new-file-metadata",
+            fileName: file.name, 
+            fileType: file.type, 
+            fileSize: file.size, 
+            lastModified: file.lastModified, 
+        })
+        front_end_handlers.addNewFileMetadata(getUsername.get(), getRoomCode.get(), getClientID.get() , file);
     })
     .catch(err => {
         log("Error while uploading the file to the server: " + err);
