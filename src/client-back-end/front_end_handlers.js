@@ -391,5 +391,7 @@ export let front_end_handlers = {
         streams.innerHTML = ""; 
         let members = document.getElementsByClassName("active-members")[0];
         members.innerHTML = "";
+        let local_stream = document.getElementsByClassName("localstream")[0]; 
+        local_stream.innerHTML = ""; 
     }
 }
