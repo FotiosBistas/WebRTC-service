@@ -396,7 +396,7 @@ async function onMessageEventHandler(message) {
         case "received-id":
             try{
 
-                let unique = active_connection_handlers.isUsenameUnique(data.username); 
+                let unique = active_connection_handlers.isUsernameUnique(data.username,data.room_code); 
                 if(unique){
                     this.user_id = this.user_id + await active_connection_handlers.createIdentifierForUser(data.username); 
                     send_data.sendToOneUser(this, {

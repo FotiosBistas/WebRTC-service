@@ -105,9 +105,9 @@ module.exports =  {
      * @param {*} username the new username 
      * @returns true if the username is unique and error "Username is not unique if it's not"
      */
-    isUsenameUnique: function(username){
+    isUsernameUnique: function(username, room_code){
         let no = active_connections.find((con) => {
-            if(con.username === username){
+            if(con.username === username && con.room_code === room_code){
                 return con; 
             }
         });
