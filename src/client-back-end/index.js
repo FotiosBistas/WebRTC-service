@@ -6,9 +6,48 @@ let create_room_input = document.getElementById("create_roomcode");
 let join_room_input = document.getElementById("join_roomcode"); 
 let join_username_input = document.getElementById("join_username");
 let join_room_button = document.getElementById("join-room-button");
-
+function log(text){
+    var time = new Date();
+    console.log("[" + time.toLocaleTimeString() + "] " + text);
+}
 let loader = document.getElementsByClassName("loader")[0];
+let messages = document.getElementsByClassName("messages")[0];
 
+messages.onclick = function(event){
+    if(event.target.id === "metadata_link"){
+        const formData = new FormData(); 
+        let clientID = event.target.parentElement.dataset.clientid; 
+        let room_code = event.target.parentElement.dataset.roomcode; 
+        let username = event.target.parentElement.dataset.username;
+        let fileName =  event.target.parentElement.dataset.filename;
+        formData.append('clientID', clientID);
+        formData.append('room_code', room_code);
+        formData.append('username', username);
+        formData.append('filename',fileName);
+        
+        const params = new URLSearchParams(formData).toString();
+        
+        const url = `${window.location.protocol}//${getServerURL.get()}/Files?${params}`;
+        
+        fetch(url)
+        .then(response => {
+            if(!response.ok){
+                throw new Error(response.statusText); 
+            } 
+            return response.blob();
+        })
+        .then(blob => {
+            log("Turned file into blob");
+            const file = new File([blob], fileName, { type: blob.type });
+            // use saveAs to save the file to the user's device
+            saveAs(file);
+        })
+        .catch((err) => {
+            alert(err); 
+            log("Error while saving file received from remote peer:" + err)
+        });
+    };
+}
 
 join_room_button.onclick = async function() {
     let value = join_room_input.value;
