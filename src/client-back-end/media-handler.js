@@ -4,6 +4,29 @@ function log(text){
     console.log("[" + time.toLocaleTimeString() + "] " + text);
 }
 
+/* navigator.mediaDevices.addEventListener('devicechange', async function(){
+    log("Device changed"); 
+    let devices = await media_functions.getDevices(); 
+    const constraints = {};
+    devices.forEach((device) => {
+        log("Device with id: " + device.deviceId + 
+        " it is of kind: " + device.kind + " and its name: " + device.label);
+        // Set the constraints for getUserMedia() based on the selected devices
+        
+        if(device.kind == 'audioinput'){
+            constraints.video = {
+                deviceId: { exact: device.deviceId }
+            };
+        }else if(device.kind == 'videoinput'){
+            constraints.audio = {
+                deviceId: { exact: device.deviceId }
+            };
+        }
+        
+    });
+    media_functions.getMedia(constraints); 
+}); */
+
 export let media_functions = {
 
     local_stream: null, 
@@ -20,6 +43,7 @@ export let media_functions = {
             this.local_stream = stream; 
             return Promise.resolve(stream); 
         }catch(err){
+            this.handleGetUserMediaError(err);
             return Promise.reject(err);    
         }
         
