@@ -126,7 +126,7 @@ export let websocket_front_end_handlers = {
         data-username="${message.username}">` 
         + `<h3 id="header_metadatalink">` 
         + message.username + `</h3>` + `<a id="metadata_link" href="#">` + message.fileName 
-        + message.fileType + `</a>` + `<br>` + message.fileSize + `<br>` + message.lastModified + 
+        + message.fileType + `</a>` + `<br> Filesize is: ` + message.fileSize + ` bytes <br> Last modified: ` + new Date(message.lastModified) + 
         `</div>`;  
         container.appendChild(new_message);
         
@@ -313,7 +313,7 @@ export let front_end_handlers = {
         data-username="${username}">` 
         + `<h3 id="header_metadatalink">` 
         + username + `</h3>` + `<a id="metadata_link" href="#">` + file.name 
-        + file.type + `</a>` + `<br>` + file.size + `<br>` + file.lastModified + 
+        + file.type + `</a>` + `<br> File size: ` + file.size + ` bytes <br> Last modified: ` + new Date(file.lastModified) + 
         `</div>`;  
         container.appendChild(new_message);
 
