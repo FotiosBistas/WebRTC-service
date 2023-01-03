@@ -167,20 +167,34 @@ function sendHtml(request, response, path){
 function extractMIME(filename) {
     let filext =  path.extname(filename).toUpperCase();
     log("Mime type extracted: " + filext);
-    if (filext == ".JPG" || filext == ".JPEG"){
-        return "image/jpeg";
-    } else if (filext == ".PNG"){
-        return "image/png";
-    }else if(filext == ".ICO") {
-        return "image/x-icon";
-    }else if(filext == ".MP4"){
-        return "video/mp4";
-    }else if(filext == ".MKV"){
-        return "video/x-matroska";
-    }else {
-        // Unsupported multimedia file format.
-        return null;
-    }
+    switch (filext) {
+        case ".JPG":
+        case ".JPEG":
+          return "image/jpeg";
+        case ".PNG":
+          return "image/png";
+        case ".ICO":
+          return "image/x-icon";
+        case ".MP4":
+          return "video/mp4";
+        case ".PDF":
+          return "application/pdf";
+        case ".MKV":
+          return "video/x-matroska";
+        case ".CSV":
+          return "text/csv"; 
+        case ".DOC":
+          return "application/msword"; 
+        case ".DOCX":
+          return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        case ".GIF":
+          return "image/gif"; 
+        case ".ZIP":
+          return "application/zip"; 
+        default:
+          // Unsupported multimedia file format.
+          return null;
+      }
 }
 
 function handleGetRoomFile(request, response, params){
@@ -203,6 +217,7 @@ function handleGetRoomFile(request, response, params){
         response.writeHead(404, {'Content-Type': 'text/plain'}); 
         response.end("Directory not found.");
         request.connection.destroy();
+        return; 
     } else {
         // Read file:
         try {
@@ -215,6 +230,7 @@ function handleGetRoomFile(request, response, params){
                 response.writeHead(400, {'Content-Type': 'text/plain'}); 
                 response.end("Unsupported multimedia file format.");
                 request.connection.destroy();
+                return; 
             }
             response.writeHead(200, {'Content-Type': mimetype});
             response.end(requested_file);
@@ -240,6 +256,11 @@ function handleSendFile(request, response){
             response.end('Failed to upload file: ' + err); 
         }
         let oldpath = files.file.filepath;
+        let mime_type = extractMIME(files.file.originalFilename);
+        if(!mime_type){
+            response.writeHead(401, {'Content-Type': 'text/plain'}); 
+            response.end('File type not supported'); 
+        } 
         let newpath = localFilePath + files.file.originalFilename;
         fs.rename(oldpath, newpath, function (err) {
             if (err) {
