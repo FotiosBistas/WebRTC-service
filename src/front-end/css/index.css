@@ -116,10 +116,26 @@ body {
     grid-template-areas: "streamcontainer chat";
 }
 
+@media screen and (max-width: 600px) {
+
+    .chatandcall{
+        grid-template-columns: 1fr;
+        grid-template-areas: "streamcontainer"
+                                    "chat";
+    }
+}
+    
+
 .streamcontainer {
     position: relative;
     grid-area: streamcontainer;
     height: 95vh;
+}
+
+@media screen and (max-width: 600px) {
+    .streamcontainer {
+        height: auto;
+    }
 }
 
 .streams{
@@ -193,6 +209,14 @@ video{
     height: 95vh;
     margin-left: 20px;
     border-radius: 10px;
+}
+
+@media screen and (max-width: 600px) {
+    .chat{
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20px;
+    }
 }
 
 .messages{
