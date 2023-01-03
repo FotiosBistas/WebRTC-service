@@ -116,6 +116,16 @@ body {
     grid-template-areas: "streamcontainer chat";
 }
 
+@media screen and (max-width: 600px) {
+
+    .chatandcall{
+        grid-template-columns: 1fr;
+        grid-template-areas: "streamcontainer"
+                                    "chat";
+    }
+}
+    
+
 .streamcontainer {
     position: relative;
     grid-area: streamcontainer;
@@ -193,6 +203,45 @@ video{
     height: 95vh;
     margin-left: 20px;
     border-radius: 10px;
+}
+
+@media screen and (max-width: 600px) {
+    .streamcontainer {
+        min-height: fit-content;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-items: center;
+    }
+
+    .streams {
+        width: 100%;
+        height: fit-content;
+    }
+
+    .localstream {
+        top: 0;
+        left: 0;
+        margin: 5px;
+        height: 60px;
+        width: 100px;
+    }
+
+    .stream-controls {
+        position: static;
+        margin: 10px; 
+        height: fit-content;
+        width: fit-content;
+    }
+
+}
+
+@media screen and (max-width: 600px) {
+    .chat{
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 .messages{
