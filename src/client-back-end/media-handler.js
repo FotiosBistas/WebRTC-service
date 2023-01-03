@@ -15,21 +15,23 @@ function log(text){
         
         if(device.kind == 'audioinput'){
             constraints.video = {
-                deviceId: { exact: device.deviceId }
+                deviceId: device.deviceId 
             };
         }else if(device.kind == 'videoinput'){
             constraints.audio = {
-                deviceId: { exact: device.deviceId }
+                deviceId: device.deviceId 
             };
         }
         
     });
-    media_functions.getMedia(constraints); 
-}); */
+    await media_functions.getMedia(constraints); 
+});  */
 
 export let media_functions = {
 
     local_stream: null, 
+
+
     /**
      * Returns the media stream that the user authorized. 
      * @param {*} constraints the type of media that we are going to request.
