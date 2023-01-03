@@ -86,6 +86,19 @@ body {
     cursor: pointer;
 }
 
+@media screen and (max-width: 600px) {
+    .room {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 5px;
+    }
+
+    .room * {
+        margin: 5px;
+        width: 280px;
+    }
+}
+
 .chatandcall{
     position: absolute;
     top:0;
