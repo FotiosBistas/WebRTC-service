@@ -48,44 +48,41 @@ export function getLocalStream(){
 
 const default_configuration = {
     iceServers: [
-        {
-            urls:[
-                'stun:stun1.l.google.com:19302',
-                'stun:stun2.l.google.com:19302',
-                'stun:stun3.l.google.com:19302',
-                'stun:stun4.l.google.com:19302',
-            ]
-        },
-        
-        {
-            url: 'turn:numb.viagenie.ca',
-            credential: 'muazkh',
-            username: 'webrtc@live.com'
-        },
-        {
-            url: 'turn:192.158.29.39:3478?transport=udp',
-            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-            username: '28224511:1379330808'
-        },
-        {
-            url: 'turn:192.158.29.39:3478?transport=tcp',
-            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-            username: '28224511:1379330808'
-        },
-        {
-            url: 'turn:turn.bistri.com:80',
-            credential: 'homeo',
-            username: 'homeo'
-        },
-        {
-            url: 'turn:turn.anyfirewall.com:443?transport=tcp',
-            credential: 'webrtc',
-            username: 'webrtc'
-        }
-            
-        
+      {
+        urls: [
+          'stun:stun1.l.google.com:19302',
+          'stun:stun2.l.google.com:19302',
+          'stun:stun3.l.google.com:19302',
+          'stun:stun4.l.google.com:19302'
+        ]
+      },
+      {
+        urls: [
+          'turn:turn01.hubl.in?transport=udp',
+          'turn:turn02.hubl.in?transport=tcp',
+          'turn:numb.viagenie.ca',
+          'turn:192.158.29.39:3478?transport=udp',
+          'turn:192.158.29.39:3478?transport=tcp',
+          'turn:turn.bistri.com:80',
+          'turn:turn.anyfirewall.com:443?transport=tcp'
+        ],
+        credential: [
+          'muazkh',
+          'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+          'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+          'homeo',
+          'webrtc'
+        ],
+        username: [
+          'webrtc@live.com',
+          '28224511:1379330808',
+          '28224511:1379330808',
+          'homeo',
+          'webrtc'
+        ]
+      }
     ]
-};
+  };
 
 
 export let peer_connection = null; 
