@@ -271,6 +271,7 @@ export function sendFileOverChat(file){
         // handle the response here
         if(!response.ok){
             alert("Error while uploading file to server: " + response.statusText);
+            throw new Error(response.statusText); 
         }
 
         //send the file metadata over the server 
