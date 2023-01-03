@@ -213,6 +213,9 @@ function handleTrackEvent(event){
     if(!remote_video){
         remote_video = document.createElement("video");
         remote_video.setAttribute('id', remote_peer_id + " video");
+        //Re-organize UI
+        let streamcontrols = document.getElementsByClassName("stream-controls")[0]
+        streamcontrols.style.marginTop = "20px"
     }
     
     //TODO ADD REMOTE PEER ID
@@ -226,9 +229,7 @@ function handleTrackEvent(event){
  
     remote_video.srcObject = remote_stream;
     
-    //Re-organize UI
-    let streamcontrols = document.getElementsByClassName("stream-controls")[0]
-    streamcontrols.style.marginTop = "20px"
+    
 
 }
 
