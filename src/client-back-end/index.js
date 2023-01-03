@@ -175,7 +175,7 @@ fileInput.onchange = function(event){
 
 toggle_chat_panel.onclick = function(event){
     let streams = document.getElementsByClassName("streams")[0];
-    var mediaQans = window.matchMedia("(max-width: 700px)");
+    var mediaQans = window.matchMedia("(max-width: 1000px)");
 
     if(chat.style.display === "none"){
         chat.style.display = "grid";
