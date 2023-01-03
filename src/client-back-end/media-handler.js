@@ -5,6 +5,8 @@ function log(text){
 }
 
 export let media_functions = {
+
+    local_stream: null, 
     /**
      * Returns the media stream that the user authorized. 
      * @param {*} constraints the type of media that we are going to request.
@@ -15,6 +17,7 @@ export let media_functions = {
         console.log(navigator.mediaDevices)
         try{
             stream = await navigator.mediaDevices.getUserMedia(constraints);
+            this.local_stream = stream; 
             return Promise.resolve(stream); 
         }catch(err){
             return Promise.reject(err);    
@@ -31,23 +34,6 @@ export let media_functions = {
             return Promise.resolve(devices); 
         }catch(err){
             return Promise.reject(err);
-        }
-    },
-
-    /**
-     * 
-     * 
-     * @param {*} connection the connection we'll add the track on the connection
-     * @param {*} stream the streams that contains the tracks we'll add to the connection 
-     */
-    addTrackToConnection: async function func(connection, ...streams){
-        log(streams + "received as parameters")
-        for(const stream of streams) {
-           log("adding stream to connection: " + stream);
-            stream.getTracks().forEach(track => {
-                log("adding track to connection: " + track); 
-                connection.addTrack(track,stream); 
-            });
         }
     },
 

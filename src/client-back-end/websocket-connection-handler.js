@@ -132,11 +132,9 @@ export function webSocketConnect(room_code, action, username){
     let websocketScheme = scheme + "://" + getServerURL.get(); 
     log("Server URL is: " + websocketScheme);
 
-    try{
-        web_socket_connection = new WebSocket(websocketScheme, "json"); 
-    }catch(err){
-        throw new Error("couldn't connect you to the server"); 
-    }
+    
+    web_socket_connection = new WebSocket(websocketScheme, "json"); 
+
     //assing event handlers 
     web_socket_connection.onclose = onCloseEventHandler; 
     web_socket_connection.onerror = onErrorEventHandler; 

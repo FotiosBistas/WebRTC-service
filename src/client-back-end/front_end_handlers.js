@@ -258,25 +258,22 @@ export let front_end_handlers = {
      * Gets the local media of the user and adds into the video grid to be displayed and sent to the other users. 
      */
     getLocalMediaAndHandleHtml: function(){
-        media_functions.getMedia({
-            audio: true, 
-            video: true, 
-        }).then((stream) => {
-            setLocalStream(stream);
+        let stream = media_functions.local_stream; 
+        setLocalStream(stream);
 
-            getLocalStream().getTracks().forEach((track) => {
-                getLocalPeerConnection().addTrack(track);
-            });
+        getLocalStream().getTracks().forEach((track) => {
+            getLocalPeerConnection().addTrack(track);
+        });
 
-            let video = document.createElement('video');
-            video.muted = true; // The peer must not hear its own audio.
-            video.setAttribute('autoplay', true); 
-            video.setAttribute("id",getClientID.get() + " video");
-            video.srcObject = getLocalStream(); 
+        let video = document.createElement('video');
+        video.muted = true; // The peer must not hear its own audio.
+        video.setAttribute('autoplay', true); 
+        video.setAttribute("id",getClientID.get() + " video");
+        video.srcObject = getLocalStream(); 
 
-            let local_video_preview = document.getElementsByClassName("localstream")[0];
-            local_video_preview.append(video);
-        }); 
+        let local_video_preview = document.getElementsByClassName("localstream")[0];
+        local_video_preview.append(video);
+        
     },
 
     /**
