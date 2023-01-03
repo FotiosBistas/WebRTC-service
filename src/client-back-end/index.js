@@ -10,16 +10,21 @@ let join_room_button = document.getElementById("join-room-button");
 let loader = document.getElementsByClassName("loader")[0];
 
 
-join_room_button.onclick = function() {
+join_room_button.onclick = async function() {
     let value = join_room_input.value;
     let username = join_username_input.value; 
+    let local_stream = await media_functions.getMedia({audio: true, video: true}); 
     try{
+        if(!local_stream){
+            throw new Error(" empty local stream"); 
+        }
+        loader.style.display = "block";
         webSocketConnect(value, "join", username); 
     }catch(err){
         alert("Error: " + err + " while trying to join the server")
     }
 
-    loader.style.display = "block";
+    
 
     
 } 
@@ -27,15 +32,20 @@ join_room_button.onclick = function() {
 let create_room_button = document.getElementById("create-room-button");
 let create_username_input = document.getElementById("create_username");
 
-create_room_button.onclick = function() {
+create_room_button.onclick = async function() {
     let value = create_room_input.value; 
     let username = create_username_input.value; 
+    let local_stream = await media_functions.getMedia({audio: true, video: true}); 
     try{
+        if(!local_stream){
+            throw new Error(" empty local stream"); 
+        }
+        loader.style.display = "block";
         webSocketConnect(value, "create", username); 
     }catch(err){
         alert("Error: " + err + " while trying to create the server")
     }   
-    loader.style.display = "block";
+    
 }
 
 
