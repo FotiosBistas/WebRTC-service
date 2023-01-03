@@ -137,8 +137,15 @@ fileInput.onchange = function(event){
 toggle_chat_panel.onclick = function(event){
     if(chat.style.display === "none"){
         chat.style.display = "grid";
-        chat_and_call.style.gridTemplateColumns = "3fr 1fr"
-        chat_and_call.style.gridTemplateAreas = "streamcontainer chat"
+        var mediaQans = window.matchMedia("(max-width: 700px)");
+        if (mediaQans.matches) { // If media query matches
+            chat_and_call.style.gridTemplateColumns = "1fr"
+            chat_and_call.style.gridTemplateAreas = '"streamcontainer" "chat"';
+        } else {
+            chat_and_call.style.gridTemplateColumns = "3fr 1fr"
+            chat_and_call.style.gridTemplateAreas = "streamcontainer chat"
+        }
+        
     }else{
         chat.style.display = "none";
         chat_and_call.style.gridTemplateColumns = "1fr"
