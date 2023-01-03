@@ -54,6 +54,9 @@ const default_configuration = {
                 'stun:stun2.l.google.com:19302',
                 'stun:stun3.l.google.com:19302',
                 'stun:stun4.l.google.com:19302',
+                `turn:turn01.hubl.in?transport=udp`,
+                `turn:turn02.hubl.in?transport=tcp`,
+
                 {
                     url: 'turn:numb.viagenie.ca',
                     credential: 'muazkh',
