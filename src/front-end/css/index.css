@@ -119,6 +119,7 @@ body {
 .streamcontainer {
     position: relative;
     grid-area: streamcontainer;
+    height: 95vh;
 }
 
 .streams{
