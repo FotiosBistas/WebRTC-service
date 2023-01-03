@@ -119,7 +119,15 @@ export let websocket_front_end_handlers = {
         //specifies it's the peer who sent the message 
         new_message.setAttribute('class', "message_container"); 
         new_message.setAttribute('id', message.id + " message_container");
-        new_message.innerHTML = `<h3>` + message.username + `</h3>` + `<a class="metadata_link" href="#"><h4>` + message.fileName + message.fileType + `</h4></a>` + `<br>` + message.fileSize + `<br>` + message.lastModified;  
+        new_message.innerHTML = `<div class="metadata_link"
+        data-clientID="${message.id}"
+        data-roomcode="${message.room_code}"
+        data-filename="${message.fileName}"
+        data-username="${message.username}">` 
+        + `<h3 id="header_metadatalink">` 
+        + message.username + `</h3>` + `<a id="metadata_link" href="#">` + message.fileName 
+        + message.fileType + `</a>` + `<br> Filesize is: ` + message.fileSize + ` bytes <br> Last modified: ` + new Date(message.lastModified) + 
+        `</div>`;  
         container.appendChild(new_message);
         
         let date = document.createElement("div");
@@ -133,42 +141,7 @@ export let websocket_front_end_handlers = {
         let chat_input_box = document.getElementsByClassName("messages")[0];
 
         chat_input_box.appendChild(container);
-        let links = Array.from(document.getElementsByClassName("metadata_link"));
-        // Scroll to the bottom of the div
-        links.forEach((element) => {
-            element.addEventListener("click", function(event) {
-                let id = new_message.getAttribute('id').split(" ")[0];
-                log("client " + id + " id for message");
-
-                const formData = new FormData(); 
-                formData.append('clientID', message.id);
-                formData.append('room_code', message.room_code);
-                formData.append('username', message.username);
-                formData.append('filename', message.fileName);
-                
-                const params = new URLSearchParams(formData).toString();
-                
-                const url = `${window.location.protocol}//${getServerURL.get()}/Files?${params}`;
-                
-                fetch(url)
-                .then(response => {
-                    if(!response.ok){
-                        throw new Error(response.statusText); 
-                    } 
-                    return response.blob();
-                })
-                .then(blob => {
-                    log("Turned file into blob");
-                    const file = new File([blob], message.fileName, { type: blob.type });
-                    // use saveAs to save the file to the user's device
-                    saveAs(file);
-                })
-                .catch((err) => {
-                    alert(err); 
-                    log("Error while saving file received from remote peer:" + err)
-                });
-            });
-          });
+        
     
         chat.scrollTop = chat.scrollHeight;
     },
@@ -333,7 +306,15 @@ export let front_end_handlers = {
         //specifies it's you who sent the message 
         new_message.setAttribute('class', "message_container_darker"); 
         new_message.setAttribute('id', getClientID.get() + " message_container_darker");
-        new_message.innerHTML = `<h3>` + username + `</h3>` + `<a class="metadata_link" href="#"><h4>` + file.name + file.type + `</h4></a>` + `<br>` + file.size + `<br>` + file.lastModified; 
+        new_message.innerHTML = `<div class="class_metadata_link"
+        data-clientID="${clientID}"
+        data-roomcode="${room_code}"
+        data-filename="${file.name}"
+        data-username="${username}">` 
+        + `<h3 id="header_metadatalink">` 
+        + username + `</h3>` + `<a id="metadata_link" href="#">` + file.name 
+        + file.type + `</a>` + `<br> File size: ` + file.size + ` bytes <br> Last modified: ` + new Date(file.lastModified) + 
+        `</div>`;  
         container.appendChild(new_message);
 
         let date = document.createElement("div");
@@ -348,41 +329,7 @@ export let front_end_handlers = {
         let chat_input_box = document.getElementsByClassName("messages")[0];
 
         chat_input_box.appendChild(container);
-        let links = Array.from(document.getElementsByClassName("metadata_link")); 
-        // Scroll to the bottom of the div
-        links.forEach((element) => {
-            element.addEventListener("click", async function(event) {
-              let id = new_message.getAttribute('id').split(" ")[0];
-              log("client " + id + " id for message");
-                const formData = new FormData(); 
-                formData.append('clientID', clientID);
-                formData.append('room_code', room_code);
-                formData.append('username', username);
-                formData.append('filename', file.name);
-                let filename = file.name;
-                const params = new URLSearchParams(formData).toString();
-                
-                const url = `${window.location.protocol}//${getServerURL.get()}/Files?${params}`;
-                
-                fetch(url)
-                .then(response => {
-                    if(!response.ok){
-                        throw new Error(response.statusText); 
-                    } 
-                    return response.blob();
-                })
-                .then(blob => {
-                    log("Turned file into blob");
-                    const file = new File([blob], filename, { type: blob.type });
-                    // use saveAs to save the file to the user's device
-                    saveAs(file);
-                })
-                .catch((err) => {
-                    alert(err); 
-                    log("Error while saving file received from remote peer:" + err)
-                });
-            });
-          });
+        
         chat.scrollTop = chat.scrollHeight;
     },
 

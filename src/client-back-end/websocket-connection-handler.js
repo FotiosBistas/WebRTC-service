@@ -259,7 +259,6 @@ export function sendFileOverChat(file){
     
     //uniquely identify filename using client id,username and roomcode 
 
-    //enable this to experience the bug 
     let new_filename = getUsername.get() + "_" + getClientID.get() + "_" + getRoomCode.get() + "_" + file.name;  
     let formdata = new FormData(); 
     formdata.append("file", file, new_filename); 
