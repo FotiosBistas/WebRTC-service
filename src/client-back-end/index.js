@@ -64,6 +64,21 @@ chat_input.addEventListener(("keypress"), function(event){
     }
 })
 
+let sendbutton = document.getElementById("send-button");
+
+sendbutton.onclick = function (event) {
+    let text = chat_input.value;
+    if(text.length > 100){
+        alert("Can't enter more that a hundred");
+    }else {
+        sendNewTextMessage(text);
+        chat_input.value = ""; 
+        //TODO HANDLE THE IMAGE BUTTON 
+        let messages = document.getElementsByClassName("messages")[0];
+        messages.scrollTop = messages.scrollHeight;
+    }
+};
+
 let disconnect = document.getElementById("disconnect-image");
 let camera = document.getElementById("camera-image");
 let microphone = document.getElementById("microphone-image");
@@ -118,31 +133,6 @@ fileInput.onchange = function(event){
     // Send the file over the chat 
     sendFileOverChat(file);
 };
-
-
-let form = document.getElementById('upload-file-form');
-
-/* form.addEventListener('submit', function(event) {
-    event.preventDefault();  // prevent the form submission from navigating away from the page
-     let fileInput = document.querySelector('input[type="file"]');
-    let file = fileInput.files[0];  // get the file object
-
-    // create a form data object and append the file to it
-    let formData = new FormData();
-    formData.append('file', file);
-    let url = new URL(`${document.location.protocol}//${getServerURL.get()}/UploadFiles`); 
-    // send the file to the server using the fetch API
-    fetch(url, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        // handle the response here
-    })
-    .catch(error => {
-        console.error(error);
-    });
-}); */
 
 toggle_chat_panel.onclick = function(event){
     if(chat.style.display === "none"){

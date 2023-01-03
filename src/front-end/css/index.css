@@ -86,6 +86,19 @@ body {
     cursor: pointer;
 }
 
+@media screen and (max-width: 600px) {
+    .room {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 5px;
+    }
+
+    .room * {
+        margin: 5px;
+        width: 280px;
+    }
+}
+
 .chatandcall{
     position: absolute;
     top:0;
@@ -103,9 +116,20 @@ body {
     grid-template-areas: "streamcontainer chat";
 }
 
+@media screen and (max-width: 600px) {
+
+    .chatandcall{
+        grid-template-columns: 1fr;
+        grid-template-areas: "streamcontainer"
+                                    "chat";
+    }
+}
+    
+
 .streamcontainer {
     position: relative;
     grid-area: streamcontainer;
+    height: 95vh;
 }
 
 .streams{
@@ -179,6 +203,45 @@ video{
     height: 95vh;
     margin-left: 20px;
     border-radius: 10px;
+}
+
+@media screen and (max-width: 600px) {
+    .streamcontainer {
+        min-height: fit-content;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-items: center;
+    }
+
+    .streams {
+        width: 100%;
+        height: fit-content;
+    }
+
+    .localstream {
+        top: 0;
+        left: 0;
+        margin: 5px;
+        height: 60px;
+        width: 100px;
+    }
+
+    .stream-controls {
+        position: static;
+        margin: 10px; 
+        height: fit-content;
+        width: fit-content;
+    }
+
+}
+
+@media screen and (max-width: 600px) {
+    .chat{
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 .messages{
@@ -330,6 +393,20 @@ video{
 }
 
 #file-input-image:hover {
+    color: #464646;
+    cursor: pointer;
+}
+
+#send-button {
+    font-size: 1.5em;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+    color: #757575;
+}
+
+#send-button:hover {
     color: #464646;
     cursor: pointer;
 }
