@@ -54,6 +54,21 @@ chat_input.addEventListener(("keypress"), function(event){
     }
 })
 
+let sendbutton = document.getElementById("send-button");
+
+sendbutton.onclick = function (event) {
+    let text = chat_input.value;
+    if(text.length > 100){
+        alert("Can't enter more that a hundred");
+    }else {
+        sendNewTextMessage(text);
+        chat_input.value = ""; 
+        //TODO HANDLE THE IMAGE BUTTON 
+        let messages = document.getElementsByClassName("messages")[0];
+        messages.scrollTop = messages.scrollHeight;
+    }
+};
+
 let disconnect = document.getElementById("disconnect-image");
 let camera = document.getElementById("camera-image");
 let microphone = document.getElementById("microphone-image");
