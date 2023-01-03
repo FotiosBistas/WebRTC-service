@@ -210,6 +210,11 @@ export let websocket_front_end_handlers = {
             remote_video.srcObject.getTracks().forEach((track) => {
                 track.stop(); 
             });
+
+            //Re-organize UI
+            let streamcontrols = document.getElementsByClassName("stream-controls")[0]
+            streamcontrols.style.marginTop = "5em"
+
             remote_video.remove();  
         }
     }

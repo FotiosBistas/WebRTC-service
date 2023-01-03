@@ -233,6 +233,7 @@ video{
         margin: 10px; 
         height: fit-content;
         width: fit-content;
+        margin-top: 5em;
     }
 
 }

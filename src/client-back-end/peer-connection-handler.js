@@ -199,7 +199,11 @@ function handleTrackEvent(event){
 
     remote_stream.addTrack(event.track); 
  
-    remote_video.srcObject = remote_stream; 
+    remote_video.srcObject = remote_stream;
+    
+    //Re-organize UI
+    let streamcontrols = document.getElementsByClassName("stream-controls")[0]
+    streamcontrols.style.marginTop = "20px"
 
 }
 
