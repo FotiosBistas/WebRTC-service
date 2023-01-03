@@ -48,16 +48,41 @@ export function getLocalStream(){
 
 const default_configuration = {
     iceServers: [
-        {
-            urls:[
-                'stun:stun1.l.google.com:19302',
-                'stun:stun2.l.google.com:19302',
-                'stun:stun3.l.google.com:19302',
-                'stun:stun4.l.google.com:19302'
-            ]
-        }
+      {
+        urls: [
+          'stun:stun1.l.google.com:19302',
+          'stun:stun2.l.google.com:19302',
+          'stun:stun3.l.google.com:19302',
+          'stun:stun4.l.google.com:19302'
+        ]
+      },
+      {
+        urls: [
+          'turn:turn01.hubl.in?transport=udp',
+          'turn:turn02.hubl.in?transport=tcp',
+          'turn:numb.viagenie.ca',
+          'turn:192.158.29.39:3478?transport=udp',
+          'turn:192.158.29.39:3478?transport=tcp',
+          'turn:turn.bistri.com:80',
+          'turn:turn.anyfirewall.com:443?transport=tcp'
+        ],
+        credential: [
+          'muazkh',
+          'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+          'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+          'homeo',
+          'webrtc'
+        ],
+        username: [
+          'webrtc@live.com',
+          '28224511:1379330808',
+          '28224511:1379330808',
+          'homeo',
+          'webrtc'
+        ]
+      }
     ]
-};
+  };
 
 
 export let peer_connection = null; 
