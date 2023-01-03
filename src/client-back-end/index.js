@@ -34,7 +34,7 @@ let create_username_input = document.getElementById("create_username");
 
 create_room_button.onclick = async function() {
     let value = create_room_input.value; 
-    let username = create_room_input.value; 
+    let username = create_username_input.value; 
     let local_stream = await media_functions.getMedia({audio: true, video: true}); 
     try{
         if(!local_stream){
