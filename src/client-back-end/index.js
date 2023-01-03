@@ -109,9 +109,6 @@ fileInput.onchange = function(event){
     sendFileOverChat(file);
 };
 
-
-let form = document.getElementById('upload-file-form');
-
 toggle_chat_panel.onclick = function(event){
     if(chat.style.display === "none"){
         chat.style.display = "grid";
