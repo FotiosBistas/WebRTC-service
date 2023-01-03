@@ -15,6 +15,7 @@ const active_connection_handlers = require('./connection-array-handler.js');
 const room_handlers = require('./room-handler.js'); 
 const send_data = require('./send-data.js'); 
 const path = require('path');
+require('webrtc-adapter');
 const private_key = 'tls/key.pem';
 const certificate = 'tls/cert.pem';
 

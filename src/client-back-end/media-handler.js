@@ -4,7 +4,32 @@ function log(text){
     console.log("[" + time.toLocaleTimeString() + "] " + text);
 }
 
+/* navigator.mediaDevices.addEventListener('devicechange', async function(){
+    log("Device changed"); 
+    let devices = await media_functions.getDevices(); 
+    const constraints = {};
+    devices.forEach((device) => {
+        log("Device with id: " + device.deviceId + 
+        " it is of kind: " + device.kind + " and its name: " + device.label);
+        // Set the constraints for getUserMedia() based on the selected devices
+        
+        if(device.kind == 'audioinput'){
+            constraints.video = {
+                deviceId: { exact: device.deviceId }
+            };
+        }else if(device.kind == 'videoinput'){
+            constraints.audio = {
+                deviceId: { exact: device.deviceId }
+            };
+        }
+        
+    });
+    media_functions.getMedia(constraints); 
+}); */
+
 export let media_functions = {
+
+    local_stream: null, 
     /**
      * Returns the media stream that the user authorized. 
      * @param {*} constraints the type of media that we are going to request.
@@ -15,8 +40,10 @@ export let media_functions = {
         console.log(navigator.mediaDevices)
         try{
             stream = await navigator.mediaDevices.getUserMedia(constraints);
+            this.local_stream = stream; 
             return Promise.resolve(stream); 
         }catch(err){
+            this.handleGetUserMediaError(err);
             return Promise.reject(err);    
         }
         
@@ -31,23 +58,6 @@ export let media_functions = {
             return Promise.resolve(devices); 
         }catch(err){
             return Promise.reject(err);
-        }
-    },
-
-    /**
-     * 
-     * 
-     * @param {*} connection the connection we'll add the track on the connection
-     * @param {*} stream the streams that contains the tracks we'll add to the connection 
-     */
-    addTrackToConnection: async function func(connection, ...streams){
-        log(streams + "received as parameters")
-        for(const stream of streams) {
-           log("adding stream to connection: " + stream);
-            stream.getTracks().forEach(track => {
-                log("adding track to connection: " + track); 
-                connection.addTrack(track,stream); 
-            });
         }
     },
 
