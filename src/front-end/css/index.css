@@ -334,6 +334,20 @@ video{
     cursor: pointer;
 }
 
+#send-button {
+    font-size: 1.5em;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+    color: #757575;
+}
+
+#send-button:hover {
+    color: #464646;
+    cursor: pointer;
+}
+
 #chat-input {
     display: block;
     width: 100%;
