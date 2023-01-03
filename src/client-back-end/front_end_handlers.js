@@ -112,19 +112,27 @@ export let websocket_front_end_handlers = {
      * @param {*} message the message received by the websocket connection.
      */
     handleNewFileMetadata: function(message){
+        let container = document.createElement("div");
+        container.setAttribute('class', "message-container-other");
+
         let new_message = document.createElement("div");
         //specifies it's the peer who sent the message 
         new_message.setAttribute('class', "message_container"); 
         new_message.setAttribute('id', message.id + " message_container");
         new_message.innerHTML = `<h3>` + message.username + `</h3>` + `<a class="metadata_link" href="#"><h4>` + message.fileName + message.fileType + `</h4></a>` + `<br>` + message.fileSize + `<br>` + message.lastModified;  
-
+        container.appendChild(new_message);
         
+        let date = document.createElement("div");
+        date.setAttribute('id', "date");
+        date.innerHTML =  `<p>` + getCurrentDateTime() + `</p>`;
+        container.appendChild(date);
+
         let chat = document.getElementsByClassName("chat")[0];
         
 
         let chat_input_box = document.getElementsByClassName("messages")[0];
 
-        chat_input_box.appendChild(new_message);
+        chat_input_box.appendChild(container);
         let links = Array.from(document.getElementsByClassName("metadata_link"));
         // Scroll to the bottom of the div
         links.forEach((element) => {
@@ -321,12 +329,20 @@ export let front_end_handlers = {
      * @param {*} file 
      */
     addNewFileMetadata: function(username, room_code, clientID, file){
+        let container = document.createElement("div");
+        container.setAttribute('class', "message-container");
+
         let new_message = document.createElement("div");
         //specifies it's you who sent the message 
         new_message.setAttribute('class', "message_container_darker"); 
         new_message.setAttribute('id', getClientID.get() + " message_container_darker");
         new_message.innerHTML = `<h3>` + username + `</h3>` + `<a class="metadata_link" href="#"><h4>` + file.name + file.type + `</h4></a>` + `<br>` + file.size + `<br>` + file.lastModified; 
+        container.appendChild(new_message);
 
+        let date = document.createElement("div");
+        date.setAttribute('id', "date");
+        date.innerHTML =  `<p>` + getCurrentDateTime() + `</p>`;
+        container.appendChild(date);
         
 
         let chat = document.getElementsByClassName("chat")[0];
@@ -334,7 +350,7 @@ export let front_end_handlers = {
 
         let chat_input_box = document.getElementsByClassName("messages")[0];
 
-        chat_input_box.appendChild(new_message);
+        chat_input_box.appendChild(container);
         let links = Array.from(document.getElementsByClassName("metadata_link")); 
         // Scroll to the bottom of the div
         links.forEach((element) => {
