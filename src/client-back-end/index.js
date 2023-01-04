@@ -180,17 +180,10 @@ toggle_chat_panel.onclick = function(event){
     if(chat.style.display === "none"){
         chat.style.display = "grid";
         if (mediaQans.matches) { // If media query matches
-            chat_and_call.style.gridTemplateColumns = "1fr"
-            chat_and_call.style.gridTemplateAreas = '"streamcontainer" "chat"';
             streams.style.height = "fit-content";
-        } else {
-            chat_and_call.style.gridTemplateColumns = "3fr 1fr"
-            chat_and_call.style.gridTemplateAreas = "streamcontainer chat"
         }
     }else{
         chat.style.display = "none";
-        chat_and_call.style.gridTemplateColumns = "1fr";
-        chat_and_call.style.gridTemplateAreas = "streamcontainer";
         // Enlarge streams
         if(mediaQans.matches){
             streams.style.height = "86vh";

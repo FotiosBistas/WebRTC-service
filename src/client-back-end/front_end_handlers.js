@@ -104,6 +104,8 @@ export let websocket_front_end_handlers = {
         let messages = document.getElementsByClassName("messages")[0];
         messages.appendChild(container);
         // Scroll to the bottom of the div
+        messages.scrollTop = messages.scrollHeight;
+
     },
 
     /**
@@ -135,15 +137,11 @@ export let websocket_front_end_handlers = {
         date.innerHTML =  `<p>` + getCurrentDateTime() + `</p>`;
         container.appendChild(date);
 
-        let chat = document.getElementsByClassName("chat")[0];
         
 
-        let chat_input_box = document.getElementsByClassName("messages")[0];
-
-        chat_input_box.appendChild(container);
-        
-    
-        chat.scrollTop = chat.scrollHeight;
+        let messages = document.getElementsByClassName("messages")[0];
+        messages.appendChild(container);
+        messages.scrollTop = messages.scrollHeight;
     },
 
     /**
@@ -282,16 +280,13 @@ export let front_end_handlers = {
         let date = document.createElement("div");
         date.setAttribute('id', "date");
         date.innerHTML =  `<p>` + getCurrentDateTime() + `</p>`;
-        container.appendChild(date);
+        container.appendChild(date);        
 
-        let chat = document.getElementsByClassName("chat")[0];
-        
+        let messages = document.getElementsByClassName("messages")[0];
 
-        let chat_input_box = document.getElementsByClassName("messages")[0];
-
-        chat_input_box.appendChild(container);
+        messages.appendChild(container);
         // Scroll to the bottom of the div
-        chat.scrollTop = chat.scrollHeight;
+        messages.scrollTop = messages.scrollHeight;
     },
 
     /**
@@ -325,17 +320,11 @@ export let front_end_handlers = {
         let date = document.createElement("div");
         date.setAttribute('id', "date");
         date.innerHTML =  `<p>` + getCurrentDateTime() + `</p>`;
-        container.appendChild(date);
-        
+        container.appendChild(date);        
 
-        let chat = document.getElementsByClassName("chat")[0];
-        
-
-        let chat_input_box = document.getElementsByClassName("messages")[0];
-
-        chat_input_box.appendChild(container);
-        
-        chat.scrollTop = chat.scrollHeight;
+        let messages = document.getElementsByClassName("messages")[0];
+        messages.appendChild(container);
+        messages.scrollTop = messages.scrollHeight;
     },
 
     /**
