@@ -179,11 +179,13 @@ toggle_chat_panel.onclick = function(event){
 
     if(chat.style.display === "none"){
         chat.style.display = "grid";
+        chat_and_call.style.gridTemplateColumns = null;
         if (mediaQans.matches) { // If media query matches
             streams.style.height = "fit-content";
         }
     }else{
         chat.style.display = "none";
+        chat_and_call.style.gridTemplateColumns = "1fr";
         // Enlarge streams
         if(mediaQans.matches){
             streams.style.height = "86vh";
