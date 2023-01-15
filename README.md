@@ -117,7 +117,7 @@ Upon exiting a call, the user will be returned to the home screen, from which th
 
 This section covers the three main directories of the project: `client-back-end/`, `front-end/`, and `server/` and will provide an overview of the code and design of each of these directories as well as instructions for setting up and running the web-conferencing app. For a more intuitive explanation, the project’s directory tree can be observed in figure 5.
 
-## Client Back-end
+### Client Back-end
 
 The client-back-end directory contains the code for the client-side of the web application, which manages the required peer-to-peer WebRTC communication and the message exchange with the signaling server. `front-end-handlers.js` contains code that handles actions in the front-end of the app, such as user input and UI updates. `index.js` is the entry point for the client-side of the app and sets up the necessary connections and event handlers. `media-handler.js` accommodates handlers for media streams, responsible for setting up the local stream and displaying the remote stream. `peer-connection-handler.js` contains code for establishing and managing peer connections using WebRTC. `websocket-connection-handler.js` contains code for establishing and maintaining a WebSocket connection with the signaling server.
 
