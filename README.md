@@ -3,9 +3,11 @@
 
 Authors; [Fotios Bistas](https://github.com/FotiosBistas "Fotios Bistas"), [Georgios E. Syros](https://github.com/gsiros "Georgios E. Syros"), [Anastasios Toumazatos](https://github.com/toumazatos "Anastasios Toumazatos")
 
+***For setup instructions go [here](#setup).***
+
 ## Introduction;
 
-*Vzoom* is a fast, lightweight video calling web app developed for AUEB’s undergraduate course Multimedia Technology leveraging the WebRTC framework. The goal was to implement an application which enables the exchange of sound, video, text and other multimedia using peer-to-peer and client-server architectures for direct and indirect communication. The application supports one-to-one communication using the peer- to-peer approach for exchanging audio and video and the client-server approach for text and multimedia.
+*Vzoom* is a fast, lightweight video calling web app developed for AUEB’s undergraduate course *Multimedia Technology* leveraging the WebRTC framework. The goal was to implement an application which enables the exchange of sound, video, text and other multimedia using *peer-to-peer* and *client-server* architectures for direct and indirect communication. The application supports one-to-one communication using the peer-to-peer approach for exchanging audio and video and the client-server approach for text and multimedia.
 
 This README includes set-up instructions, the application user’s guide, high-level software documentation, the used software, sources and difficulties faced during development.
 
@@ -19,18 +21,18 @@ This README includes set-up instructions, the application user’s guide, high-l
 
 ## Architecture
 
-The app supports peer-to-peer video and audio communication via the WebRTC protocol. Firstly, an exchange of important messages is required, before the participating peers can successfully establish a connection. Because there isn’t any type of connection underway, these messages must be exchanged by a middle-man; the signalling server. To begin the process, the peers must give permission to the browser to access their media devices, such as a camera or a microphone, in order for some important event handlers of the protocol to fire up. A high level description of the process is given by the following steps:
+The app supports peer-to-peer video and audio communication via the **WebRTC** protocol. Firstly, an exchange of important **messages** is required, before the participating peers can successfully establish a connection. Because there isn’t any type of connection underway, these messages must be exchanged by a middle-man; the **signalling server**. To begin the process, the peers must give permission to the browser to access their media devices, such as a camera or a microphone, in order for some important **event handlers** of the protocol to fire up. A high level description of the process is given by the following steps:
 
-1. Access the media devices of the users.
-2. Send the messages to the signalling server.
-3. Establish the connection.
+1. *Access the media devices of the users.*
+2. *Send the messages to the signalling server.*
+3. *Establish the connection.*
 
 
 ### Peer-to-peer audio and video exchange
 
-For a user to chat with another one, they must first join a room. When a peer connects to a room, the important signalling messages are sent to the server using Websocket secured (WSS). This connection, as described in section 2.2, is upgraded over HTTPS using the http upgrade method. Leveraging this connection the signalling messages sent by one peer are broadcasted to all other room participants[^1]. After receiving these messages the other peer(s) connect in a siminal manner.
+For a user to chat with another one, they must first join a room. When a peer connects to a room, the important signalling messages are sent to the server using **Websocket secured (WSS)**. This connection, as described in section 2.2, is upgraded over HTTPS using the http upgrade method. Leveraging this connection the signalling messages sent by one peer are broadcasted to all other room participants[^1]. After receiving these messages the other peer(s) connect in a siminal manner.
 
-Along with the exchange of audio-video, the room’s chat supports the exchange of simple text messages and files. The text messages are sent over the websocket connection and are broadcasted to all the peers connected to the room. The files are uploaded using https POST requests and can be downloaded by other peers by https GET requests.
+Along with the exchange of audio-video, the room’s chat supports the exchange of simple text messages and files. The text messages are sent over the websocket connection and are broadcasted to all the peers connected to the room. The files are uploaded using https **POST** requests and can be downloaded by other peers by https **GET** requests.
 
 Theoretically, the connection could be run over pure http but the exchange of video and audio would be very problematic due to security concerns and policies implemented by most browsers.
 
@@ -38,7 +40,7 @@ Theoretically, the connection could be run over pure http but the exchange of vi
 
 ### The signalling server
 
-The signalling server is a custom NodeJS server. It is capable of concurrent support of http(s) messages along with websocket requests. In phase one the server starts of as a https server and in phase two is configured to also listen to websocket requests at port 62000.
+The signalling server is a custom **NodeJS** server. It is capable of concurrent support of http(s) messages along with websocket requests. In phase one the server starts of as a https server and in phase two is configured to also listen to websocket requests at port 62000.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/47118034/212556649-3c23ccd2-c192-4bfa-b8df-0d4f638bf647.jpg" width=650/>
@@ -117,7 +119,7 @@ Upon exiting a call, the user will be returned to the home screen, from which th
 
 This section covers the three main directories of the project: `client-back-end/`, `front-end/`, and `server/` and will provide an overview of the code and design of each of these directories as well as instructions for setting up and running the web-conferencing app. For a more intuitive explanation, the project’s directory tree can be observed in figure 5.
 
-### Client Back-end
+## Client Back-end
 
 The client-back-end directory contains the code for the client-side of the web application, which manages the required peer-to-peer WebRTC communication and the message exchange with the signaling server. `front-end-handlers.js` contains code that handles actions in the front-end of the app, such as user input and UI updates. `index.js` is the entry point for the client-side of the app and sets up the necessary connections and event handlers. `media-handler.js` accommodates handlers for media streams, responsible for setting up the local stream and displaying the remote stream. `peer-connection-handler.js` contains code for establishing and managing peer connections using WebRTC. `websocket-connection-handler.js` contains code for establishing and maintaining a WebSocket connection with the signaling server.
 
@@ -151,5 +153,3 @@ For the app to be accessible over the Internet, ensure that the device that is h
 ## Difficulties
 
 One of the most difficult problems we had to overcome is the lack of example projects that use purely NodeJS, WebRTC and WSS. Usually, the aforementioned are handled by third party frameworks/libraries e.g. ExpressJS. Extensive research on open-source code exchange websites like GitHub, StackOverflow questions, documentation, debugging and testing was conducted to find insight and help us move forward. Secondly, the lack of experience from the team members in the technologies used lead to a wrong initial structure of the project, which consequently complicated things. Finally, deploying a web server to check whether the app worked over the internet and not just locally was a challenging task. Numerous services were tried such as Amazon Web Services, Microsoft’s Azure and Google Cloud Services. Out of all Mi- crosoft’s Azure platform was deemed more appropriate for the nature of the project. Additionally, a decent number of alpha-testers was recruited for validation of the app’s offered services.
-
-
