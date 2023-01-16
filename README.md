@@ -12,7 +12,7 @@ Authors; [Fotios Bistas](https://github.com/FotiosBistas "Fotios Bistas"), [Geor
 This README includes set-up instructions, the application user’s guide, high-level software documentation, the used software, sources and difficulties faced during development.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/47118034/212555958-a049125a-6381-4ecc-93c5-3ea3c2427f9f.jpeg" />
+  <img src="https://user-images.githubusercontent.com/47118034/212691053-c1aeecaa-966c-4d2b-b159-1cd3dd0cc07c.jpeg" />
 </p>
 
 <p align="center">
